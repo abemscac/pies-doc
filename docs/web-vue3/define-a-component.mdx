@@ -1,0 +1,254 @@
+---
+sidebar_position: 5
+---
+
+import Badge from '@site/src/components/Badge'
+
+# Define a Component
+
+Learn a couple of ways to declare a component in Vue 3.
+
+There are multiple ways to define a component in Vue 3, we want to bring up some of the most commonly seen methods in our everyday life.
+
+## 1. Legacy Options API
+
+<p>
+  <Badge text="Legacy" />
+</p>
+
+Well, yes, the legacy Options API still works in Vue 3, in almost the same way. If you just copy & paste your Vue 2 code into a Vue 3 project, it'll probably dependencies issues (e.g., unspported npm packages) and some other minor issues are resolved.
+
+That being said, it is strongly recommended to try out other methods instead of sticking to the legacy Options API. Otherwise upgrading an app from Vue 2 to Vue 3 becomes nothing more than a meaningless change of number, isn't it?
+
+But don't get me wrong, Options API is still a great tool! It's still a valid way to define a component in Vue 3, so we put it here to make it easier to compare the difference between Options API and Composition API.
+
+```html title="Legacy Options API"
+<template>
+  <div>
+    <div>Hello, {{ name }}, I'm {{ age }} years old.</div>
+    <div>I'll be {{ ageAfter3years }} years old after 3 years.</div>
+    <input v-model="name" />
+    <button @click="incrementAge">Increment age</button>
+  </div>
+</template>
+
+<script>
+  export default {
+    props: {
+      age: Number,
+    },
+    emits: ['incrementAge'],
+    data() {
+      return {
+        name: 'world',
+      }
+    },
+    computed: {
+      ageAfter3years() {
+        return this.age + 3
+      },
+    },
+    methods: {
+      incrementAge() {
+        this.$emit('incrementAge')
+      },
+    },
+    mounted() {
+      console.log('I am mounted!')
+    },
+  }
+</script>
+```
+
+:::info
+
+- Make sure to checkout the new, awesome [`emits`](https://vuejs.org/guide/components/events.html#declaring-emitted-events) option in Vue 3!
+
+- There's also a new [`defineComponent`](https://vuejs.org/api/general.html#definecomponent) helper function in Vue 3. If you would like to see some type interfaces while building components, you can use it like this:
+
+  <!-- prettier-ignore -->
+  ```html title="MyComponent.vue"
+  <script>
+  import { defineComponent } from 'vue'
+
+  export default defineComponent({
+    props: {
+      // Typical component stuff.
+    },
+  })
+  </script>
+  ```
+
+:::
+
+## 2. Composition API with `<script setup>`
+
+<p>
+  <Badge variant="success" text="Recommended" />
+</p>
+
+This is the most popular one at the moment! If you've leaned React Hooks API, you may find the coding styles very similar. If you don't, don't worry! It's actually very easy to understand.
+
+By default there's no `this` in `<script setup>` whether you use function or arrow function. So if don't like `this`, this will be a good news!
+
+<!-- prettier-ignore -->
+```html title="Composition API with <script setup>"
+<template>
+  <div>
+    <div>Hello, {{ name }}, I'm {{ age }} years old.</div>
+    <div>I'll be {{ ageAfter3years }} years old after 3 years.</div>
+    <input v-model="name" />
+    <button @click="incrementAge">Increment age</button>
+  </div>
+</template>
+
+<script lang="ts" setup>
+import { computed, onMounted, ref, toRefs } from 'vue'
+
+// Define props.
+const props = defineProps<{
+  age: number
+}>()
+const { age } = toRefs(props)
+
+// Define emitted events.
+const emit = defineEmits<{
+  (e: 'incrementAge'): void
+}>()
+
+// Define data.
+const name = ref('world')
+
+// Define computed properties.
+const ageAfter3years = computed(() => age.value + 3)
+
+// Define methods.
+const incrementAge = () => {
+  emit('incrementAge')
+}
+
+// Register lifecycle hooks.
+onMounted(() => {
+  console.log('I am mounted!')
+})
+</script>
+```
+
+## 3. Composition API with `setup()`
+
+Another option is to use the new [`setup()`](https://vuejs.org/api/composition-api-setup.html) function in a component:
+
+```html title="Composition API with setup()"
+<template>
+  <div>
+    <div>Hello, {{ name }}, I'm {{ age }} years old.</div>
+    <div>I'll be {{ ageAfter3years }} years old after 3 years.</div>
+    <input v-model="name" />
+    <button @click="incrementAge">Increment age</button>
+  </div>
+</template>
+
+<script>
+  import { computed, onMounted, ref } from 'vue'
+
+  export default {
+    props: {
+      age: Number,
+    },
+    emits: ['incrementAge'],
+    setup(props, context) {
+      // Define data.
+      const name = ref('world')
+
+      // Define computed properties.
+      const ageAfter3years = computed(() => props.age + 3)
+
+      // Define methods.
+      const incrementAge = () => {
+        context.emit('incrementAge')
+      }
+
+      // Register lifecycle hooks.
+      onMounted(() => {
+        console.log('I am mounted!')
+      })
+
+      // Return an object with all of the "things" you want to expose to <template>.
+      return {
+        name,
+        ageAfter3years,
+        incrementAge,
+      }
+    },
+  }
+</script>
+```
+
+As you can see, it's almost the same with `<script setup>`, but it comes with some constraints:
+
+1. `props` must be defined using `props` option instead of `defineProps` function, because `defineProps` only works in `<script setup>`
+
+2. Emitted events must be defined using `emits` option instead of `defineEmits` function, because `defineEmits` only works in `<script setup>`
+
+3. `props` can be directly accessed in `<template>`, but variables declared in `setup()` must be returned in the function to make them accessible in `<template>`
+
+4. By default, variables returned in `setup()` will be accessible to parent component. You can use the [`expose`](https://vuejs.org/api/composition-api-setup.html#exposing-public-properties) function in [setup context](https://vuejs.org/api/composition-api-setup.html#setup-context) to change that behavior.
+
+If you're using a SFC, we recommend you to just use `<script setup>` instead, because there are some [great features](https://vuejs.org/api/sfc-script-setup.html#typescript-only-features) `setup()` can't do!
+
+:::caution
+
+Since the `setup()` function is defined in an object (Options API), things like `data()`, `computed`, `methods`, `mounted()` would still work if they are defined.
+
+For example, the following component will work without any warning/error:
+
+```html
+<template>
+  <div>
+    <h1>Hello, {{ upperCaseName }}.</h1>
+    <button @click="sayMyAge">Say my age</button>
+  </div>
+</template>
+
+<script>
+  import { onMounted, ref } from 'vue'
+
+  export default {
+    setup(props, context) {
+      const name = ref('world')
+
+      onMounted(() => {
+        console.log('[setup()] I am mounted!')
+      })
+
+      return {
+        name,
+      }
+    },
+    computed: {
+      upperCaseName() {
+        return this.name.toUpperCase()
+      },
+    },
+    methods: {
+      sayMyAge() {
+        console.log('I am 5 years old')
+      },
+    },
+    mounted() {
+      console.log('[mounted()] I am mounted!')
+    },
+  }
+</script>
+```
+
+Looks terrible, isn't it? This is bad because:
+
+- There are 2 `mounted` lifecycle hooks getting registered, and **both of them works**
+
+- `upperCaseName` in `computed` is referencing the `name` we returned in `setup()`
+
+- `sayMyAge` is defined in `methods`, but it could also be returned in `setup()`, so now we have to check multiple places to find where a variable is being defined
+
+Things would only get worse as your app gets bigger, so we strongly recommend you to **avoid mixing Options API and Composition API like this at all cost!**
+:::
