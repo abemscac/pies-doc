@@ -1,10 +1,10 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 ---
 
 # Ref and ref
 
-Probably the most important part in Vue 3!
+This is probably the most important part in Vue 3!
 
 ## What is Ref?
 
@@ -18,34 +18,20 @@ interface Ref<T> {
 }
 ```
 
-`Ref` variable can contain only **one** value with any type, so you can have `Ref<number>`, `Ref<boolean>`, `Ref<Map>`, `Ref<{ id: number, name: string }>`, `Ref<YourOwnInterface[]>`, anything you can think of.
+A `Ref` variable can contain only **one** value with any type, so you can have `Ref<number>`, `Ref<boolean>`, `Ref<Map>`, `Ref<{ id: number, name: string }>`, `Ref<YourOwnInterface[]>`, `Ref<Promise<number>>`, anything you need.
 
-One of the differences between a normal variable and a `Ref` variable is that: **when a Ref variable gets updated, it'll cause the container component to re-render.**
+That's all we need to know about `Ref` for now!
 
-```jsx title="src/pages/my-react-page.js"
-import React from 'react';
-import Layout from '@theme/Layout';
+## What is ref?
 
-export default function MyReactPage() {
-  return (
-    <Layout>
-      <h1>My React page</h1>
-      <p>This is a React page</p>
-    </Layout>
-  );
-}
+`ref` is a `function` that accepts an argument (value or variable), and returns a `Ref` with that "thing" as its' `value`. For example:
+
+```ts
+import { ref } from 'vue'
+
+const name = ref('hello')
+
+console.log(name.value) // 'hello'
 ```
 
-A new page is now available at [http://localhost:3000/my-react-page](http://localhost:3000/my-react-page).
-
-## Create your first Markdown Page
-
-Create a file at `src/pages/my-markdown-page.md`:
-
-```mdx title="src/pages/my-markdown-page.md"
-# My Markdown page
-
-This is a Markdown page
-```
-
-A new page is now available at [http://localhost:3000/my-markdown-page](http://localhost:3000/my-markdown-page).
+Pretty easy, eh?

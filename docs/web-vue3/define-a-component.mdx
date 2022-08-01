@@ -1,5 +1,5 @@
 ---
-sidebar_position: 5
+sidebar_position: 2
 ---
 
 import Badge from '@site/src/components/Badge'
@@ -8,7 +8,7 @@ import Badge from '@site/src/components/Badge'
 
 Learn a couple of ways to declare a component in Vue 3.
 
-There are multiple ways to define a component in Vue 3, we want to bring up some of the most commonly seen methods in our everyday life.
+There are multiple ways to define a component in Vue 3, we want to bring up some of the most commonly seen options you may see in your everyday life.
 
 ## 1. Legacy Options API
 
@@ -87,7 +87,7 @@ But don't get me wrong, Options API is still a great tool! It's still a valid wa
   <Badge variant="success" text="Recommended" />
 </p>
 
-This is the most popular one at the moment! If you've leaned React Hooks API, you may find the coding styles very similar. If you don't, don't worry! It's actually very easy to understand.
+This is the most popular option at the moment. If you've leaned React Hooks API, you may find the coding styles very similar. If you don't, don't worry! It's actually very easy to understand.
 
 By default there's no `this` in `<script setup>` whether you use function or arrow function. So if don't like `this`, this will be a good news!
 
@@ -133,6 +133,12 @@ onMounted(() => {
 })
 </script>
 ```
+
+:::info
+
+You may have noticed that we're using `defineProps` and `defineEmits` without importing them, this is because those functions are **compiler macros**. Vue will actually shows a warning if you import and use them in a component.
+
+:::
 
 ## 3. Composition API with `setup()`
 
@@ -194,11 +200,11 @@ As you can see, it's almost the same with `<script setup>`, but it comes with so
 
 4. By default, variables returned in `setup()` will be accessible to parent component. You can use the [`expose`](https://vuejs.org/api/composition-api-setup.html#exposing-public-properties) function in [setup context](https://vuejs.org/api/composition-api-setup.html#setup-context) to change that behavior.
 
-If you're using a SFC, we recommend you to just use `<script setup>` instead, because there are some [great features](https://vuejs.org/api/sfc-script-setup.html#typescript-only-features) `setup()` can't do!
+If you're using SFC, we recommend you to just use `<script setup>` instead because there's less boilerplate. Also, there are some [great features](https://vuejs.org/api/sfc-script-setup.html#typescript-only-features) `setup()` can't do if you're using TypeScript.
 
 :::caution
 
-Since the `setup()` function is defined in an object (Options API), things like `data()`, `computed`, `methods`, `mounted()` would still work if they are defined.
+Since the `setup()` function is defined in an object (Options API), things like `data()`, `computed`, `methods`, `mounted()` could still work if they are defined.
 
 For example, the following component will work without any warning/error:
 
@@ -242,13 +248,13 @@ For example, the following component will work without any warning/error:
 </script>
 ```
 
-Looks terrible, isn't it? This is bad because:
+It looks terrible, isn't it? This is bad because:
 
 - There are 2 `mounted` lifecycle hooks getting registered, and **both of them works**
 
 - `upperCaseName` in `computed` is referencing the `name` we returned in `setup()`
 
-- `sayMyAge` is defined in `methods`, but it could also be returned in `setup()`, so now we have to check multiple places to find where a variable is being defined
+- `sayMyAge` is defined in `methods`, but it could also be returned in `setup()`, so now we have to check multiple places to find a variable we see in `<template>`
 
 Things would only get worse as your app gets bigger, so we strongly recommend you to **avoid mixing Options API and Composition API like this at all cost!**
 :::
