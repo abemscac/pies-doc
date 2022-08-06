@@ -22,7 +22,7 @@ That being said, it is strongly recommended to try out other methods instead of 
 
 But don't get me wrong, Options API is still a great tool! It's still a valid way to define a component in Vue 3, so we put it here to make it easier to compare the difference between Options API and Composition API.
 
-```html title="Legacy Options API"
+```html title="Legacy Options API" showLineNumbers
 <template>
   <div>
     <div>Hello, {{ name }}, I'm {{ age }} years old.</div>
@@ -67,7 +67,7 @@ But don't get me wrong, Options API is still a great tool! It's still a valid wa
 - There's also a new [`defineComponent`](https://vuejs.org/api/general.html#definecomponent) helper function in Vue 3. If you would like to see some type interfaces while building components, you can use it like this:
 
   <!-- prettier-ignore -->
-  ```html title="MyComponent.vue"
+  ```html title="MyComponent.vue" showLineNumbers
   <script>
   import { defineComponent } from 'vue'
 
@@ -92,7 +92,7 @@ This is the most popular option at the moment. If you've leaned React Hooks API,
 By default there's no `this` in `<script setup>` whether you use function or arrow function. So if don't like `this`, this will be a good news!
 
 <!-- prettier-ignore -->
-```html title="Composition API with <script setup>"
+```html title="Composition API with <script setup>" showLineNumbers
 <template>
   <div>
     <div>Hello, {{ name }}, I'm {{ age }} years old.</div>
@@ -144,7 +144,7 @@ You may have noticed that we're using `defineProps` and `defineEmits` without im
 
 Another option is to use the new [`setup()`](https://vuejs.org/api/composition-api-setup.html) function in a component:
 
-```html title="Composition API with setup()"
+```html title="Composition API with setup()" showLineNumbers
 <template>
   <div>
     <div>Hello, {{ name }}, I'm {{ age }} years old.</div>
