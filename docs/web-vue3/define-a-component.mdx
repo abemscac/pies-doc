@@ -192,11 +192,11 @@ Another option is to use the new [`setup()`](https://vuejs.org/api/composition-a
 
 As you can see, it's almost the same with `<script setup>`, but it comes with some constraints:
 
-1. `props` must be defined using `props` option instead of `defineProps` function, because `defineProps` only works in `<script setup>`
+1. `props` must be defined using `props` option instead of `defineProps` function, because `defineProps` only works in `<script setup>`.
 
-2. Emitted events must be defined using `emits` option instead of `defineEmits` function, because `defineEmits` only works in `<script setup>`
+2. Emitted events must be defined using `emits` option instead of `defineEmits` function, because `defineEmits` only works in `<script setup>`.
 
-3. `props` can be directly accessed in `<template>`, but variables declared in `setup()` must be returned in the function to make them accessible in `<template>`
+3. `props` can be directly accessed in `<template>`, but variables declared in `setup()` must be returned in the function to make them accessible in `<template>`.
 
 4. By default, variables returned in `setup()` will be accessible to parent component. You can use the [`expose`](https://vuejs.org/api/composition-api-setup.html#exposing-public-properties) function in [setup context](https://vuejs.org/api/composition-api-setup.html#setup-context) to change that behavior.
 
@@ -250,11 +250,9 @@ For example, the following component will work without any warning/error:
 
 It looks terrible, isn't it? This is bad because:
 
-- There are 2 `mounted` lifecycle hooks getting registered, and **both of them works**
-
-- `upperCaseName` in `computed` is referencing the `name` we returned in `setup()`
-
-- `sayMyAge` is defined in `methods`, but it could also be returned in `setup()`, so now we have to check multiple places to find a variable we see in `<template>`
+- There are 2 `mounted` lifecycle hooks getting registered, and **both of them works**.
+- `upperCaseName` in `computed` is referencing the `name` we returned in `setup()`.
+- `sayMyAge` is defined in `methods`, but it could also be returned in `setup()`, so now we have to check multiple places to find a variable we see in `<template>`.
 
 Things would only get worse as your app gets bigger, so we strongly recommend you to **avoid mixing Options API and Composition API like this at all cost!**
 :::
