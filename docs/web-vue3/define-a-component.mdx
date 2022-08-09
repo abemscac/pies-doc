@@ -1,5 +1,5 @@
 ---
-sidebar_position: 5
+sidebar_position: 2
 ---
 
 import Badge from '@site/src/components/Badge'
@@ -8,7 +8,7 @@ import Badge from '@site/src/components/Badge'
 
 Learn a couple of ways to declare a component in Vue 3.
 
-There are multiple ways to define a component in Vue 3, we want to bring up some of the most commonly seen methods in our everyday life.
+There are multiple ways to define a component in Vue 3, we want to bring up some of the most commonly seen options you may see in your everyday life.
 
 ## 1. Legacy Options API
 
@@ -22,7 +22,7 @@ That being said, it is strongly recommended to try out other methods instead of 
 
 But don't get me wrong, Options API is still a great tool! It's still a valid way to define a component in Vue 3, so we put it here to make it easier to compare the difference between Options API and Composition API.
 
-```html title="Legacy Options API"
+```html title="Legacy Options API" showLineNumbers
 <template>
   <div>
     <div>Hello, {{ name }}, I'm {{ age }} years old.</div>
@@ -67,7 +67,7 @@ But don't get me wrong, Options API is still a great tool! It's still a valid wa
 - There's also a new [`defineComponent`](https://vuejs.org/api/general.html#definecomponent) helper function in Vue 3. If you would like to see some type interfaces while building components, you can use it like this:
 
   <!-- prettier-ignore -->
-  ```html title="MyComponent.vue"
+  ```html title="MyComponent.vue" showLineNumbers
   <script>
   import { defineComponent } from 'vue'
 
@@ -87,12 +87,12 @@ But don't get me wrong, Options API is still a great tool! It's still a valid wa
   <Badge variant="success" text="Recommended" />
 </p>
 
-This is the most popular one at the moment! If you've leaned React Hooks API, you may find the coding styles very similar. If you don't, don't worry! It's actually very easy to understand.
+This is the most popular option at the moment. If you've leaned React Hooks API, you may find the coding styles very similar. If you don't, don't worry! It's actually very easy to understand.
 
 By default there's no `this` in `<script setup>` whether you use function or arrow function. So if don't like `this`, this will be a good news!
 
 <!-- prettier-ignore -->
-```html title="Composition API with <script setup>"
+```html title="Composition API with <script setup>" showLineNumbers
 <template>
   <div>
     <div>Hello, {{ name }}, I'm {{ age }} years old.</div>
@@ -134,11 +134,17 @@ onMounted(() => {
 </script>
 ```
 
+:::info
+
+You may have noticed that we're using `defineProps` and `defineEmits` without importing them, this is because those functions are **compiler macros**. Vue will actually shows a warning if you import and use them in a component.
+
+:::
+
 ## 3. Composition API with `setup()`
 
 Another option is to use the new [`setup()`](https://vuejs.org/api/composition-api-setup.html) function in a component:
 
-```html title="Composition API with setup()"
+```html title="Composition API with setup()" showLineNumbers
 <template>
   <div>
     <div>Hello, {{ name }}, I'm {{ age }} years old.</div>
@@ -186,19 +192,19 @@ Another option is to use the new [`setup()`](https://vuejs.org/api/composition-a
 
 As you can see, it's almost the same with `<script setup>`, but it comes with some constraints:
 
-1. `props` must be defined using `props` option instead of `defineProps` function, because `defineProps` only works in `<script setup>`
+1. `props` must be defined using `props` option instead of `defineProps` function, because `defineProps` only works in `<script setup>`.
 
-2. Emitted events must be defined using `emits` option instead of `defineEmits` function, because `defineEmits` only works in `<script setup>`
+2. Emitted events must be defined using `emits` option instead of `defineEmits` function, because `defineEmits` only works in `<script setup>`.
 
-3. `props` can be directly accessed in `<template>`, but variables declared in `setup()` must be returned in the function to make them accessible in `<template>`
+3. `props` can be directly accessed in `<template>`, but variables declared in `setup()` must be returned in the function to make them accessible in `<template>`.
 
 4. By default, variables returned in `setup()` will be accessible to parent component. You can use the [`expose`](https://vuejs.org/api/composition-api-setup.html#exposing-public-properties) function in [setup context](https://vuejs.org/api/composition-api-setup.html#setup-context) to change that behavior.
 
-If you're using a SFC, we recommend you to just use `<script setup>` instead, because there are some [great features](https://vuejs.org/api/sfc-script-setup.html#typescript-only-features) `setup()` can't do!
+If you're using SFC, we recommend you to just use `<script setup>` instead because there's less boilerplate. Also, there are some [great features](https://vuejs.org/api/sfc-script-setup.html#typescript-only-features) `setup()` can't do if you're using TypeScript.
 
 :::caution
 
-Since the `setup()` function is defined in an object (Options API), things like `data()`, `computed`, `methods`, `mounted()` would still work if they are defined.
+Since the `setup()` function is defined in an object (Options API), things like `data()`, `computed`, `methods`, `mounted()` could still work if they are defined.
 
 For example, the following component will work without any warning/error:
 
@@ -242,13 +248,11 @@ For example, the following component will work without any warning/error:
 </script>
 ```
 
-Looks terrible, isn't it? This is bad because:
+It looks terrible, isn't it? This is bad because:
 
-- There are 2 `mounted` lifecycle hooks getting registered, and **both of them works**
-
-- `upperCaseName` in `computed` is referencing the `name` we returned in `setup()`
-
-- `sayMyAge` is defined in `methods`, but it could also be returned in `setup()`, so now we have to check multiple places to find where a variable is being defined
+- There are 2 `mounted` lifecycle hooks getting registered, and **both of them works**.
+- `upperCaseName` in `computed` is referencing the `name` we returned in `setup()`.
+- `sayMyAge` is defined in `methods`, but it could also be returned in `setup()`, so now we have to check multiple places to find a variable we see in `<template>`.
 
 Things would only get worse as your app gets bigger, so we strongly recommend you to **avoid mixing Options API and Composition API like this at all cost!**
 :::
