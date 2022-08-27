@@ -48,9 +48,9 @@ Make sure to checkout the new [`v-bind` in CSS](https://vuejs.org/api/sfc-css-fe
 
 So what is this `<scrtip setup>` thing? What can the `setup` attribute do in a SFC?
 
-Basically it is used to tell Vue that **the code in this `<script>` block should be treated as the definition of a component**, even if we didn't explicitly export an object like how we did it in Options API. So anything we can do in Options API, we can also do it in `<script setup>`.
+Basically it is used to tell Vue that the code in this `<script>` block should be treated as the definition of a component, even if we didn't explicitly export an object like how we did it in Options API. So anything we can do in Options API, we can also do it in `<script setup>`.
 
-One thing worth mentioning is **there cannot be more than one `<script setup>` in a SFC**, just like how we cannot `export default` multiple times in a single file. You can have as many `<script>` as you want, just remember only one of them can be decorated with `setup` attribute.
+One thing worth mentioning is there **cannot be more than one `<script setup>`** in a SFC, just like how we cannot `export default` multiple times in a single file. You can have as many `<script>` as you want, just remember only one of them can be decorated with `setup` attribute.
 
 ## Defining a component
 
