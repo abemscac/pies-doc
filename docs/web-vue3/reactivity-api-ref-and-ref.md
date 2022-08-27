@@ -5,11 +5,11 @@ sidebar_position: 3
 
 # `Ref` and `ref`
 
-This is probably the most important part in Vue 3. Both `Ref` and `ref` are part of Vue 3 [Reactivity API](https://vuejs.org/api/reactivity-core.html#reactivity-api-core).
+This chapter is a part of Vue 3 [Reactivity API](https://vuejs.org/api/reactivity-core.html#reactivity-api-core). Probably the most important part in Vue 3!
 
 ## What is `Ref`?
 
-`Ref` is a **type** with one public property `value`.
+`Ref` is a **type** with only one public property `value`.
 
 A simple interface for `Ref` would look like this:
 
@@ -19,7 +19,7 @@ interface Ref<T> {
 }
 ```
 
-A `Ref` variable can contain only **one** value with **any type**, so you can have:
+A `Ref` variable can contain only **one** value of any type, so you can have:
 
 - `Ref<number>`
 - `Ref<boolean>`
@@ -29,32 +29,19 @@ A `Ref` variable can contain only **one** value with **any type**, so you can ha
 - `Ref<Promise<() => void>>`
 - ...anything you need!
 
-Great, that's all we need to know about `Ref` for now!
-
 ## What is `ref`?
 
-`ref` is a **function** that accepts an argument of any type, and returns a `Ref` object with that "thing" as its' `value`. For example:
+`ref` is a **function** that accepts one argument of any type, and returns a `Ref` object with that argument as its' `value`. For example:
 
 ```ts showLineNumbers
 import { ref } from 'vue'
 
-// highlight-next-line
-const name = ref('hello') // The type of name is Ref<string>
+const name = ref('hello')
 
 console.log(name.value) // 'hello'
 ```
 
-Very straightforward, isn't it? Nothing more to explain for now!
-
-:::caution
-
-Well, the description here about `ref` is actually not 100% correct! If for some reason you want to directly jump to conclusions, please see [below](#the-real-ref).
-
-:::
-
-## Mutating a `Ref`
-
-Because a `Ref` variable is just an object with `value` property, if we want to change the value in it, we can simply do it in the classic JavaScript way:
+To change the value in it, we can simply do it in the classic JavaScript way:
 
 ```ts showLineNumbers
 import { ref } from 'vue'
@@ -92,68 +79,75 @@ somebody.value.name = 'world'
 console.log(somebody) // { name: 'world', age: 5 }
 ```
 
-Yeah, that's how easy it is!
+That's how easy it is!
 
 ## `ref` a `Ref`
 
-So we know what `Ref` and `ref` are, but here comes the question — what happens if we use `ref` on a `Ref`? For example:
+So we know what `Ref` and `ref` are, but here comes the question — what if we use `ref` on a `Ref`? For example:
 
 ```ts showLineNumbers
 import { ref } from 'vue'
 
 const myName = ref('hello')
-console.log(myName.value) // 'hello'
-
 // highlight-next-line
 const yourName = ref(myName)
-// highlight-next-line
-console.log(yourName.value.value) // Will this give us 'hello' too?
 ```
 
-Based on how we describe `Ref` and `ref` earlier in this chapter, it's very natural to think that `ref(myName)` will give us something like this:
+Based on how we describe `Ref` and `ref` earlier in this chapter, it's very natural to think that `ref(myName)` will evaluate to a nested object like `{ value: { value: 'hello' }}`. But when we try to `console.log(yourName.value.value)`, you'll see that it's showing `undefined` instead of `hello`.
 
-```ts showLineNumbers
-const yourName = {
-  value: {
-    value: 'hello'
-  }
-}
+```ts
+console.log(yourName.value.value) // undefined
 ```
 
-But when you try to `console.log(yourName.value.value)`, you'll see that it's showing `undefined` instead of `hello`. If you're using TypeScript, you'll probably see an error in your IDE even before running anything. That's strange, isn't it? Apparently this happens because `ref` is actually doing more than what we think it can do!
+If you're using TypeScript, you'll probably see an error in your IDE even before running anything. This happens because `ref` is actually doing more than just wrapping stuff into `Ref` structure.
 
 ## Under the Hood of `ref`
 
-So what does `ref` actually do? Isn't it just wrapping the argument into a new `Ref` object and returns it to us? The answer is no. Under the hood of `ref`, it uses another function that's also from Vue 3 called [`reactive`](./reactivity-api-reactive-and-reactive.md), which we have not introduced yet.
+So what does `ref` actually do? Well, that depends on the type of the argument. The returned type of `ref` is guaranteed to be `Ref`, the only thing matters is what `value` is in the `Ref`.
 
-Wait, does that mean we have to learn `reactive` before `ref`? Well, not really. You're still doing fine without knowing anything about `reactive`, don't you? That being said, we still want to give you the answer about why in the above example, `console.log(yourName.value.value)` logs `undefined`?
+- If the arugment is a [primitive value](https://developer.mozilla.org/en-US/docs/Glossary/Primitive), Vue will directly use it as the `value` of the `Ref`, and "track" any changes we made to it.
+- Otherwise Vue will use the argument to call another function called [`reactive`](./reactivity-api-reactive.md), and use the returned value from `reactive` as the `value` of the `Ref`. We'll talk more about `reactive` when we get to it, just don't worry about it for now.
 
-We'll explain more in detail when we get to `reactive`, for now the only thing to keep in mind is: **if the argument of `ref` is already a `Ref`, it'll just returns it without doing anything**.
+:::info
 
-So in the above example, writing `const yourName = ref(myName)` is equal to `const yourName = myName` because `myName` is a variable of type `Ref`. We can verify this by using the [strict equality operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Strict_equality) (===) to check if `myName` and `yourName` are the same object.
+Some may think the returned value of `ref` is a plain object like `{ value: 'hello' }`, but it's actually not! Instead, it's an instance of a class called `RefImpl` which has only one public property `value`. So from user's perspective (you and me), it's okay to just treat `RefImpl` as `Ref`.
+
+Just keep in mind that Vue will "track" the `value` in `RefImpl` and re-render the component(s) when `value` changes. Anything else about `RefImpl` is not too important if you're not trying to figure out how Vue implements the "tracking" mechanism. We'll just skip it!
+
+:::
+
+Let's get back to the [`ref(Ref)` example](#ref-a-ref) — why does it log `undefined`? It has something to do with `reactive`, for now the only thing we need to know is, if the argument of `ref` is **already a `Ref`**, it'll just returns it without doing anything.
+
+Therefore, in the above example, writing `const yourName = ref(myName)` will actually equal to `const yourName = myName` because `myName` is a variable of type `Ref`. We can verify this by using the [strict equality operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Strict_equality) (===) to check if `myName` and `yourName` are the same object.
 
 ```ts showLineNumbers
 import { ref } from 'vue'
 
 const myName = ref('hello')
-console.log(myName.value) // 'hello'
-
 const yourName = ref(myName)
-console.log(yourName.value.value) // undefined
-
 // highlight-next-line
 console.log(myName === yourName) // true
 ```
 
-We get `true` from the comparison, which means `ref` is returning the same value we just gave it — that also means if we want to get `hello` from `yourName`, we can just use `yourName.value` like how we did it with `myName`, just because they're the same object!
+Thus, to get the value of `yourName`, all we need to do is using `yourName.value`, just like how we get value from `myName`. The reason is simple — because they're the same object!
 
+```ts
+import { ref } from 'vue'
+
+const myName = ref('hello')
+const yourName = ref(myName)
+console.log(yourName.value) // 'hello'
+```
+
+We've learned enough about `ref` and `Ref` in `<script>` for now. Let's proceed to `<template>`!
 
 ## `Ref` in `<template>` (Interpolations)
 
-In Vue 2 we can access variables declared in `<script>` from `<template>` using 3 different syntax — double curly braces `{{ }}`, `v-on` (shorthand as `@`), and `v-bind` (shorthand as `:`). These 3 syntax still exist in Vue 3, but the logic is a little different. Use the following component as an example:
+In Vue 2 we can access variables declared in `<script>` from `<template>` using 3 different syntax — double curly braces `{{ }}`, `v-on` (shorthand as `@`), and `v-bind` (shorthand as `:`). These 3 syntax still exist in Vue 3, but the logic is a little different. Take the following component as an example:
 
 ```html showLineNumbers
 <template>
+  <!-- Will this work? -->
   <!-- highlight-next-line -->
   <div>{{ name.value }}</div>
 </template>
@@ -165,11 +159,11 @@ const name = ref('hello')
 </script>
 ```
 
-Because `name` is a `Ref`, it is very reasonable to think that `<div>{{ name.value }}</div>` will give us `<div>hello</div>`. But when this component gets rendered, nothing shows up on the screen; it only renders `<div></div>` as the output HTML, no `hello` in the middle. Why is that?
+Because `name` is a `Ref`, it is very reasonable to think that `<div>{{ name.value }}</div>` will evaluate to `<div>hello</div>`. But when this component gets rendered, the output HTML is actually `<div></div>` — where's our `hello`?
 
-This is because when we try to access `Ref` variables from `<template>`, sometimes (yes, SOMETIMES!) they will be automatically "unwrapped", which means in this case `{{ name }}` in `<template>` equals to `name.value` in `<script setup>`. Hence, **we must omit the `.value` to get the value of a `Ref` in `<template>` under some circumstances**. So what are these "circumstances"?
+In Vue 3, when we try to access `Ref` variables from `<template>`, **sometimes** they will be automatically **"unwrapped"** (yes, SOMETIMES!), which means in this case `{{ name }}` in `<template>` equals to `name.value` in `<script setup>`. Hence, we must omit the `.value` to get the value of a `Ref` in `<template>` under some circumstances. So what are these "circumstances"?
 
-The rule is simple: **if a `Ref` variable is exposed as a top-level property in `<script setup>`, Vue will auto-unwrap it for us when it is used in `<template>`**. This rule also applies to v-on and v-bind.
+The rule is simple: if a `Ref` variable is exposed as a **top-level property** in `<script setup>`, Vue will auto-unwrap it in `<template>`. This rule also applies to v-on and v-bind.
 
 So in the above example, if we want to display `hello` on the screen, we will have to write `{{ name }}` instead of `{{ name.value }}` because `name` is a top-level `Ref` in `<script setup>`, and Vue is going it auto-unwrap it for us.
 
