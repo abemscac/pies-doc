@@ -41,7 +41,7 @@ const name = ref('hello')
 console.log(name.value) // 'hello'
 ```
 
-To change the value in it, we can simply do it in the classic JavaScript way:
+To mutate the value in it, we can simply do it in the classic JavaScript way:
 
 ```ts showLineNumbers
 import { ref } from 'vue'
@@ -116,9 +116,9 @@ Just keep in mind that Vue will "track" the `value` in `RefImpl` and re-render t
 
 :::
 
-Let's get back to the [`ref(Ref)` example](#ref-a-ref) — why does it log `undefined`? It has something to do with `reactive`, for now the only thing we need to know is, if the argument of `ref` is **already a `Ref`**, it'll just returns it without doing anything.
+Let's get back to the [`ref` a `Ref`](#ref-a-ref) example — why `console.log(yourName.value.value)` logs `undefined`? Well, it has something to do with `reactive`, for now the only thing we need to know is, if the argument of `ref` is **already a `Ref`**, it'll just returns it without doing anything.
 
-Therefore, in the above example, writing `const yourName = ref(myName)` will actually equal to `const yourName = myName` because `myName` is a variable of type `Ref`. We can verify this by using the [strict equality operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Strict_equality) (===) to check if `myName` and `yourName` are the same object.
+Therefore, in the above example, writing `const yourName = ref(myName)` will actually equal to `const yourName = myName` because `myName` is a variable declared via `ref`. We can verify this by using the [strict equality operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Strict_equality) (===) to check if `myName` and `yourName` are the same object.
 
 ```ts showLineNumbers
 import { ref } from 'vue'
@@ -139,9 +139,15 @@ const yourName = ref(myName)
 console.log(yourName.value) // 'hello'
 ```
 
-We've learned enough about `ref` and `Ref` in `<script>` for now. Let's proceed to `<template>`!
+:::tip
 
-## `Ref` in `<template>` (Interpolations)
+Vue provides some convenient utility functions like [`isRef`](https://vuejs.org/api/reactivity-utilities.html#isref) and [`unref`](https://vuejs.org/api/reactivity-utilities.html#unref). They may come in handy in your custom functions sometime.
+
+:::
+
+Great, we've learned enough about `ref` and `Ref` in `<script>` for now. Let's see how `Ref` works in `<template>`!
+
+## `Ref` in `<template>`
 
 In Vue 2 we can access variables declared in `<script>` from `<template>` using 3 different syntax — double curly braces `{{ }}`, `v-on` (shorthand as `@`), and `v-bind` (shorthand as `:`). These 3 syntax still exist in Vue 3, but the logic is a little different. Take the following component as an example:
 
@@ -161,14 +167,15 @@ const name = ref('hello')
 
 Because `name` is a `Ref`, it is very reasonable to think that `<div>{{ name.value }}</div>` will evaluate to `<div>hello</div>`. But when this component gets rendered, the output HTML is actually `<div></div>` — where's our `hello`?
 
-In Vue 3, when we try to access `Ref` variables from `<template>`, **sometimes** they will be automatically **"unwrapped"** (yes, SOMETIMES!), which means in this case `{{ name }}` in `<template>` equals to `name.value` in `<script setup>`. Hence, we must omit the `.value` to get the value of a `Ref` in `<template>` under some circumstances. So what are these "circumstances"?
+In Vue 3, when we try to access `Ref` variables from `<template>`, **sometimes** (yes, SOMETIMES!) they will be automatically **"unwrapped"**. To unwrap (or **unref**) means to get the `value` out from `Ref`. Hence, we must omit the `.value` behind a `Ref` in `<template>` under some circumstances. So what are these "circumstances"?
 
 The rule is simple: if a `Ref` variable is exposed as a **top-level property** in `<script setup>`, Vue will auto-unwrap it in `<template>`. This rule also applies to v-on and v-bind.
 
-So in the above example, if we want to display `hello` on the screen, we will have to write `{{ name }}` instead of `{{ name.value }}` because `name` is a top-level `Ref` in `<script setup>`, and Vue is going it auto-unwrap it for us.
+So in the above example, if we want to display `hello` on the screen, we will have to write `{{ name }}` instead of `{{ name.value }}` because `name` is a top-level `Ref` in `<script setup>`. Vue is going to auto-unwrap it, and we can't say no.
 
 ```html showLineNumbers
 <template>
+  <!-- This will work! -->
   <!-- highlight-next-line -->
   <div>{{ name }}</div>
 </template>
@@ -203,17 +210,26 @@ const user = {
 </script>
 ```
 
-In this example, the output HTML will be `<h1>A: function toFixed() { [native code] }</h1>` and `B: `. Do you know how does this happen?
+The output HTML of this component is:
+
+```html
+<div>
+  <h1>A: function toFixed() { [native code] }</h1>
+  <h2>B: </h2>
+</div>
+```
+
+Do you know why there's such difference?
 
 <details>
-  <summary>That happens because...</summary>
+  <summary>That happens because... (think about it for a while before revealing the answer!)</summary>
 
-  - Both `age` and `user` are exposed as top-level properties in `<script setup>`, so `<template>` can access these two variables without problem.
+  - Both `age` and `user` are exposed as top-level properties in `<script setup>`.
   - Since `name` is a top-level `Ref` in `<script setup>`, it gets auto-unwrapped in `<template>`, which means `{{ age }}` in `<template>` will equal to `age.value` in `<script setup>`, thus resolves to `5`.
-  - In JavaScript, `toFixed` is a method defined in `Number`; `5` is a number, so `5.toFixed` will give us that function, thus showing `function toFixed() { [native code] }` on the screen.
-  - Although `user.age` and `age` are exactly the same variable in `<script setup>`, `{{ user.age }}` will NOT get auto-unwrapped in `<template>` because `user.age` is NOT a top-level property — `user` is!
-  - Since `user.age` is not auto-unwrapped in `<template>`, `{{ user.age }}` in `<template>` will equal to `user.age` in `<script setup>`, thus resolves to `Ref<number>` (and the value is `5` by the way).
-  - There's no property called `toFixed` in `Ref<number>` (see [above](#what-is-ref) if you forget why!), so `{{ user.age.toFixed }}` resolves to `undefined`, causing that block of HTML to show nothing.
+  - In JavaScript, `toFixed` is a method defined in `Number`; `5` is a number, so `5.toFixed` will evaluate to that function, thus showing `function toFixed() { [native code] }` on the screen.
+  - Although `user.age` and `age` are exactly the same variable in `<script setup>`, `{{ user.age }}` will **NOT** get auto-unwrapped in `<template>` because `user.age` is **NOT** a top-level property — `user` is!
+  - Since `user.age` is not auto-unwrapped in `<template>`, `{{ user.age }}` in `<template>` will equal to `user.age` in `<script setup>`, which is `Ref<number>` instead of `number`.
+  - `Ref<number>` does not have a property called `toFixed`, so `{{ user.age.toFixed }}` resolves to `undefined` in `<template>`, so `<h2>B: {{ undefined }}</h2>` will be rendered as `<h2>B: </h2>`.
 
 </details>
 
