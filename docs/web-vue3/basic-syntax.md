@@ -40,7 +40,7 @@ Similar to Vue 2, a SFC in Vue 3 consists of 3 tags — `<template>`, `<script>`
 
 :::info
 
-Make sure to checkout the new [`v-bind` in CSS](https://vuejs.org/api/sfc-css-features.html#v-bind-in-css) feature! It may come in handy in some situations.
+Make sure to check out the new [`v-bind` in CSS](https://vuejs.org/api/sfc-css-features.html#v-bind-in-css) feature! It may come in handy in some situations.
 
 :::
 
@@ -54,4 +54,4 @@ One thing worth mentioning is there **cannot be more than one `<script setup>`**
 
 ## Defining a component
 
-There are multiple ways to define a component in Vue 3, `<script setup>` is just one of them. Make sure to checkout [Define a Component](./define-a-component) if you're curious how Options API and Composition API differ from each other in component implementation.
+There are multiple ways to define a component in Vue 3, `<script setup>` is just one of them. Make sure to check out [Define a Component](./define-a-component) if you're curious how Options API and Composition API differ from each other in component implementation.
