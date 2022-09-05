@@ -1,11 +1,11 @@
 ---
-title: Reactivity API - Ref and ref
+title: Ref and ref
 sidebar_position: 3
 ---
 
 # `Ref` and `ref`
 
-This chapter is a part of Vue 3 [Reactivity API](https://vuejs.org/api/reactivity-core.html#reactivity-api-core). Probably the most important part in Vue 3!
+Probably the most important part in Vue 3!
 
 ## What is `Ref`?
 
@@ -106,7 +106,7 @@ If you're using TypeScript, you'll probably see an error in your IDE even before
 So what does `ref` actually do? Well, that depends on the type of the argument. The returned type of `ref` is guaranteed to be `Ref`, the only thing matters is what `value` is in the `Ref`.
 
 - If the arugment is a [primitive value](https://developer.mozilla.org/en-US/docs/Glossary/Primitive), Vue will directly use it as the `value` of the `Ref`, and "track" any changes we made to it.
-- Otherwise Vue will use the argument to call another function called [`reactive`](./reactivity-api-reactive.md), and use the returned value from `reactive` as the `value` of the `Ref`. We'll talk more about `reactive` when we get to it, just don't worry about it for now.
+- Otherwise Vue will use the argument to call another function called [`reactive`](./reactive.md), and use the returned value from `reactive` as the `value` of the `Ref`. We'll talk more about `reactive` when we get to it, just don't worry about it for now.
 
 :::info
 
@@ -116,7 +116,7 @@ Just keep in mind that Vue will "track" the `value` in `RefImpl` and re-render t
 
 :::
 
-Let's get back to the [`ref` a `Ref`](#ref-a-ref) example — why `console.log(yourName.value.value)` logs `undefined`? Well, it has something to do with `reactive`, for now the only thing we need to know is, if the argument of `ref` is **already a `Ref`**, it'll just returns it without doing anything.
+Let's get back to the [`ref` a `Ref`](#ref-a-ref) example — why `console.log(yourName.value.value)` logs `undefined`? It has something to do with the `reactive` function we just mentioned, we'll explain that in detail in [`ref` VS `reactive`](./ref-vs-reactive). For now the only thing to know is if the argument of `ref` is **already a `Ref`**, it'll just returns it without doing anything.
 
 Therefore, in the above example, writing `const yourName = ref(myName)` will actually equal to `const yourName = myName` because `myName` is a variable declared via `ref`. We can verify this by using the [strict equality operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Strict_equality) (===) to check if `myName` and `yourName` are the same object.
 
@@ -145,7 +145,7 @@ Vue provides some convenient utility functions like [`isRef`](https://vuejs.org/
 
 :::
 
-Great, we've learned enough about `ref` and `Ref` in `<script>` for now. Let's see how `Ref` works in `<template>`!
+Great, we've learned enough about how `ref` and `Ref` works in `<script>` for now. Let's see how `Ref` works in `<template>`!
 
 ## `Ref` in `<template>`
 
@@ -167,7 +167,7 @@ const name = ref('hello')
 
 Because `name` is a `Ref`, it is very reasonable to think that `<div>{{ name.value }}</div>` will evaluate to `<div>hello</div>`. But when this component gets rendered, the output HTML is actually `<div></div>` — where's our `hello`?
 
-In Vue 3, when we try to access `Ref` variables from `<template>`, **sometimes** (yes, SOMETIMES!) they will be automatically **"unwrapped"**. To unwrap (or **unref**) means to get the `value` out from `Ref`. Hence, we must omit the `.value` behind a `Ref` in `<template>` under some circumstances. So what are these "circumstances"?
+In Vue 3, when we try to access `Ref` variables from `<template>`, **sometimes** (yes, SOMETIMES!) they will be automatically **"unwrapped"**. To unwrap (or **unref**) means to extra the `value` out from `Ref`. Hence, we must omit the `.value` behind a `Ref` in `<template>` under some circumstances. So what are these "circumstances"?
 
 The rule is simple: if a `Ref` variable is exposed as a **top-level property** in `<script setup>`, Vue will auto-unwrap it in `<template>`. This rule also applies to v-on and v-bind.
 
