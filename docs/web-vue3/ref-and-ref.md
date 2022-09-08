@@ -7,7 +7,7 @@ sidebar_position: 3
 
 Probably the most important part in Vue 3!
 
-## What is `Ref`?
+## What is a `Ref`?
 
 `Ref` is a **type** with only one public property `value`.
 
@@ -103,16 +103,14 @@ If you're using TypeScript, you'll probably see an error in your IDE even before
 
 ## Under the Hood of `ref`
 
-So what does `ref` actually do? Well, that depends on the type of the argument. The returned type of `ref` is guaranteed to be `Ref`, the only thing matters is what `value` is in the `Ref`.
+So what does `ref` actually do? Well, that depends on the type of the argument we send to `ref`. The returned type of `ref` is guaranteed to be a `Ref`, what really matters is what `value` is in the `Ref`.
 
-- If the arugment is a [primitive value](https://developer.mozilla.org/en-US/docs/Glossary/Primitive), Vue will directly use it as the `value` of the `Ref`, and "track" any changes we made to it.
-- Otherwise Vue will use the argument to call another function called [`reactive`](./reactive.md), and use the returned value from `reactive` as the `value` of the `Ref`. We'll talk more about `reactive` when we get to it, just don't worry about it for now.
+- If the arugment is a [primitive value](https://developer.mozilla.org/en-US/docs/Glossary/Primitive), `ref` will directly use it as the `value` of the `Ref`, and "track" any changes we made to it.
+- Otherwise `ref` would call another function called [`reactive`](./reactive.md) internally, and use the returned value from `reactive` as the `value` of the `Ref`. We'll talk more about `reactive` when we get to it, just don't worry about it for now.
 
 :::info
 
-Some may think the returned value of `ref` is a plain object like `{ value: 'hello' }`, but it's actually not! Instead, it's an instance of a class called `RefImpl` which has only one public property `value`. So from user's perspective (you and me), it's okay to just treat `RefImpl` as `Ref`.
-
-Just keep in mind that Vue will "track" the `value` in `RefImpl` and re-render the component(s) when `value` changes. Anything else about `RefImpl` is not too important if you're not trying to figure out how Vue implements the "tracking" mechanism. We'll just skip it!
+Although the returned value of `ref` seems to be a plain object of type `Ref` (e.g. `{ value: 'hello' }`), it's actually not! Instead, it's an instance of a class called `RefImpl` which has only one public property `value`. So from user's perspective (you and me, the developers), it's okay to just see `RefImpl` as `Ref` because they expose exactly the same public property.
 
 :::
 
@@ -167,7 +165,7 @@ const name = ref('hello')
 
 Because `name` is a `Ref`, it is very reasonable to think that `<div>{{ name.value }}</div>` will evaluate to `<div>hello</div>`. But when this component gets rendered, the output HTML is actually `<div></div>` — where's our `hello`?
 
-In Vue 3, when we try to access `Ref` variables from `<template>`, **sometimes** (yes, SOMETIMES!) they will be automatically **"unwrapped"**. To unwrap (or **unref**) means to extra the `value` out from `Ref`. Hence, we must omit the `.value` behind a `Ref` in `<template>` under some circumstances. So what are these "circumstances"?
+In Vue 3, when we try to access `Ref` variables from `<template>`, **sometimes** (yes, SOMETIMES!) they will be automatically **"unwrapped"**. To unwrap (or **unref**) means to take the `value` out from `Ref`. Hence, we must omit the `.value` behind a `Ref` in `<template>` under some circumstances. So what are these "circumstances"?
 
 The rule is simple: if a `Ref` variable is exposed as a **top-level property** in `<script setup>`, Vue will auto-unwrap it in `<template>`. This rule also applies to v-on and v-bind.
 

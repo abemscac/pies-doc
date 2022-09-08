@@ -5,6 +5,10 @@ sidebar_position: 5
 
 # `ref` VS `reactive`
 
+*So... which one should I use? `ref` or `reactive`?*
+
+We're finally here! This is probably the most commonly asked question when it comes to Vue 3.
+
 ```ts
 function ref(arg) {
   let value
@@ -19,7 +23,7 @@ function ref(arg) {
     // Vue will use reactive()
     value = reactive(arg)
   }
-  // ...
+  // Return a new RefImpl, which can be seen as Ref
   return { value }
 }
 ```
