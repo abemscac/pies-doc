@@ -5,7 +5,7 @@ sidebar_position: 4
 
 # `reactive`
 
-## What is `reactive`
+## What is `reactive`?
 
 `reactive` is a **function** that accepts only **one non-primitive value** as argument, and returns a **"reactive" (proxy) variable** based on that value **without mutating the argument**, with type `UnwrapNestedRefs<T>`. This one-line definition actually sums it up very well, but it might have brought so many questions to your head:
 
@@ -72,7 +72,7 @@ const count = reactive(0) // This is wrong!
 
 This is because `reactive` is designed for **non-primitive value**. You can think of the implementation of `reactive` to be something similar to the following pseudocode:
 
-```ts
+```ts showLineNumbers
 const reactive = (arg) => {
   if (arg is primitive value) {
     if (is in development mode) {
@@ -217,90 +217,137 @@ So When using Vue 3, you should **always avoid such pattern** because it is more
 - Always make a variable reactive (by using `ref` or `reactive`) if this thing **will change**, and **users must be informed of that change** on the screen.
 - Otherwise just make it non-reactive.
 
-## What is `UnwrapNestedRefs<T>`
+## What is `UnwrapNestedRefs<T>`?
 
 :::caution Prerequisites
 
-You must learn [`Ref`](./ref-and-ref#what-is-ref) first before getting into this section.
+You must learn [`Ref`](./ref-and-ref#what-is-a-ref) before getting into this section.
 
 :::
 
-`UnwrapNestedRefs<T>` is a **type** that pretty much explains itself — unwrap all of the nested `Ref`s! To be more specific, `UnwrapNestedRefs` means to **recursively unwrap all `Ref`s in a plain object** (in case you're new to TypeScript, `<T>` is the [Generic Type](https://www.typescriptlang.org/docs/handbook/2/generics.html) syntax of TypeScript.)
+`UnwrapNestedRefs<T>` is a **type** that pretty much explains itself — unwrap all of the nested `Ref`s! To be more specific, `UnwrapNestedRefs` means to **recursively unwrap all `Ref`s in a plain object** (in case you're new to TypeScript, `<T>` is the [Generic Type](https://www.typescriptlang.org/docs/handbook/2/generics.html) syntax of TypeScript; it's fine to ignore it for now.)
 
-For example, if we have an object like this:
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-```ts showLineNumbers
-import { ref } from 'vue'
+## The Reactivity of Reactive Object
 
-const child = ref({ name: 'hello' })
+### Does Destructing Assignment Breaks Reactivity?
 
-const parent = reactive({
-  name: 'world',
-  child,
-})
-```
-
-In the above example:
-
-- To get `hello` from `child` (in `<script>`), we have to write `child.value.name` because `child` is a `Ref`.
-- To get `hello` from `parent`, we have to write `parent.child.name` instead of `parent.child.value.name` because `parent.child` has been unwrapped by `reactive`.
-
-Reactivity still remains after `reactive` internally unwraps `Ref`s; mutating `child` will also effect `parent.child` (and vice versa) because they're actually pointing to the same object:
-
-```ts showLineNumbers title=UnwrapNestedRefs
-import { ref } from 'vue'
-
-const child = ref({ name: 'hello' })
-
-const parent = reactive({
-  child,
-})
-
-// highlight-next-line
-parent.child.name = 'world'
-console.log(child.value.name) // 'world'
-
-// highlight-next-line
-child.value.name = 'hello again'
-console.log(parent.child.name) // 'hello again'
-```
-
-It may have confused you at first glance, but don't panic yet! It's actually very easy to understand — it works in the same way as how object works in JavaScript.
-
-In JavaScript, putting one object into another object will kind of "connect" them together because objects are being passed by reference. For example:
-
+A common mistake developers make is they take primitive values out from reactive objects, and assigning them to some other variables, hoping they will stay "connected". The most common example is destructing assignment:
 
 ```ts showLineNumbers
-const child = {
+const user = reactive({
   name: 'hello',
-}
+  age: '5',
+})
 
-const parent = {
-  child,
-}
-
-console.log(child) // { name: 'hello' }
-console.log(parent) // { child: { name: 'hello' } }
-
-// highlight-next-line
-child.name = 'world' // Or parent.child.name = 'world'
-
-console.log(child) // { name: 'world' }
-console.log(parent) // { child: { name: 'world' } }
+const { name: myName, age: myAge } = user
 ```
 
-We know that "unwrap" is just to extract the `value` out from `Ref`; since `child.value` is an object, the idea of `UnwrapNestedRefs<T>` is very similar to "peel" the `Ref` off the variable. So in the example of UnwrapNestedRefs, `parent.child` will directly points to `child.value` instead of `child` itself.
+We may think to ourselves "Okay, so now `myName` and `myAge` are connected to `user`", and proceed to mutate `user.name` and `user.age`:
 
-## Props is Reactive
+```ts showLineNumbers
+import { reactive } from 'vue'
 
-Have you ever wonder why component re-renders whenever `props` changes? The answer is simple — because `props` is a reactive variable! We can verify that by using the [`isReactive`](https://vuejs.org/api/reactivity-utilities.html#isreactive) utility function in Vue 3:
+const user = reactive({
+  name: 'hello',
+  age: '5',
+})
+
+const { name: myName, age: myAge } = user
+
+// highlight-next-line
+user.name = 'world'
+// highlight-next-line
+user.age = 10
+
+console.log(user.name, user.age) // 'world' 10 
+console.log(myName, myAge) // 'hello' 5
+```
+
+As you can see, `myName` and `myAge` are not effected by the changes we made to `user`, and vice versa.
+
+*So there's a problem when using destructing assignment with `reactive`?*
+
+Kind of, but not really. The same thing would happen even if we write `const myName = user.name` (because that's exactly what destructing assignment do), so it's not quite correct to say destructing assignment causes the problem.
+
+*Okay, so why is this happening then?*
+
+The answer is actually very simple. All we have to do is recapping how variable works in JavaScript, and you'll know it right away!
+
+in JavaScript, variables are either being **passed by value** or being **passed by reference**. For primitive values, they are always being **passed by value**, and non-primitive values are always being **passed by reference**. So by writing `const { name: myName, age: myName } = user`, we're actually saying:
+
+```js
+const myName = user.name
+const myAge = user.age
+```
+
+You see the problem already, don't you? Because `user.name` (string) and `user.age` (number) are both **primitive values**, they are being **passed by value** when declaring `myName` and `myAge`; that means `myName` and `myAge` will be new variables with new memory addresses, thus they "disconnect" from `user`.
+
+So as long as the target value is non-primitive, you can use as many destructing assignment as you want without having any problem. For example:
+
+```ts showLineNumbers
+import { reactive } from 'vue'
+
+const user = reactive({
+  name: 'hello',
+  age: '5',
+  child: {
+    name: 'I am child'
+  }
+})
+
+const { child } = user
+
+// highlight-next-line
+child.name = 'world'
+
+console.log(user.child.name) // 'world'
+console.log(child.name) // 'world'
+```
+
+The example above demonstrate the common misconception that everything we get from reactive object is "connected" to the source, but it's acutally not. The reason why mutating `child` would effect `user.child` is because `user.child`, a non-primitive value, is being passed to `child` by reference.
+
+### How to Keep Reactivity
+
+Is there a way that we can use the convenient destructing assignment syntax with `reactive`, but keeping reactivity at the same time? Yes, there is! The closest we can get is to use [`toRef`](https://vuejs.org/api/reactivity-utilities.html#toref) and/or [`toRefs`](https://vuejs.org/api/reactivity-utilities.html#torefs) functions.
+
+`toRef` and `toRefs` do exactly what they say — turn something into [`Ref`](./ref-and-ref#what-is-a-ref). They're almost the same, but in a nutshell, `toRefs` = a lot of `toRef`. For example,
+
+```ts showLineNumbers
+import { reactive, toRef, toRefs } from 'vue'
+
+const user = reactive({
+  name: 'hello',
+  age: '5',
+  child: {
+    name: 'I am child'
+  }
+})
+
+// We can either do this:
+const myName = toRef(user, 'name')
+const myAge = toRef(user, 'age')
+
+// or:
+const { name: myName, age: myAge } = toRefs(user)
+```
+
+Most of the time we'll just use `toRefs` because it's slightly more convenient than `toRef`, but the results are the same. The returned type of `toRef` will be `Ref<T>`, and is connected to the source property. By using `toRef` and/or `toRefs`, we don't have to worry about if a property is primitive anymore. Just turn it into a `Ref`, and everything would work as expected!
+
+## Props are Reactive!
+
+One thing worth mentioning is, the value returned of [`defineProps`](https://vuejs.org/api/sfc-script-setup.html#defineprops-defineemits) is actually a reactive object! We can verify this by using [`isReactive`](https://vuejs.org/api/reactivity-utilities.html#isreactive) function:
 
 ```ts showLineNumbers
 import { isReactive } from 'vue'
 
 const props = defineProps<{
   name: string
+  age: number
 }>()
 
 console.log(isReactive(props)) // true
 ```
+
+So it's perfectly fine to treat props as a value returned by `reactive` function in `<script>`. We'll talk more about props when we get to [Props](./props).
