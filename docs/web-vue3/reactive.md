@@ -229,7 +229,7 @@ You must learn [`Ref`](./ref-and-ref#what-is-a-ref) before getting into this sec
 
 `UnwrapNestedRefs<T>` is a **type** that pretty much explains itself — unwrap all of the nested `Ref`s! To be more specific, `UnwrapNestedRefs` means to **recursively unwrap all `Ref`s in a plain object** (in case you're new to TypeScript, `<T>` is the [Generic Type](https://www.typescriptlang.org/docs/handbook/2/generics.html) syntax of TypeScript; it's fine to ignore it for now.)
 
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@
 
 ## The Reactivity of Reactive Object
 
@@ -314,7 +314,7 @@ The example above demonstrate the common misconception that everything we get fr
 
 Is there a way that we can use the convenient destructing assignment syntax with `reactive`, but keeping reactivity at the same time? Yes, there is! The closest we can get is to use [`toRef`](https://vuejs.org/api/reactivity-utilities.html#toref) and/or [`toRefs`](https://vuejs.org/api/reactivity-utilities.html#torefs) functions.
 
-`toRef` and `toRefs` do exactly what they say — turn something into a [`Ref`](./ref-and-ref#what-is-a-ref). These two functions are almost the same, but in a nutshell, **`toRefs` = a lot of `toRef`**. For example,
+`toRef` and `toRefs` do exactly what they say — turn something into a [`Ref`](./ref-and-ref#what-is-a-ref). These two functions are almost the same, but in a nutshell, **`toRefs` = a lot of `toRef`**. For example:
 
 ```ts showLineNumbers
 import { reactive, toRef, toRefs } from 'vue'
