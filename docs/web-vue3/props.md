@@ -7,11 +7,11 @@ sidebar_position: 6
 
 ## What are Props?
 
-Props are properties coming from parent component. These properties are stored in an **readonly** object when using [`defineProps`](https://vuejs.org/api/sfc-script-setup.html#defineprops-defineemits).
+Props are properties coming from parent component. These properties are stored in a **readonly** object returned by [`defineProps`](https://vuejs.org/api/sfc-script-setup.html#defineprops-defineemits).
 
-For example, if you have this in a component called `ChildComponent`:
+For example, if you do this in a component called `ChildComponent`:
 
-```ts ChildComponent.vue
+```ts title=ChildComponent.vue showLineNumbers
 const props = defineProps<{
   name: string
   age: number
@@ -20,27 +20,29 @@ const props = defineProps<{
 
 Then in the parent you could use it like this:
 
-```html
-<ChildComponent
-  :name="'hello'"
-  :age="5"
-/>
+```html title="ParentComponent.vue" showLineNumbers
+<template>
+  <ChildComponent
+    :name="'hello'"
+    :age="5"
+  />
+</template>
 ```
 
-If you try to mutate a property in props, you'll see a warning in console:
+If you try to mutate a property in props from child components, you'll see a warning in console:
 
-```ts ChildComponent.vue
+```ts title=ChildComponent.vue showLineNumbers
 const props = defineProps<{
   name: string
   age: number
 }>()
 
-props.name += 'hello' // [Vue warn] Set operation on key "name" failed: target is readonly.[object Object]
+props.name += 'hello' // [Vue warn] Set operation on key "name" failed: target is readonly.
 ```
 
-But be careful! The readonly constraint is only applied to **primitve values**! If the property is a non-primitive value, the warning won't show up when you mutate those props:
+But be careful, the readonly constraint is only applied to **primitve values** in props! If the property is a non-primitive value, the warning won't show up when you mutate those props:
 
-```ts ChildComponent.vue
+```ts title=ChildComponent.vue showLineNumbers
 const props = defineProps<{
   user: {
     name: string
@@ -50,19 +52,21 @@ const props = defineProps<{
 props.user.name += 'hello' // This would work without warning!
 ```
 
-You should **always avoid directly mutating props in child components** regardless of the type, so that the data flow of your components stays one-way (from top to bottom). If you have to mutate props in child components, you should use [`events`](https://vuejs.org/guide/components/events.html#component-events).
+You should **always avoid directly mutating props in child components** regardless of the type, so that the data flow of your components stays one-way (from top to bottom). If you have to mutate props in child components, you should use [`events`](https://vuejs.org/guide/components/events.html#component-events). The main concept is, parent will be the one to mutate those values; all children do is to "trigger" those changes.
 
 ## Props are Reactive
 
-Have you ever wonder why your component re-renders whenever props changes? That's because props are reactive! (we've mentioned this before in [`reactive`](./reactive#props-are-reactive).)
+Have you ever wonder why your component re-renders whenever props changes? That's because props are reactive!
 
-## How to Receive `Ref` As Props in Child Components?
+We've mentioned this before in [`reactive`](./reactive#props-are-reactive). Make sure to learn all things about `reactive` if you haven't!
+
+## How to Receive `Ref` As Props Without Unwrap?
 
 **You don't!** 
 
 The only reason you want to do this is because you're in a situation that **some properties in your props are not reactive for some reason**.
 
-You're annoyed because Vue [auto-unwrap](./ref-and-ref#ref-in-template) `Ref` for you, so you try to find a way to bypass the auto-unwrap mechanics. This way child components can receive the whole `Ref` as props without unwrapping.
+You're annoyed because Vue [auto-unwrap](./ref-and-ref#ref-in-template) `Ref` for you, so you try to find a way to bypass the auto-unwrap mechanics. This way child components can receive the whole `Ref` as props without being unwrapped.
 
 We have to say this again, **you don't**!  Seriously, don't do this.
 
@@ -79,7 +83,7 @@ If that's the case, that means you've accidentally broke the reactivity of props
 
   1. Use a non top-level `Ref` as the value of props, for example:
 
-  ```html ParentComponent.vue
+  ```html title=ParentComponent.vue showLineNumbers
   <template>
     <Child :name="user.name" />
   </template>
@@ -95,7 +99,7 @@ If that's the case, that means you've accidentally broke the reactivity of props
 
   2. Use a function to return `Ref`, for example:
 
-  ```html ParentComponent.vue
+  ```html title=ParentComponent.vue showLineNumbers
   <template>
     <Child :name="getName()" />
   </template>
