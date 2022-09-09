@@ -103,14 +103,16 @@ If you're using TypeScript, you'll probably see an error in your IDE even before
 
 ## Under the Hood of `ref`
 
-So what does `ref` actually do? Well, that depends on the type of the argument we send to `ref`. The returned type of `ref` is guaranteed to be a `Ref`, what really matters is what `value` is in the `Ref`.
+So what does `ref` actually do? That depends on the type of the argument we send to `ref`. The returned type of `ref` is guaranteed to be a `Ref`, what really matters is what `value` is in the `Ref`.
 
-- If the arugment is a [primitive value](https://developer.mozilla.org/en-US/docs/Glossary/Primitive), `ref` will directly use it as the `value` of the `Ref`, and "track" any changes we made to it.
-- Otherwise `ref` would call another function called [`reactive`](./reactive.md) internally, and use the returned value from `reactive` as the `value` of the `Ref`. We'll talk more about `reactive` when we get to it, just don't worry about it for now.
+- If the arugment is a [primitive value](https://developer.mozilla.org/en-US/docs/Glossary/Primitive), `ref` will use it as the `value` of the `Ref`, and track any changes we made to it.
+- Otherwise `ref` would called [`reactive`](./reactive.md) internally, and use the returned value from `reactive` as the `value` of `Ref`.
+
+We'll talk more about this when we get to [`ref` VS `reactive`](./ref-vs-reactive#how-ref-works), just don't worry about it for now.
 
 :::info
 
-Although the returned value of `ref` seems to be a plain object of type `Ref` (e.g. `{ value: 'hello' }`), it's actually not! Instead, it's an instance of a class called `RefImpl` which has only one public property `value`. So from user's perspective (you and me, the developers), it's okay to just see `RefImpl` as `Ref` because they expose exactly the same public property.
+Although the returned value of `ref` seems to be a plain object of type `Ref` (e.g. `{ value: 'hello' }`), it's actually not! Instead, it's an instance of a class called `RefImpl` which has only one public property `value`. So from user's perspective (you and me, the developers), it's okay to just see `RefImpl` as `Ref` because they expose the same property.
 
 :::
 
@@ -129,7 +131,7 @@ console.log(myName === yourName) // true
 
 Thus, to get the value of `yourName`, all we need to do is using `yourName.value`, just like how we get value from `myName`. The reason is simple — because they're the same object!
 
-```ts
+```ts showLineNumbers
 import { ref } from 'vue'
 
 const myName = ref('hello')
@@ -210,7 +212,7 @@ const user = {
 
 The output HTML of this component is:
 
-```html
+```html showLineNumbers
 <div>
   <h1>A: function toFixed() { [native code] }</h1>
   <h2>B: </h2>

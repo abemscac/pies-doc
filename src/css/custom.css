@@ -30,3 +30,7 @@
   --ifm-color-primary-lightest: #4fddbf;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
+
+p + video {
+  margin-top: calc(-0.25 * var(--ifm-paragraph-margin-bottom));
+}
