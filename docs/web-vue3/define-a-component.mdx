@@ -64,7 +64,7 @@ But don't get me wrong, Options API is still a great tool! It's still a valid wa
 
 - Make sure to check out the new, awesome [`emits`](https://vuejs.org/guide/components/events.html#declaring-emitted-events) option in Vue 3!
 
-- There's also a new [`defineComponent`](https://vuejs.org/api/general.html#definecomponent) helper function in Vue 3. If you would like to see some type interfaces while building components, you can use it like this:
+- There's also a new [`defineComponent()`](https://vuejs.org/api/general.html#definecomponent) helper function in Vue 3. If you would like to see some type interfaces while building components, you can use it like this:
 
   <!-- prettier-ignore -->
   ```html title="MyComponent.vue" showLineNumbers
@@ -136,7 +136,7 @@ onMounted(() => {
 
 :::info
 
-You may have noticed that we're using `defineProps` and `defineEmits` without importing them, this is because those functions are **compiler macros**. Vue will actually shows a warning if you import and use them in a component.
+You may have noticed that we're using `defineProps()` and `defineEtmis()` without importing them, this is because those functions are **compiler macros**. Vue will actually shows a warning if you import and use them in a component.
 
 :::
 
@@ -192,9 +192,9 @@ Another option is to use the new [`setup()`](https://vuejs.org/api/composition-a
 
 As you can see, it's almost the same with `<script setup>`, but it comes with some constraints:
 
-1. `props` must be defined using `props` option instead of `defineProps` function, because `defineProps` only works in `<script setup>`.
+1. `props` must be defined using `props` option instead of `defineProps()`, because `defineProps()` only works in `<script setup>`.
 
-2. Emitted events must be defined using `emits` option instead of `defineEmits` function, because `defineEmits` only works in `<script setup>`.
+2. Emitted events must be defined using `emits` option instead of `defineEmits()`, because `defineEtmis()` only works in `<script setup>`.
 
 3. `props` can be directly accessed in `<template>`, but variables declared in `setup()` must be returned in the function to make them accessible in `<template>`.
 
@@ -204,7 +204,7 @@ If you're using SFC, we recommend you to just use `<script setup>` instead becau
 
 :::caution
 
-Since the `setup()` function is defined in an object (Options API), things like `data()`, `computed`, `methods`, `mounted()` could still work if they are defined.
+Since the `setup()` is defined in an object (Options API), things like `data()`, `computed`, `methods`, `mounted()` could still work if they are defined.
 
 For example, the following component will work without any warning/error:
 
