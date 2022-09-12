@@ -8,13 +8,13 @@ import Video from '@site/src/components/Video'
 
 ## What is `reactive()`
 
-`reactive()` is a **function** that takes a **non-primitive** value as argument, and returns a **"reactive" (proxy) variable** based on that value **without mutating the argument**; if the argument is a plain object, then the type of returned value will be `UnwrapRefSimple<T>`.
+`reactive()` is a **function** that takes a **non-primitive** value as argument, and returns a **"reactive" (proxy) variable** based on that value **without mutating the argument**; if the argument is a plain object, then the type of returned value will be `UnwrapNestedRef<T>`.
 
 This short definition actually sums it up very well, but it might have brought so many questions to your head:
 
 - What is a **non-primitive value**?
 - What is a **reactive** variable? Is there any difference betweeen normal variables and reactive variables?
-- What is `UnwrapRefSimple<T>`?
+- What is **`UnwrapNestedRef<T>`**?
 
 We'll try to explain these stuff in this chapter. But before doing that, let's take a look at a simple example of `reactive()`:
 
@@ -64,47 +64,31 @@ What are **non-primitive values**? Simply put, anything that is not a primitive 
 
 If you try to use `reactive()` on primitive value like `0`, you'll see a warning in console that says `value cannot be made reactive: 0` in development mode.
 
-
 ```ts showLineNumbers
 import { reactive } from 'vue'
 
 const count = reactive(0) // value cannot be made reactive: 0
 ```
 
-This is because `reactive()` is only designed for **non-primitive** values. You can think of the implementation of `reactive()` to be something similar to the following pseudocode:
-
-```ts showLineNumbers
-const reactive = (arg) => {
-  if (arg is primitive value) {
-    if (is in development mode) {
-      console.warn(`value cannot be made reactive: ${String(arg)}`)
-    }
-    return arg
-  }
-  return reactive version of arg
-}
-```
-
-The above pseudocode is not quite correct, but you get the idea. We'll explain more in detail in [`ref()` VS `reactive()`](./ref-vs-reactive#how-reactive-works), just don't worry too much at the moment and go on.
-
-As you can see, `reactive()` will directly returns the argument when the argument is a primitive value. This means `const count = reactive(0)` will do the same thing as `const count = 0` due to how `reactive()` works internally. Even if you declare it using `let count = reactive(0)`, your component will still not re-render when `count` changes, because `count` is nothing more than a normal `number`.
+This is because `reactive()` is only designed for **non-primitive** values. If the argument is a primitive value, `reactive()` will just returns it without doing anything. This means `const count = reactive(0)` will do the same thing as `const count = 0` due to how `reactive()` works internally. Even if you declare it using `let count = reactive(0)`, your component will still not re-render when `count` changes, because `count` is nothing more than a normal `number`.
 
 :::info
 
-If you really need reactive primitive values, you should use [`ref()`](./ref-and-ref#what-is-ref).
+- If you really need reactive primitive values, you should use [`ref()`](./ref-and-ref#what-is-ref).
+- We'll talk more about how `reactive()` works in [`ref()` vs `reactive()`](./ref-vs-reactive#how-reactive-works).
 
 :::
 
-## Normal Variable VS Reactive Variable
+## Normal Variable vs Reactive Variable
 
-What's the difference between a normal variable and a reactive variable? To get straight to the point:
+What's the difference between a normal variable and a reactive variable? The main difference is:
 
 - A **reactive variable** will cause components to re-render when value changes.
 - A **non-reactive variable** will **not** cause components to re-render when value changes.
 
 Let's take a look at an example of **reactive variable**:
 
-```html showLineNumbers title="Reactive variable"
+```html title="Reactive variable" showLineNumbers
 <template>
   <div>
     <h1>{{ user.name }} is {{ user.age }} years old</h1>
@@ -113,17 +97,17 @@ Let's take a look at an example of **reactive variable**:
 </template>
 
 <script setup>
-import { reactive } from 'vue'
+  import { reactive } from 'vue'
 
-const user = reactive({
-  name: 'hello',
-  age: 5,
-})
+  const user = reactive({
+    name: 'hello',
+    age: 5,
+  })
 
-const getOld = () => {
-  user.age++
-  console.log(user.age)
-}
+  const getOld = () => {
+    user.age++
+    console.log(user.age)
+  }
 </script>
 ```
 
@@ -133,7 +117,7 @@ The logic of this component is very simple — every time we click "Get Old", `u
 
 Nice and simple, now let's take a look at **non-reactive variable**:
 
-```html showLineNumbers title="Non-reactive variable"
+```html title="Non-reactive variable" showLineNumbers
 <template>
   <div>
     <h1>{{ user.name }} is {{ user.age }} years old</h1>
@@ -142,15 +126,15 @@ Nice and simple, now let's take a look at **non-reactive variable**:
 </template>
 
 <script setup>
-const user = {
-  name: 'hello',
-  age: 5,
-}
+  const user = {
+    name: 'hello',
+    age: 5,
+  }
 
-const getOld = () => {
-  user.age++
-  console.log(user.age)
-}
+  const getOld = () => {
+    user.age++
+    console.log(user.age)
+  }
 </script>
 ```
 
@@ -164,7 +148,7 @@ So why is this happening? This happens because Vue is designed in such way that 
 
 But be careful, that doens't mean the changes being made to a non-reactive variable will never be reflected on the screen. Take a look at the following example:
 
-```html showLineNumbers title="Both reactive and non-reactive variables"
+```html title="Both reactive and non-reactive variables" showLineNumbers
 <template>
   <div>
     <h1>{{ user.name }} is {{ age }} years old</h1>
@@ -174,21 +158,21 @@ But be careful, that doens't mean the changes being made to a non-reactive varia
 </template>
 
 <script setup>
-import { reactive } from 'vue'
+  import { reactive } from 'vue'
 
-const user = reactive({
-  name: 'hello',
-})
+  const user = reactive({
+    name: 'hello',
+  })
 
-let age = 5
+  let age = 5
 
-const changeName = () => {
-  user.name += 'o'
-}
+  const changeName = () => {
+    user.name += 'o'
+  }
 
-const getOld = () => {
-  age++
-}
+  const getOld = () => {
+    age++
+  }
 </script>
 ```
 
@@ -217,68 +201,6 @@ So When using Vue 3, you should **always avoid such pattern** because it is more
 
 - Always make a variable reactive (by using `ref()` or `reactive()`) if the value **will change**, and **users must be informed of that change** on the screen.
 - Otherwise just make it non-reactive.
-
-## What is `UnwrapRefSimple<T>`
-
-:::caution Prerequisites
-
-You must learn [`Ref<T>`](./ref-and-ref#what-is-reft) before getting into this section.
-
-:::
-
-`UnwrapRefSimple<T>` is a **type** that pretty much explains itself — unwrap all of the nested `Ref<T>`s.
-
-To be more specific, `UnwrapRefSimple` means to **recursively unwrap all nested `Ref<T>`s in a plain object**. Nested `Ref<T>` means a `Ref<T>` that's wrapped in another `Ref<T>`.
-
-For example, if we have an object with interface like this:
-
-```ts showLineNumbers
-import { Ref } from 'vue'
-
-interface IUser {
-  name: string
-  shippingInfo: Ref<{
-    phoneNumber: string
-    address: Ref<{
-      line1: string
-      line2: string
-    }>
-  }>
-}
-
-const user: IUser = {
-  // ...
-}
-```
-
-In this example, the only nested `Ref<T>` is the `address` inside `shippingInfo`. Therefore:
-
-- To access `phoneNumber`, we use `user.shippingInfo.value.phoneNumber`.
-- To access `line1`, we'll have to use `user.shippingInfo.value.address.line`. Notice there's no `.value` behind `address` because `address` is a nested `Ref<T>`, it is going to be unwrapped.
-
-A few more things to keep in mind:
-
-- The unwrap mechanism of `reactive()` only applies to **plain object**. This means if a `Ref<T>` is stored in anything rather than a `Ref<T>`, it will not be unwrapped by `reactive()`. For example,
-
-```ts
-import { ref, reactive } from 'vue'
-
-const userA = ref({
-  name: 'hello',
-})
-
-const userB = ref({
-  name: 'world'
-})
-
-const users = reactive([userA, userB])
-```
-
-```ts
-import { ref } from 'vue'
-```
-
-- A `Ref<T>` does not necessary have to be wrapped in another `Ref<T>`
 
 ## The Reactivity of Reactive Object
 
@@ -312,17 +234,17 @@ user.name = 'world'
 // highlight-next-line
 user.age = 10
 
-console.log(user.name, user.age) // 'world' 10 
+console.log(user.name, user.age) // 'world' 10
 console.log(myName, myAge) // 'hello' 5
 ```
 
 As you can see, the changes we made to `user` did not effect `myName` and `myAge` at all (and vice versa!).
 
-*So there's a problem when using destructing assignment with `reactive()`?*
+_So there's a problem when using destructing assignment with `reactive()`?_
 
 Kind of, but not really. The same thing would happen even if we write `const myName = user.name` (because that's exactly what destructing assignment do), so it's not quite correct to say destructing assignment causes the problem.
 
-*Okay, so why is this happening then?*
+_Okay, so why is this happening then?_
 
 The answer is actually very simple. All we have to do is to recap how variable works in JavaScript, and you'll know it right away!
 
@@ -344,8 +266,8 @@ const user = reactive({
   name: 'hello',
   age: '5',
   child: {
-    name: 'I am child'
-  }
+    name: 'I am child',
+  },
 })
 
 const { child } = user
@@ -357,7 +279,7 @@ console.log(user.child.name) // 'world'
 console.log(child.name) // 'world'
 ```
 
-The example above demonstrate the common misconception that everything we get from reactive object is "connected" to the source, but it's acutally not. The reason why mutating `child` would effect `user.child` is because `user.child` is a non-primitive value, which means it is being passed to `child` by reference.
+The example above demonstrates the common misconception that everything we get from reactive object is "connected" to the source, but it's acutally not. The reason why mutating `child` would effect `user.child` is because `user.child` is a non-primitive value, which means it is being passed to `child` by reference.
 
 ### How to Keep Reactivity
 
@@ -372,8 +294,8 @@ const user = reactive({
   name: 'hello',
   age: '5',
   child: {
-    name: 'I am child'
-  }
+    name: 'I am child',
+  },
 })
 
 // We can either do this:
@@ -402,3 +324,96 @@ console.log(isReactive(props)) // true
 ```
 
 So it's perfectly fine to treat props as a value returned by `reactive()` in `<script>`. We'll talk more about props when we get to [Props](./props).
+
+## What is `UnwrapNestedRef<T>`
+
+:::caution Prerequisites
+
+You must learn [`Ref<T>`](./ref-and-ref#what-is-reft) before getting into this section.
+
+:::
+
+`UnwrapNestedRef<T>` is a somewhat complicated **type** that pretty much explains itself — unwrap all of the nested `Ref<T>`s.
+
+To be honest, this may not be a very important topic because for most of the time, your IDE would have evaluated the output type for you; you probably didn't even notice the existence of this thing.
+
+:::note
+
+If you find this section very confusing, don't worry, it's totally fine to skip it! You'll do just fine without knowing anything about it.
+
+:::
+
+To get straight to the point, there's actually an unwrap mechanism of `Ref<T>` built inside `reactive()`. The following pseudocode demonstrates the simplified (yet still complicated) definition of `UnwrapNestedRef<T>`:
+
+```ts showLineNumbers
+type UnwrapNestedRef<T> = (
+  if (T is Ref) {
+    return T
+  } else {
+    return UnwrapRef<T>
+  }
+)
+
+type UnwrapRef<T> = (
+  if (T is plain object) {
+    return { for key in T: UnwrapRef<T> }
+  } else if (T is Array) {
+    return [for key in T: UnwrapRef<T[key]>]
+  } else {
+    return T
+  }
+)
+```
+
+### Nestedly Unwrap a Plain Object
+
+If the argument is a plain object, `reactive()` will return a new, unwrapped object based on that argument.
+
+For example, if we have an object like this:
+
+```ts showLineNumbers
+import { reactive } from 'vue'
+
+const user = reactive({
+  shippingInfo: ref({
+    phoneNumber: '123',
+  }),
+})
+
+console.log(user.shippingInfo.value.phoneNumber) // This will cause an error!
+```
+
+To get the value of `phoneNumber` from `user`, it's very natural to think that we have to use `user.shippingInfo.value.phoneNumber` because `user.shippingInfo` is a `Ref<T>`. But if you try to run that line of code, you'll get an error that says `TypeError: Cannot read properties of undefined (reading 'phoneNumber')`.
+
+This happens because `reactive()` is implemented in such way that it **recursively** unwraps all the `Ref<T>`s in a plain object. So to get the value of `phoneNumber` from `user`, we should use `user.shippingInfo.phoneNumber`. Notice that there's no `.value` after `shippingInfo`.
+
+**Recursively** means the `Ref<T>` does not necessarily have to be the (top-level) property of the object being passed to `reactive()` to be unwrapped; it will get unwrapped as long as `reactive()` appears in one of its' ancestors. For eaxmple:
+
+```ts showLineNumbers
+import { reactive } from 'vue'
+
+const user = reactive({
+  shippingInfo: {
+    phoneNumber: '123',
+    address: ref({
+      line1: 'hello',
+      line2: 'world',
+    }),
+  },
+})
+
+console.log(user.shippingInfo.address.line1) // 'hello'
+```
+
+In this example, even if `address` is not a (top-level) property of the object being passed to `reactive()`, it will still get unwrapped by `reactive()`. So to get the value of `line1` from `user`, we'll have to use `user.shippingInfo.address.line1`. Notice that there's no `.value` after `address`.
+
+### Nestedly Unwrap an Array
+
+If the argument is an array, `reactive()` will return a new array consists of unwrapped elements. You can simply think of the unwrap logic as something similar to the following pseudocode:
+
+```ts showLineNumbers
+const newArray = array.map((element) => unwrapNestedly(element))
+return newArray
+```
+
+The `unwrapNestedly()` will run the unwrap logic we described in [Nestedly Unwrap a Plain Object](#nestedly-unwrap-a-plain-object); if the element is not a plain object, it'll use it as is without doing anything.

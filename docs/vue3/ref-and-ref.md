@@ -85,7 +85,7 @@ console.log(somebody.value) // { name: 'world', age: 5 }
 
 :::info
 
-Although the returned value of `ref()` seems to be a plain object like `{ value: 'hello' }`, it's actually not! Instead, it's an instance of a class called `RefImpl` which has only one public property `value`. So from user's perspective (you and me, the developers), it's okay to just see `RefImpl` as `Ref<T>` because they expose the same property. Also, `ref()` does not just blindly wrap value into `Ref<T>` structure; we'll explain more in detail in [`ref()` VS `reactive()`](./ref-vs-reactive.md).
+Although the returned value of `ref()` seems to be a plain object like `{ value: 'hello' }`, it's actually not! Instead, it's an instance of a class called `RefImpl` which has only one public property `value`. So from user's perspective (you and me, the developers), it's okay to just see `RefImpl` as `Ref<T>` because they expose the same property. Also, `ref()` does not just blindly wrap value into `Ref<T>` structure; we'll explain more in detail in [`ref()` vs `reactive()`](./ref-vs-reactive.md).
 :::
 
 Great, we've learned enough about how `Ref<T>` works in `<script>` for now. Let's see how `Ref<T>` works in `<template>`!
@@ -185,4 +185,4 @@ Great, now you know how `Ref<T>` works in `<template>`! This is especially impor
 
 `ComputedRef<T>` is the type of value returned by [`computed()`](https://vuejs.org/api/reactivity-core.html#computed).
 
-Since `ComputedRef<T>` extends `Ref<T>`, they share pretty much the same rule in `<script>` and `<template>`. For example, top-level `ComputedRef<T>` also gets auto-unwrapped in `<template>`.
+Since `ComputedRef<T>` extends `Ref<T>`, they work pretty much the same way in `<script>` and `<template>`. For example, `value` is the only public property exposed by `ComputedRef<T>`, and top-level `ComputedRef<T>` also gets auto-unwrapped in `<template>`.
