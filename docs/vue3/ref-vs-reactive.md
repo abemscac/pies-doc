@@ -1,9 +1,9 @@
 ---
-title: ref() VS reactive()
+title: ref() vs reactive()
 sidebar_position: 5
 ---
 
-# `ref()` VS `reactive()`
+# `ref()` vs `reactive()`
 
 :::caution Prerequisites
 
@@ -27,7 +27,7 @@ In order to know how to choose between `ref()` and `reactive()`, it's essential 
 
 ### How `ref()` Works
 
-The following pseudocode gives us a good concept of how `ref()` works in Vue 3. Although it is extremely simplified and rearranged, we can still get some ideas of what's going on inside `ref()`:
+The following pseudocode gives us a decent concept of how `ref()` works in Vue 3. Although it is extremely simplified and rearranged, we can still get some ideas of what's going on inside `ref()`:
 
 ```ts showLineNumbers
 import { reactvie, Ref } from 'vue'
@@ -46,17 +46,18 @@ class RefImp<T> implements Ref<T> {
   constructor(arg: T) {
     if (arg is primitive value) {
       this.value = arg
-      track(this.value)
     } else {
       this.value = reactive(arg)
     }
+    track(this.value)
   }
 }
 ```
 
 - As we've mentioned before, `RefImpl` is a class with only one public property `value`.
-- If the argument is a primitive value, `RefImpl` will use it as `this.value` and track the changes so that reactivity can be fulfilled.
-- If the argument is not a primitive value, `RefImpl` will just call `reactive()` and use the returned value as `this.value`.
+- If the argument is a primitive value, `RefImpl` will use it as `this.value`.
+- If the argument is not a primitive value, `RefImpl` will just call `reactive()` and use the returned value as `this.value`. Therefore, we have no choice but to learn `reactive()` as well if we want to know `ref()` better.
+- The `track(this.value)` actually works very differently than the source code; but the point is, `RefImpl` will "track" the changes of `this.value` so that reactivity can be fulfilled.
 
 ### How `reactive()` Works
 
@@ -72,32 +73,34 @@ function reactive(arg) {
   } else if (arg is reactive OR arg is function) {
     return arg
   } else {
-    return reactive version of arg
+    const unwrappedValue = unwrapNestedly(arg)
+    return createReactiveValue(unwrappedValue)
   }
 }
 ```
 
 - As we've mentioned before, `reactive()` only works with non-primitive values.
-- `reactive()` doesn't work with functions, even if functions are not primitive values.
-- The "reactive version of arg" actually means a `Proxy` object.
+- Even if functions are non-primitive values, `reactive()` still doesn't work with it; it directly returns it.
+- `unwrapNestedly()` is the same unwrap mechanism we've mentioned in [`reactive()`](./reactive#what-is-unwrapnestedreft)
+- `createReactiveValue()` means to create a new [`Proxy`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) object.
 
 ## Explanation
 
-Great, now you know how `ref()` and `reactive()` actually work! Now it's time to dive into the most important part — explain why we choose `ref()` or `reactive()` over the other based on different type of argument.
+After learning how `ref()` and `reactive()` actually work, we can finally dive into the most important part — explain why we choose `ref()` or `reactive()` over the other based on different type of argument.
 
 ### Primitive Values
 
 If the argument is a primitive value, then `ref()` would be the best choice because `reactive()` only works with non-primitive values.
 
-Of course we can just wrap the value into an object like `const age = reactive({ someRandomKey: 5 })`, but... why? Just use `ref()` and you'll get the same result!
+Of course we can wrap the value into an object like `const age = reactive({ someRandomKey: 5 })` to make it work with `reactive()`, but... why? Just use `ref()` and you'll get the same result!
 
 ### Functions
 
-If the argument is a function, you probably don't want it to be reactive. Function is something that **should not be rendered** on the screen, and it **should not be used to represent the state of a component**, so making it reactive is meaningless.
+If the argument is a function, you probably don't want it to be reactive. Function is something that **should not be rendered** on the screen, and it **should not be used to represent the state of a component**, so making it reactive is just meaningless.
 
-A common use case of assigning functions to variables is **event subscription/registration**. It's those things we register when component mounts, and we remove them before component unmounts.
+However, there are some cases where we do want to assign functions to variables. For example, **event subscription/registration**. It's those things we register when component mounts, and we remove them before component unmounts.
 
-Take the [Navigation Guards](https://router.vuejs.org/guide/advanced/navigation-guards.html#global-before-guards) of [Vue Router](https://router.vuejs.org/) for example:
+Take the [Navigation Guards](https://router.vuejs.org/guide/advanced/navigation-guards.html#global-before-guards) of [Vue Router](https://router.vuejs.org/) as an example:
 
 ```ts showLineNumbers
 import { onMounted, onBeforeUnmount } from 'vue'

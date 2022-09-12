@@ -10,7 +10,7 @@ Props are properties coming from parent component. These properties are stored i
 
 For example, if you do this in a component called `ChildComponent`:
 
-```ts title=ChildComponent.vue showLineNumbers
+```ts title="ChildComponent.vue" showLineNumbers
 const props = defineProps<{
   name: string
   age: number
@@ -30,7 +30,7 @@ Then in the parent you could use it like this:
 
 If you try to mutate a property in props from child components, you'll see a warning in console:
 
-```ts title=ChildComponent.vue showLineNumbers
+```ts title="ChildComponent.vue" showLineNumbers
 const props = defineProps<{
   name: string
   age: number
@@ -41,7 +41,7 @@ props.name += 'hello' // [Vue warn] Set operation on key "name" failed: target i
 
 But be careful, the readonly constraint is only applied to **primitve properties** in props. If the property is a non-primitive value, the warning won't show up when you mutate those props:
 
-```ts title=ChildComponent.vue showLineNumbers
+```ts title="ChildComponent.vue" showLineNumbers
 const props = defineProps<{
   user: {
     name: string
@@ -82,7 +82,7 @@ If that's the case, that means you've accidentally broke the reactivity of props
 
   1. Use a non top-level `Ref<T>` as the value of props, for example:
 
-  ```html title=ParentComponent.vue showLineNumbers
+  ```html title="ParentComponent.vue" showLineNumbers
   <template>
     <Child :name="user.name" />
   </template>
@@ -98,7 +98,7 @@ If that's the case, that means you've accidentally broke the reactivity of props
 
   2. Use a function to return `Ref<T>`, for example:
 
-  ```html title=ParentComponent.vue showLineNumbers
+  ```html title="ParentComponent.vue" showLineNumbers
   <template>
     <Child :name="getName()" />
   </template>

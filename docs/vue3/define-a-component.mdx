@@ -6,19 +6,15 @@ import Badge from '@site/src/components/Badge'
 
 # Define a Component
 
-Learn a couple of ways to declare a component in Vue 3.
+Learn a couple of ways to define a component in Vue 3.
 
-There are multiple ways to define a component in Vue 3, we want to bring up some of the most commonly seen options you may see in your everyday life.
+There are multiple ways to define a component in Vue 3, we want to bring up some of the most commonly seen patterns you may use in your everyday life.
 
 ## 1. Legacy Options API
 
-<p>
-  <Badge text="Legacy" />
-</p>
+The legacy Options API still works in Vue 3, in almost the same way! If you just copy & paste your Vue 2 components into a Vue 3 project, they'll probably work fine after some other minor issues are resolved.
 
-Well, yes, the legacy Options API still works in Vue 3, in almost the same way. If you just copy & paste your Vue 2 code into a Vue 3 project, it'll probably dependencies issues (e.g., unspported npm packages) and some other minor issues are resolved.
-
-That being said, it is strongly recommended to try out other methods instead of sticking to the legacy Options API. Otherwise upgrading an app from Vue 2 to Vue 3 becomes nothing more than a meaningless change of number, isn't it?
+That being said, it is strongly recommended to try out other methods instead of sticking to the legacy Options API. Otherwise upgrading what's the point of upgrading from Vue 2 to Vue 3?
 
 But don't get me wrong, Options API is still a great tool! It's still a valid way to define a component in Vue 3, so we put it here to make it easier to compare the difference between Options API and Composition API.
 
@@ -62,9 +58,9 @@ But don't get me wrong, Options API is still a great tool! It's still a valid wa
 
 :::info
 
-- Make sure to check out the new, awesome [`emits`](https://vuejs.org/guide/components/events.html#declaring-emitted-events) option in Vue 3!
+- Make sure to check out the new [`emits`](https://vuejs.org/guide/components/events.html#declaring-emitted-events) option in Vue 3!
 
-- There's also a new [`defineComponent()`](https://vuejs.org/api/general.html#definecomponent) helper function in Vue 3. If you would like to see some type interfaces while building components, you can use it like this:
+- There's also a new [`defineComponent()`](https://vuejs.org/api/general.html#definecomponent) helper function in Vue 3. If you would like to see some type interfaces while defining components, you can use it like this:
 
   <!-- prettier-ignore -->
   ```html title="MyComponent.vue" showLineNumbers
@@ -136,13 +132,13 @@ onMounted(() => {
 
 :::info
 
-You may have noticed that we're using `defineProps()` and `defineEtmis()` without importing them, this is because those functions are **compiler macros**. Vue will actually shows a warning if you import and use them in a component.
+You may have noticed that we're using `defineProps()` and `defineEtmis()` without importing them, this is because those functions are [**compiler macros**](https://vuejs.org/api/sfc-script-setup.html#defineprops-defineemits). Vue will show a warning in console if you explicitly import and use them in a component.
 
 :::
 
 ## 3. Composition API with `setup()`
 
-Another option is to use the new [`setup()`](https://vuejs.org/api/composition-api-setup.html) function in a component:
+Another option is to use the new [`setup()`](https://vuejs.org/api/composition-api-setup.html) function with Options API:
 
 ```html title="Composition API with setup()" showLineNumbers
 <template>
@@ -190,25 +186,22 @@ Another option is to use the new [`setup()`](https://vuejs.org/api/composition-a
 </script>
 ```
 
-As you can see, it's almost the same with `<script setup>`, but it comes with some constraints:
+It's almost the same with `<script setup>`, the main differences are:
 
-1. `props` must be defined using `props` option instead of `defineProps()`, because `defineProps()` only works in `<script setup>`.
-
+1. `props` must be defined using `props` option instead of `defineProps()`, because `defineProps()` only works in `<script setup>`. This means we will not be able to use some convenient features like [type-only props/emit declarations](https://vuejs.org/api/sfc-script-setup.html#typescript-only-features).
 2. Emitted events must be defined using `emits` option instead of `defineEmits()`, because `defineEtmis()` only works in `<script setup>`.
-
 3. `props` can be directly accessed in `<template>`, but variables declared in `setup()` must be returned in the function to make them accessible in `<template>`.
-
 4. By default, variables returned in `setup()` will be accessible to parent component. You can use the [`expose`](https://vuejs.org/api/composition-api-setup.html#exposing-public-properties) function in [setup context](https://vuejs.org/api/composition-api-setup.html#setup-context) to change that behavior.
 
-If you're using SFC, we recommend you to just use `<script setup>` instead because there's less boilerplate. Also, there are some [great features](https://vuejs.org/api/sfc-script-setup.html#typescript-only-features) `setup()` can't do if you're using TypeScript.
+If you're using SFC, we recommend you to just use `<script setup>` instead because there's less boilerplate.
 
 :::caution
 
-Since the `setup()` is defined in an object (Options API), things like `data()`, `computed`, `methods`, `mounted()` could still work if they are defined.
+Since `setup()` is a part of Options API, things like `data()`, `computed`, `methods`, `mounted()` could still work if they are defined.
 
 For example, the following component will work without any warning/error:
 
-```html
+```html showLineNumbers
 <template>
   <div>
     <h1>Hello, {{ upperCaseName }}.</h1>
@@ -220,12 +213,14 @@ For example, the following component will work without any warning/error:
   import { onMounted, ref } from 'vue'
 
   export default {
-    setup(props, context) {
+    setup() {
       const name = ref('world')
 
+      // highlight-start
       onMounted(() => {
         console.log('[setup()] I am mounted!')
       })
+      // highlight-end
 
       return {
         name,
@@ -241,18 +236,18 @@ For example, the following component will work without any warning/error:
         console.log('I am 5 years old')
       },
     },
+    // highlight-start
     mounted() {
       console.log('[mounted()] I am mounted!')
     },
+    // highlight-end
   }
 </script>
 ```
 
-It looks terrible, isn't it? This is bad because:
-
 - There are 2 `mounted` lifecycle hooks getting registered, and **both of them works**.
 - `upperCaseName` in `computed` is referencing the `name` we returned in `setup()`.
-- `sayMyAge` is defined in `methods`, but it could also be returned in `setup()`, so now we have to check multiple places to find a variable we see in `<template>`.
+- We could define data and methods in `setup()`, but that is now overlapping with `data()` and `methods: { ... }`; this means we may have to check multiple places to find the source of a variable in a component.
 
 Things would only get worse as your app gets bigger, so we strongly recommend you to **avoid mixing Options API and Composition API** like this at all cost!
 :::
