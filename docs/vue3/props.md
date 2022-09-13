@@ -2,11 +2,13 @@
 sidebar_position: 6
 ---
 
+import Video from '@site/src/components/Video';
+
 # Props
 
 ## What are Props
 
-Props are properties coming from parent component. These properties are stored in a **readonly** object returned by [`defineProps()`](https://vuejs.org/api/sfc-script-setup.html#defineprops-defineemits).
+Props are properties coming from parent component. These properties are stored in a **readonly, shallow-reactive proxy**.
 
 For example, if you do this in a component called `ChildComponent`:
 
@@ -17,16 +19,68 @@ const props = defineProps<{
 }>()
 ```
 
-Then in the parent you could use it like this:
+Then in the parent you could pass values to it like this:
 
 ```html title="ParentComponent.vue" showLineNumbers
 <template>
   <ChildComponent
-    :name="'hello'"
-    :age="5"
+    :name="myName"
+    :age="myAge"
   />
 </template>
+
+<script lang="ts" setup>
+import { ref } from 'vue'
+
+const myName = ref('hello')
+const myAge = ref(5)
+</script>
 ```
+
+### Shallow-Reactive Proxy
+
+Here's an interesting fact: the value returned by [`defineProps()`](https://vuejs.org/api/sfc-script-setup.html#defineprops-defineemits) is actually a **shallow-reactive proxy**!
+
+Before explaining what shallow-reactive proxy is, let's just see an example of shallow-reactive proxy! We can use [`shallowReactive()`](https://vuejs.org/api/reactivity-advanced.html#shallowreactive) to generate a shallow-reactive proxy. For example:
+
+```html
+<template>
+  <div>{{ user.name }}'s child is {{ user.child.age }} years old.</div>
+  <button @click="changeName">Change Name</button>
+  <button @click="getOld">Get Old</button>
+</template>
+
+<script lang="ts" setup>
+import { shallowReactive } from 'vue'
+
+const user = shallowReactive({
+  name: 'hello',
+  child: {
+    age: 5,
+  },
+})
+
+const changeName = () => {
+  user.name += 'o'
+  console.log(user.name)
+}
+
+const getOld = () => {
+  user.child.age++
+  console.log(user.child.age)
+}
+</script>
+```
+
+In this example, `user` is declared with `shallowReactive()`. Clicking "Change Name" will append an `o` to `user.name`, while clicking "Get Old" will increment `user.child.age` by 1.
+
+You could try clicking the buttons for a couple of times, and you'll find the same result as what we've discovered in one of the example of [`reactive()`](./reactive#both-reactive-and-non-reactive-values).
+
+<Video src="/video/props_shallow-reactive.mov" />
+
+**Shallow-reactive** means reactivity is only applied to the root object itself; any nested object will **not** be reactive. So in this example, `user.name` will be the only reactive property because `user` is declared with `shallowReactive()`; since `user.child` is a nested object, any property start from that position is not going to be reactive.
+
+### Readonly Constraint
 
 If you try to mutate a property in props from child components, you'll see a warning in console:
 
@@ -51,32 +105,36 @@ const props = defineProps<{
 props.user.name += 'hello' // This would work without warning!
 ```
 
-You should **always avoid directly mutating props in child components** regardless of the type, so that the data flow of your components stays one-way (from top to bottom). If you have to mutate props in child components, you should use [`events`](https://vuejs.org/guide/components/events.html#component-events). The main concept is, parent component is the only one that's allowed to mutate those values; all children do is to trigger those events.
+You should **always avoid directly mutating props in child components** regardless of the type, so that the data flow of your components stays one-way (from top to bottom). If you have to mutate props in child components, you should use [`events`](https://vuejs.org/guide/components/events.html#component-events). The main concept is, parent component would be the only one that's allowed to mutate those values; all children do is to "trigger" those changes.
 
-## Props are Reactive
+## The Reactivity of Props
 
-Have you ever wonder why your component re-renders whenever props changes? That's because props are reactive!
+Have you ever been in a situation that **for some reason, some properties in your props are just not reactive**?
 
-We've mentioned this before in [`reactive()`](./reactive#props-are-reactive). Make sure to learn all things about `reactive()` if you have not!
+You spent a lot of time debugging but still can't find a solution. So you start to find some workaround:
 
-## How to Receive `Ref<T>` in Props Without Unwrap
+_What if I can just receive `Ref<T>` in props without unwrap, so that it's guaranteed to be reactive?_
 
-**You don't!** 
+So maybe this kind of props definition would work:
 
-The only reason you want to do this is because you're in a situation that **some properties in your props are not reactive for some reason**.
+```ts
+import { Ref } from 'vue'
 
-You're annoyed because Vue [auto-unwrap](./ref-and-ref#ref-in-template) `Ref<T>` for you, so you try to find a way to bypass the auto-unwrap mechanics. This way child components can receive the whole `Ref<T>` as props without being unwrapped.
+const props = defineProps<{
+  name: Ref<string>
+}>()
 
-We have to say this again, **you don't**!  Seriously, don't do this.
+name.value = 'victory!'
+```
 
-Because `defineProps()` already returns a reactive object, this kind of props definition makes no sense at all (but it still work). Also, since `Ref<T>` is a non-primitive type, it breaks the [readonly constraint](#what-are-props) we mentioned above.
+That's actually not a very bad idea, but **don't do that!** The main reason is that it breaks the [readonly constraint](#readonly-constraint) we've mentioned above, which increases the chance of props getting modified by children.
 
-If that's the case, that means you've accidentally broke the reactivity of props. Check [here](./reactive#the-reactivity-of-reactive-object) for solutions!
+If that's the case, that means you've accidentally broke the reactivity of props. Since shallow-reactive proxy is also a proxy, you can just treat it like a reactive proxy. Check [here](./reactive#the-reactivity-of-a-reactive-proxy) for solutions!
+
+
 
 <details>
-  <summary>In case you're really curious about how to pass <code>Ref</code> down...</summary>
-
-  **CAUTION! Please don't do this.**
+  <summary>In case you're really curious about how to pass <code>Ref</code> down without being unwrapped...</summary>
 
   The main concept here is to prevent Vue from automatically unwrapping `Ref<T>` in `<template>`.
 
@@ -84,7 +142,7 @@ If that's the case, that means you've accidentally broke the reactivity of props
 
   ```html title="ParentComponent.vue" showLineNumbers
   <template>
-    <Child :name="user.name" />
+    <ChildComponent :name="user.name" />
   </template>
 
   <script lang="ts" setup>
@@ -100,7 +158,7 @@ If that's the case, that means you've accidentally broke the reactivity of props
 
   ```html title="ParentComponent.vue" showLineNumbers
   <template>
-    <Child :name="getName()" />
+    <ChildComponent :name="getName()" />
   </template>
 
   <script lang="ts" setup>

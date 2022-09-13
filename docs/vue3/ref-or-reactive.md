@@ -1,17 +1,17 @@
 ---
-title: ref() vs reactive()
+title: ref() or reactive()
 sidebar_position: 5
 ---
 
-# `ref()` vs `reactive()`
+# `ref()` or `reactive()`
 
 :::caution Prerequisites
 
-You must learn [`ref()`](./ref) and [`reactive()`](./reactive) before getting into this chapter.
+You must learn [`ref()`](./ref-and-ref#what-is-ref) and [`reactive()`](./reactive#what-is-reactive) before getting into this chapter.
 
 :::
 
-*So... which one should I use to declare reactive states, `ref()` or `reactive()`?*
+*So... which one should I use to declare reactive values, `ref()` or `reactive()`?*
 
 We're finally here! This is probably the most commonly asked question when it comes to Vue 3.
 
@@ -56,8 +56,10 @@ class RefImp<T> implements Ref<T> {
 
 - As we've mentioned before, `RefImpl` is a class with only one public property `value`.
 - If the argument is a primitive value, `RefImpl` will use it as `this.value`.
-- If the argument is not a primitive value, `RefImpl` will just call `reactive()` and use the returned value as `this.value`. Therefore, we have no choice but to learn `reactive()` as well if we want to know `ref()` better.
-- The `track(this.value)` actually works very differently than the source code; but the point is, `RefImpl` will "track" the changes of `this.value` so that reactivity can be fulfilled.
+- If the argument is not a primitive value, `RefImpl` will just call `reactive()` and use the returned value as `this.value`.
+- The `track(this.value)` actually works very differently than the source code; but the point is, `RefImpl` will "track" the changes of `this.value` when needed so that reactivity can be fulfilled.
+
+By using `ref()`, you're actually using `reactive()` as well (if the argument is not a primitive value), you just didn't notice that! Therefore, if you want to know `ref()` better, you have no choice but to learn `reactive()` together.
 
 ### How `reactive()` Works
 
@@ -70,33 +72,32 @@ function reactive(arg) {
       console.warn(`value cannot be made reactive: ${String(arg)}`)
     }
     return arg
-  } else if (arg is reactive OR arg is function) {
+  } else if (arg is Ref OR arg is reactive OR arg is function) {
     return arg
   } else {
     const unwrappedValue = unwrapNestedly(arg)
-    return createReactiveValue(unwrappedValue)
+    return createReactiveProxy(unwrappedValue)
   }
 }
 ```
 
 - As we've mentioned before, `reactive()` only works with non-primitive values.
 - Even if functions are non-primitive values, `reactive()` still doesn't work with it; it directly returns it.
-- `unwrapNestedly()` is the same unwrap mechanism we've mentioned in [`reactive()`](./reactive#what-is-unwrapnestedreft)
-- `createReactiveValue()` means to create a new [`Proxy`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) object.
+- `unwrapNestedly()` will do the unwrap mechanism we described in [`reactive()`](./reactive#what-is-unwrapnestedreft).
 
 ## Explanation
 
-After learning how `ref()` and `reactive()` actually work, we can finally dive into the most important part — explain why we choose `ref()` or `reactive()` over the other based on different type of argument.
+We can finally dive into the most important part — explain why we choose `ref()` or `reactive()` over the other based on different types of arguments.
 
 ### Primitive Values
 
 If the argument is a primitive value, then `ref()` would be the best choice because `reactive()` only works with non-primitive values.
 
-Of course we can wrap the value into an object like `const age = reactive({ someRandomKey: 5 })` to make it work with `reactive()`, but... why? Just use `ref()` and you'll get the same result!
+Of course we can wrap the value into an object like `const age = reactive({ someRandomKey: 5 })` to make it work, but...why? Just use `ref()` and you'll get the same result!
 
 ### Functions
 
-If the argument is a function, you probably don't want it to be reactive. Function is something that **should not be rendered** on the screen, and it **should not be used to represent the state of a component**, so making it reactive is just meaningless.
+If the argument is a function, you probably don't want it to be reactive. Functions are something that **should not be rendered** on the screen, and it **should not be used to represent the state of a component**, so making them reactive is just meaningless.
 
 However, there are some cases where we do want to assign functions to variables. For example, **event subscription/registration**. It's those things we register when component mounts, and we remove them before component unmounts.
 
@@ -130,7 +131,7 @@ onBeforeUnmount(() => {
 3. The unregister function should only be called in `onBeforeUnmount()`.
 4. After we get the unregister function in step 2, we assign it to a variable called `unregisterNavGuard` and use it in step 3.
 
-We use `let` instead of `ref()` or `reactive()` to declare `unregisterNavGuard` because users don't have to be informed of this change.
+Since `unregisterNavGuard` has nothing to do with the rendering of a component, we just use `let` instead of `ref()` or `reactive()` during declaration. If for some reason we want to re-assign the value in the future, the component won't do unnecessary re-renders because it's neither a reactive proxy nor a `Ref<T>`.
 
 If you REALLY want a function to be reactive (which we cannot think of any good reason), `ref()` would be a better choice because `reactive()` will directly returns the argument if it's a function, which means `const func = reactive(() => {})` will be the same as `const func = () => {}`.
 
@@ -138,27 +139,6 @@ If you REALLY want a function to be reactive (which we cannot think of any good 
 
 Anything other than primitive value and function falls into this category. For example, plain object, Array, Map, etc.
 
-In these cases, it doesn't really matter if we use `ref()` or `reactive()`; because from user's perspective (you and me, the developers), the `.value` after `Ref<T>` would be the only difference. For example:
+In these cases, it doesn't really matter if you use `ref()` or `reactive()`; because the inner value returned by `ref()` and `reactive()` under these circumstances are exactly the same; the `.value` after `Ref<T>` would be the only difference.
 
-```ts showLineNumbers
-import { ref, reactive } from 'vue'
-
-const userA = ref({
-  name: 'hello',
-})
-
-const userB = reactive({
-  name: 'hello'
-})
-
-console.log(userA.value) // { name: 'hello' }
-console.log(userB) // { name: 'hello' }
-
-userA.value.name = 'world'
-userB.name = 'world'
-
-console.log(userA.value) // { name: 'world' }
-console.log(userB) // { name: 'world' }
-```
-
-Since none is better than the other, either `ref()` or `reactive()` is fine. Just make sure **the whole team/project is using the same rule** when declaring reactive variables and you'll be just fine!
+Since none is better than the other, using either `ref()` or `reactive()` is fine. Just make sure **the whole team/project is following the same rule when choosing `ref()` and `reactive()`** (for code consistency) and you'll be just fine!
