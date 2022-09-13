@@ -13,7 +13,7 @@ In case you're new to TypeScript or OOP, `<T>` is the [Generic Type](https://www
 
 :::
 
-## What is `Ref<T>`
+## What is `Ref<T>`?
 
 `Ref<T>` is a **type** with only one public property `value`.
 
@@ -33,7 +33,7 @@ A `Ref<T>` contain only **one** value of any type, so you can have:
 - `Ref<Promise<() => void>>`
 - ...anything you need!
 
-## What is `ref()`
+## What is `ref()`?
 
 `ref()` is a **function** that takes an argument of any type, and returns a `Ref<T>` object with that argument as its' `value`. For example:
 
@@ -85,7 +85,7 @@ console.log(somebody.value) // { name: 'world', age: 5 }
 
 :::info
 
-Although the returned value of `ref()` seems to be a plain object like `{ value: 'hello' }`, it's actually not! Instead, it's an instance of a class called `RefImpl` which has only one public property `value`. So from user's perspective (you and me, the developers), it's okay to just see `RefImpl` as `Ref<T>` because they expose the same property. Also, `ref()` does not just blindly wrap value into `Ref<T>` structure; we'll explain more in detail in [`ref()` vs `reactive()`](./ref-vs-reactive.md).
+Although the returned value of `ref()` seems to be a plain object like `{ value: 'hello' }`, it's actually not! Instead, it's an instance of a class called `RefImpl` which has only one public property `value`. So from user's perspective (you and me, the developers), it's okay to just see `RefImpl` as `Ref<T>` because they expose the same property. Also, `ref()` does not just blindly wrap value into `Ref<T>` structure; we'll explain more in detail in [`ref()` or `reactive()`](./ref-or-reactive.md).
 :::
 
 Great, we've learned enough about how `Ref<T>` works in `<script>` for now. Let's see how `Ref<T>` works in `<template>`!

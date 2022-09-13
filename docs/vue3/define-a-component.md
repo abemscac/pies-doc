@@ -62,7 +62,6 @@ But don't get me wrong, Options API is still a great tool! It's still a valid wa
 
 - There's also a new [`defineComponent()`](https://vuejs.org/api/general.html#definecomponent) helper function in Vue 3. If you would like to see some type interfaces while defining components, you can use it like this:
 
-  <!-- prettier-ignore -->
   ```html title="MyComponent.vue" showLineNumbers
   <script>
   import { defineComponent } from 'vue'
@@ -87,7 +86,6 @@ This is the most popular option at the moment. If you've leaned React Hooks API,
 
 By default there's no `this` in `<script setup>` whether you use function or arrow function. So if don't like `this`, this will be a good news!
 
-<!-- prettier-ignore -->
 ```html title="Composition API with <script setup>" showLineNumbers
 <template>
   <div>
@@ -138,7 +136,7 @@ You may have noticed that we're using `defineProps()` and `defineEtmis()` withou
 
 ## 3. Composition API with `setup()`
 
-Another option is to use the new [`setup()`](https://vuejs.org/api/composition-api-setup.html) function with Options API:
+Another option is to use the new [`setup()`](https://vuejs.org/api/composition-api-setup.html) option in Options API:
 
 ```html title="Composition API with setup()" showLineNumbers
 <template>
@@ -191,7 +189,7 @@ It's almost the same with `<script setup>`, the main differences are:
 1. `props` must be defined using `props` option instead of `defineProps()`, because `defineProps()` only works in `<script setup>`. This means we will not be able to use some convenient features like [type-only props/emit declarations](https://vuejs.org/api/sfc-script-setup.html#typescript-only-features).
 2. Emitted events must be defined using `emits` option instead of `defineEmits()`, because `defineEtmis()` only works in `<script setup>`.
 3. `props` can be directly accessed in `<template>`, but variables declared in `setup()` must be returned in the function to make them accessible in `<template>`.
-4. By default, variables returned in `setup()` will be accessible to parent component. You can use the [`expose`](https://vuejs.org/api/composition-api-setup.html#exposing-public-properties) function in [setup context](https://vuejs.org/api/composition-api-setup.html#setup-context) to change that behavior.
+4. By default, variables returned in `setup()` will be accessible to parent component. You can use the [`expose()`](https://vuejs.org/api/composition-api-setup.html#exposing-public-properties) in [setup context](https://vuejs.org/api/composition-api-setup.html#setup-context) to change that behavior.
 
 If you're using SFC, we recommend you to just use `<script setup>` instead because there's less boilerplate.
 
