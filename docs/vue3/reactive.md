@@ -31,7 +31,7 @@ console.log(user.age) // 5
 ```
 
 In this example, the returned value of `reactive()` has exactly the same data structure as what we gave it, but that's not always the case.
-The reason is there's an unwrap mechanism inside `reactive()`, but it rarely gets "triggered". We'll explain more in detail [below](#what-is-unwrapnestedreft).
+The reason is there's an unwrap process inside `reactive()`, but it rarely gets "triggered". We'll explain more in detail [below](#what-is-unwrapnestedreft).
 
 To mutate a reactive value, we can simply do it in the classic JavaScript way:
 
@@ -300,7 +300,7 @@ The answer is actually very simple. All we have to do is to recap how variable w
 
 In JavaScript, variables are either being **passed by value** or being **passed by reference**. For primitive values, they are always being **passed by value**, and non-primitive values are always being **passed by reference**. So by writing `const { name: myName, age: myName } = user`, we're actually saying:
 
-```js
+```js showLineNumbers
 const myName = user.name
 const myAge = user.age
 ```

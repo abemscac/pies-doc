@@ -6,6 +6,12 @@ sidebar_position: 1
 
 Learn the essentials of a component in Vue 3.
 
+:::info
+
+Make sure to check out the super convenient online Vue 3 IDE — [Vue SFC Playground](https://sfc.vuejs.org/)!
+
+:::
+
 ## Sample Component
 
 Here's an example of Vue 3 single file component (SFC) with [Composition API](https://vuejs.org/guide/introduction.html#composition-api):

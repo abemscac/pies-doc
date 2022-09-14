@@ -59,7 +59,7 @@ onMounted(async () => {
 
 You should never manage your API like this! We only write it in this way for the sake of simplicity. If you're not sure what to do, a simple encapsulation would be a good start:
 
-```ts
+```ts showLineNumbers
 export const useUserApi = () => {
   const getUsers = () => fetch('/users')
 

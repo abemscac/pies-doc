@@ -45,7 +45,7 @@ Here's an interesting fact: the `props` object is actually a **shallow reactive-
 
 **Shallow reactive** means in an object, only the root-level properties are reactive; properties deeper than that are not reactive. We can use the [`shallowReactive()`](https://vuejs.org/api/reactivity-advanced.html#shallowreactive) function to create a shallow reactive proxy, for example:
 
-```ts
+```ts showLineNumbers
 import { shallowReactive } from 'vue'
 
 const user = shallowReactive({
@@ -64,7 +64,7 @@ In this example, `user` is declared as a shallow reactive proxy, which means:
 
 However, if `user.child` has been a reactive proxy since the beginning, mutating `user.child.age` would also cause the component to re-render, because all `shallowReactive()` does is making root-level properties reactive; it never "de-reactive" any reactive properties. For example:
 
-```ts
+```ts showLineNumbers
 import { reactive, shallowReactive } from 'vue'
 
 const user = shallowReactive({
@@ -91,7 +91,7 @@ Unlike `reactive()`, `shallowReactive()` does not go throught the [unwrap proces
 
 **Shallow readonly** means in an object, only the root-level properties are readonly; properties deeper than that are not readonly. We can use the [`shallowReadonly()`](https://vuejs.org/api/reactivity-advanced.html#shallowreadonly) function to create a shallow readonly object, for example:
 
-```ts
+```ts showLineNumbers
 import { shallowReadonly } from 'vue'
 
 const user = shallowReadonly({
@@ -110,7 +110,7 @@ In this example, `user` is declared as a shallow readonly object, which means:
 
 To sum up, you can think of it this way: `props` acts just like a reactive proxy made by `shallowReactive()` and `shallowReadonly()`; it's just that all property values are coming from parent component.
 
-```ts
+```ts showLineNumbers
 import { shallowReactive, shalloeReadonly } from 'vue'
 
 const props =

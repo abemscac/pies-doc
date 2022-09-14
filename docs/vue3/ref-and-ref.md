@@ -9,7 +9,7 @@ Probably the most important part in Vue 3!
 
 :::info
 
-In case you're new to TypeScript or OOP, `<T>` is the [Generic Type](https://www.typescriptlang.org/docs/handbook/2/generics.html) syntax of TypeScript. If it's too much for you, it's okay to ignore the `<T>` for now.
+In case you're new to TypeScript or OOP, `<T>` is the [Generic Type](https://www.typescriptlang.org/docs/handbook/2/generics.html) syntax of TypeScript.
 
 :::
 
@@ -58,7 +58,7 @@ name.value = 'world'
 console.log(name.value) // 'world'
 ```
 
-The same rule applies to any type of value, including array and object. For example:
+The same rule applies to any type of value, for example:
 
 ```ts showLineNumbers
 import { ref } from 'vue'
@@ -68,8 +68,8 @@ const fruits = ref(['apple', 'banana'])
 console.log(fruits.value) // ['apple', 'banana']
 
 // highlight-next-line
-fruits.value[0] = 'orange'
-console.log(fruits.value) // ['orange', 'banana']
+fruits.value[0] = 'cherry'
+console.log(fruits.value) // ['cherry', 'banana']
 
 // object
 const somebody = ref({
@@ -85,14 +85,16 @@ console.log(somebody.value) // { name: 'world', age: 5 }
 
 :::info
 
-Although the returned value of `ref()` seems to be a plain object like `{ value: 'hello' }`, it's actually not! Instead, it's an instance of a class called `RefImpl` which has only one public property `value`. So from user's perspective (you and me, the developers), it's okay to just see `RefImpl` as `Ref<T>` because they expose the same property. Also, `ref()` does not just blindly wrap value into `Ref<T>` structure; we'll explain more in detail in [`ref()` or `reactive()`](./ref-or-reactive).
+Although the returned value of `ref()` seems to be a plain object like `{ value: 'hello' }`, it's actually not! Instead, it's an instance of a class called `RefImpl` which has only one public property `value`. So from user's perspective (you and me, the developers), it's okay to just see `RefImpl` as `Ref<T>` because they expose the same property.
+
+Also, `ref()` does not just blindly wrap value into `Ref<T>` structure, but it's not necessary to learn that now. We'll explain more in detail in [`ref()` or `reactive()`](./ref-or-reactive).
 :::
 
-Great, we've learned enough about how `Ref<T>` works in `<script>` for now. Let's see how `Ref<T>` works in `<template>`!
+Great, we've learned enough about how `Ref<T>` works in `<script>`. Let's see how `Ref<T>` works in `<template>`!
 
 ## `Ref<T>` in `<template>`
 
-In Vue 2 we can access variables declared in `<script>` from `<template>` using 3 different syntax — double curly braces `{{ }}`, `v-on` (shorthand as `@`), and `v-bind` (shorthand as `:`). These 3 syntax still exist in Vue 3, but the logic is a little different. Take the following component as an example:
+In Vue 2, we can access variables declared in `<script>` from `<template>` using 3 different syntax — double curly braces `{{ }}`, `v-on` (shorthand as `@`), and `v-bind` (shorthand as `:`). These 3 syntax still exist in Vue 3, but the logic is a little different. Take the following component as an example:
 
 ```html showLineNumbers
 <template>

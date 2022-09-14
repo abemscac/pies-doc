@@ -8,15 +8,15 @@ import Badge from '@site/src/components/Badge'
 
 Learn a couple of ways to define a component in Vue 3.
 
-There are multiple ways to define a component in Vue 3, we want to bring up some of the most commonly seen patterns you may use in your everyday life.
+There are multiple ways to define a component in Vue 3, we want to bring up some commonly seen patterns you may use in your everyday life.
 
 ## 1. Legacy Options API
 
 The legacy Options API still works in Vue 3, in almost the same way! If you just copy & paste your Vue 2 components into a Vue 3 project, they'll probably work fine after some other minor issues are resolved.
 
-That being said, it is strongly recommended to try out other methods instead of sticking to the legacy Options API. Otherwise upgrading what's the point of upgrading from Vue 2 to Vue 3?
+That being said, it is strongly recommended to try out the new Composition API instead of sticking to the legacy Options API. Otherwise what is the point of upgrading from Vue 2 to Vue 3, right?
 
-But don't get me wrong, Options API is still a great tool! It's still a valid way to define a component in Vue 3, so we put it here to make it easier to compare the difference between Options API and Composition API.
+But don't get me wrong, Options API is still a great tool! It's still a valid way to define a component in Vue 3.
 
 ```html title="Legacy Options API" showLineNumbers
 <template>
@@ -173,7 +173,7 @@ Another option is to use the new [`setup()`](https://vuejs.org/api/composition-a
         console.log('I am mounted!')
       })
 
-      // Return an object with all of the "things" you want to expose to <template>.
+      // Return an object with all of the properties you want to expose to <template>.
       return {
         name,
         ageAfter3years,
@@ -189,7 +189,6 @@ It's almost the same with `<script setup>`, the main differences are:
 1. `props` must be defined using `props` option instead of `defineProps()`, because `defineProps()` only works in `<script setup>`. This means we will not be able to use some convenient features like [type-only props/emit declarations](https://vuejs.org/api/sfc-script-setup.html#typescript-only-features).
 2. Emitted events must be defined using `emits` option instead of `defineEmits()`, because `defineEtmis()` only works in `<script setup>`.
 3. `props` can be directly accessed in `<template>`, but variables declared in `setup()` must be returned in the function to make them accessible in `<template>`.
-4. By default, variables returned in `setup()` will be accessible to parent component. You can use the [`expose()`](https://vuejs.org/api/composition-api-setup.html#exposing-public-properties) in [setup context](https://vuejs.org/api/composition-api-setup.html#setup-context) to change that behavior.
 
 If you're using SFC, we recommend you to just use `<script setup>` instead because there's less boilerplate.
 
