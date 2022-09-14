@@ -36,7 +36,7 @@ Similar to Vue 2, a SFC in Vue 3 consists of 3 tags — `<template>`, `<script>`
 - The main difference is, now we have a `setup` attribute on `<script>` tag, which only works with Composition API.
 - TypeScript is now officially supported in Vue 3, we can just add `lang="ts"` attribute on `<script>` tag to start building components in TypeScript.
 - [`<style>`](https://vuejs.org/api/sfc-spec.html#style) tag is still optional, and the [`scoped` attribute](https://vue-loader.vuejs.org/guide/scoped-css.html#scoped-css) still works.
-- Although we didn't show them in this example, the template syntax remains the same! These syntax are double curly beaces `{{ }}`, `v-on` (shorthand as `@`), and `v-bind` (shorthand as `:`).
+- Although we didn't show them in this example, the template syntax remains the same! These syntax are double curly braces `{{ }}`, `v-on` (shorthand as `@`), and `v-bind` (shorthand as `:`).
 
 :::info
 
