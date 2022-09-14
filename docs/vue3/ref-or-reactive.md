@@ -32,7 +32,7 @@ The following pseudocode gives us a decent concept of how `ref()` works in Vue 3
 ```ts showLineNumbers
 import { reactvie, Ref } from 'vue'
 
-function ref(arg) {
+const ref = (arg) => {
   if (arg is Ref) {
     return arg
   } else {
@@ -66,7 +66,7 @@ By using `ref()`, you're actually using `reactive()` as well (if the argument is
 The following pseudocode gives us a good concept of how `reactive()` works in Vue 3. It's not exactly the same as the source code, but it's close enough to let us know what's going on inside `reactive()`:
 
 ```ts showLineNumbers
-function reactive(arg) {
+const reactive = (arg) => {
   if (arg is primitive value) {
     if (is in development mode) {
       console.warn(`value cannot be made reactive: ${String(arg)}`)
