@@ -75,15 +75,16 @@ const reactive = (arg) => {
   } else if (arg is Ref OR arg is reactive OR arg is function) {
     return arg
   } else {
-    const unwrappedValue = unwrapNestedly(arg)
-    return createReactiveProxy(unwrappedValue)
+    const unwrappedValue = unwrapNestedRef(arg)
+    return toProxy(unwrappedValue)
   }
 }
 ```
 
 - As we've mentioned before, `reactive()` only works with non-primitive values.
 - Even if functions are non-primitive values, `reactive()` still doesn't work with it; it directly returns it.
-- `unwrapNestedly()` will do the unwrap mechanism we described in [`reactive()`](./reactive#what-is-unwrapnestedreft).
+- `unwrapNestedRef()` is an imaginary function we've described in [`UnwrapNestedRef<T>`](./unwrap-nested-ref#what-is-unwrapnestedreft); it is used to unwrap the nested `Ref<T>`s in a plain object.
+- `toProxy()` is an imaginary function that is used to create reactive proxy.
 
 ## Explanation
 

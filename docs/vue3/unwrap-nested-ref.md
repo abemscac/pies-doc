@@ -5,27 +5,62 @@ sidebar_position: 8
 
 # `UnwrapNestedRef<T>`
 
-Learn the unwrap mechanism of `reactive()`.
+Learn the unwrap process of `reactive()`.
 
 :::caution Prerequisites
 
-You must learn [`reactive()`](./reactive) before getting into this chapter.
+You must learn [`ref()`](./ref) and [`reactive()`](./reactive) before getting into this chapter.
 
 :::
 
 :::note
 
-If you find this chapter very confusing, it's totally fine to skip it! You'll do just fine without knowing anything about it!
+To be honest, this may not be a very important topic because for most of the time, your IDE would have evaluated the output type for you; you probably didn't even notice the existence of this thing.
+
+If you find this chapter very confusing, feel free to skip it! You'll do just fine without knowing anything about it!
 
 :::
+
+## Example
+
+Have you ever wonder what happens if we use `ref()` on a plain object with any `Ref<T>` property in it? For example:
+
+```ts showLineNumbers
+import { ref } from 'vue'
+
+const dog = ref({
+  name: 'hello'
+})
+
+const we = ref({
+  have: {
+    a: {
+      dog,
+    }
+  }
+})
+```
+
+In this example, `dog` and `we` are both `Ref<T>`s because they are declared by using `ref()`.
+
+To get `hello` from `we`, it's very natural to think that we have to use `we.value.have.a.dog.value.name` because `ref()` return a `Ref<T>`, and `dog` is already a `Ref<T>`, thus creating a nested structure.
+
+But when you try to run that code, you'll get an error that says `TypeError: Cannot read properties of undefined (reading 'name')`. How come?
+
+This happens because:
+
+- As we've mentioned in [`ref()` or `reactive()`](./ref-or-reactive#how-ref-works), `ref()` uses `reactive()` internally.
+- There's actually an unwrap mechanism (unwrap `Ref<T>`) built inside `reactive()`, thus leading to the error we see.
+
+So to get `hello` from `we`, the correct way would be `we.value.have.a.dog.name`, because `we.value.have.a.dog` is unwrapped by `reactive()`.
+
+In this chapter, we'll try to explain the secret unwrap mechanism built in `reactive()`.
 
 ## What Is `UnwrapNestedRef<T>`
 
 `UnwrapNestedRef<T>` is the **return type** of `reactive()`. It pretty much explains itself — unwrap all of the nested `Ref`s in `T`.
 
-To be honest, this may not be a very important topic because for most of the time, your IDE would have evaluated the output type for you; you probably didn't even notice the existence of this thing.
-
-To get straight to the point, there's actually an unwrap mechanism (unwrap `Ref<T>`) built inside `reactive()`. The following pseudocode demonstrates the simplified (yet still complicated) definition of `UnwrapNestedRef<T>`:
+The following pseudocode demonstrates the simplified (yet still complicated) definition of `UnwrapNestedRef<T>`:
 
 ```ts showLineNumbers
 type UnwrapNestedRef<T> = (
@@ -37,8 +72,10 @@ type UnwrapNestedRef<T> = (
 )
 
 type UnwrapRef<T> = (
-  if (T is plain object) {
-    return { for key in T: UnwrapRef<T> }
+  if (T is Ref) {
+    return T['value']
+  } else if (T is plain object) {
+    return { for key in T: UnwrapRef<T[key]> }
   } else if (T is Array) {
     return [for key in T: UnwrapRef<T[key]>]
   } else {
@@ -47,64 +84,58 @@ type UnwrapRef<T> = (
 )
 ```
 
-The most complicated part lies in `UnwrapRef<T>` because it's a recursive structure. Since `UnwrapNestedRef<T>` is just a type, we still need a function that is used to create a recursively unwrapped object:
+The following pseudocode demonstrates the imaginary functions implemented based on the types we see above:
 
-```ts
-const unwrapNestedly = <T>(arg: T): UnwrapNestedRef<T> => {
-  // Doing all the complicated logic here...
-  return unwrappedObject
+```ts showLineNumbers
+const unwrapNestedRef = <T>(arg: T): UnwrapNestedRef<T> => {
+  if (arg is Ref) {
+    return arg
+  } else {
+    return unwrapRef(arg)
+  }
+}
+
+const unwrapRef = <T>(arg: T): UnwrapRef<T> => {
+  if (arg is Ref) {
+    return arg.value
+  } else if (arg is plain object) {
+    const result = {}
+    for (const key in arg) {
+      result[key] = unwrapRef(arg[key])
+    }
+    return result
+  } else if (arg is Array) {
+    return arg.map((item) => unwrapRef(item))
+  } else {
+    return arg
+  }
 }
 ```
 
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+The above pseudocode just sums everything up! Take your time to read and understand the pseudocode, hopefully it will give you a decent understanding of how the unwrap mechanism works in `reactive()`!
 
-### Unwrap a Plain Object
+We'll just highlight some commonly seen scenarios, and things you should pay attention to below.
 
-If the argument is a plain object, `reactive()` will return a new, unwrapped object based on that argument.
+## Collections
 
-For example, if we have an object like this:
+`Ref<T>`s stored in collection types like `Map` and `Set` will **not** be unwrapped by `reactive()`, but the reactivity is still applied.
 
-```ts showLineNumbers
-import { reactive } from 'vue'
+## Partial Reactive Object
 
-const user = reactive({
-  shippingInfo: ref({
-    phoneNumber: '123',
-  }),
-})
-```
+When using Vue 3, you should try to **avoid declaring partial reactive object**, because usually the are the source of bugs. For example:
 
-To get the value of `phoneNumber` from `user`, it's very natural to think that we have to use `user.shippingInfo.value.phoneNumber` because `user.shippingInfo` is a `Ref<T>`. But if you try to run that line of code, you'll get an error that says `TypeError: Cannot read properties of undefined (reading 'phoneNumber')`.
-
-This happens because `shippingInfo`, which is a `Ref<T>`, is being wrapped in an object . So to get the value of `phoneNumber` from `user`, we should use `user.shippingInfo.phoneNumber`. Notice that there's no `.value` after `shippingInfo`.
-
-**Recursively** means the `Ref<T>` does not necessarily have to be the (top-level) property of the object being passed to `reactive()` to be unwrapped; it will get unwrapped as long as `reactive()` appears in one of its' ancestors. For eaxmple:
 
 ```ts showLineNumbers
-import { reactive } from 'vue'
+import { reactive } from 'reactive'
 
-const user = reactive({
-  shippingInfo: {
-    phoneNumber: '123',
-    address: ref({
-      line1: 'hello',
-      line2: 'world',
+const user = {
+  name: 'hello',
+  friend: {
+    child: reactive({
+      name: 'world',
     }),
   },
-})
-
-console.log(user.shippingInfo.address.line1) // 'hello'
+}
 ```
 
-In this example, even if `address` is not a (top-level) property of the object being passed to `reactive()`, it will still get unwrapped by `reactive()`. So to get the value of `line1` from `user`, we'll have to use `user.shippingInfo.address.line1`. Notice that there's no `.value` after `address`.
-
-### Nestedly Unwrap an Array
-
-If the argument is an array, `reactive()` will return a new array consists of unwrapped elements. You can simply think of the unwrap logic as something similar to the following pseudocode:
-
-```ts showLineNumbers
-const newArray = array.map((element) => unwrapNestedly(element))
-return newArray
-```
-
-The `unwrapNestedly()` will run the unwrap logic we described in [Nestedly Unwrap a Plain Object](#nestedly-unwrap-a-plain-object); if the element is not a plain object, it'll use it as is without doing anything.
+In this example, mutating any property inside `user.friend.child` will cause the component to re-render, while mutating any other property will not. The same rule applies to `ref()` as well.
