@@ -76,7 +76,7 @@ But don't get me wrong, Options API is still a great tool! It's still a valid wa
 
 :::
 
-## 2. Composition API with `<script setup>`
+## 2. Composition API With `<script setup>`
 
 <p>
   <Badge variant="success" text="Recommended" />
@@ -134,7 +134,7 @@ You may have noticed that we're using `defineProps()` and `defineEtmis()` withou
 
 :::
 
-## 3. Composition API with `setup()`
+## 3. Composition API With `setup()`
 
 Another option is to use the new [`setup()`](https://vuejs.org/api/composition-api-setup.html) option in Options API:
 

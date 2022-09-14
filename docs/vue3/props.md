@@ -6,11 +6,11 @@ import Video from '@site/src/components/Video';
 
 # Props
 
-## What are Props
+## What Are Props?
 
-Props are properties coming from parent component. These properties are stored in a **readonly, shallow-reactive proxy**.
+Props are **properties coming from parent component**. These properties are stored in an object which most of the time is named `props`.
 
-For example, if you do this in a component called `ChildComponent`:
+For example, if you declare your props in a component like this:
 
 ```ts title="ChildComponent.vue" showLineNumbers
 const props = defineProps<{
@@ -37,20 +37,15 @@ const myAge = ref(5)
 </script>
 ```
 
-### Shallow-Reactive Proxy
+## Shallow Reactive and Shallow Readonly
 
-Here's an interesting fact: the value returned by [`defineProps()`](https://vuejs.org/api/sfc-script-setup.html#defineprops-defineemits) is actually a **shallow-reactive proxy**!
+Here's an interesting fact: the `props` object is actually a **shallow reactive-ish proxy** with **shallow readonly** constraint! (We'll explain the "-ish" below.)
 
-Before explaining what shallow-reactive proxy is, let's just see an example of shallow-reactive proxy! We can use [`shallowReactive()`](https://vuejs.org/api/reactivity-advanced.html#shallowreactive) to generate a shallow-reactive proxy. For example:
+### What Is Shallow Reactive?
 
-```html
-<template>
-  <div>{{ user.name }}'s child is {{ user.child.age }} years old.</div>
-  <button @click="changeName">Change Name</button>
-  <button @click="getOld">Get Old</button>
-</template>
+**Shallow reactive** means in an object, only the root-level properties are reactive; properties deeper than that are not reactive. We can use the [`shallowReactive()`](https://vuejs.org/api/reactivity-advanced.html#shallowreactive) function to create a shallow reactive proxy, for example:
 
-<script lang="ts" setup>
+```ts
 import { shallowReactive } from 'vue'
 
 const user = shallowReactive({
@@ -59,119 +54,83 @@ const user = shallowReactive({
     age: 5,
   },
 })
-
-const changeName = () => {
-  user.name += 'o'
-  console.log(user.name)
-}
-
-const getOld = () => {
-  user.child.age++
-  console.log(user.child.age)
-}
-</script>
 ```
 
-In this example, `user` is declared with `shallowReactive()`. Clicking "Change Name" will append an `o` to `user.name`, while clicking "Get Old" will increment `user.child.age` by 1.
+In this example, `user` is declared as a shallow reactive proxy, which means:
 
-You could try clicking the buttons for a couple of times, and you'll find the same result as what we've discovered in one of the example of [`reactive()`](./reactive#both-reactive-and-non-reactive-values).
+- Mutating `user.name` will cause the component to re-render.
+- Replacing `user.child` with any other value will cause the component to re-render.
+- Mutating `user.child.age` will **not** cause the component to re-render.
 
-<Video src="/video/props_shallow-reactive.mov" />
+However, if `user.child` has been a reactive proxy since the beginning, mutating `user.child.age` would also cause the component to re-render, because all `shallowReactive()` does is making root-level properties reactive; it never "de-reactive" any reactive properties. For example:
 
-**Shallow-reactive** means reactivity is only applied to the root object itself; any nested object will **not** be reactive. So in this example, `user.name` will be the only reactive property because `user` is declared with `shallowReactive()`; since `user.child` is a nested object, any property start from that position is not going to be reactive.
+```ts
+import { reactive, shallowReactive } from 'vue'
 
-### Readonly Constraint
-
-If you try to mutate a property in props from child components, you'll see a warning in console:
-
-```ts title="ChildComponent.vue" showLineNumbers
-const props = defineProps<{
-  name: string
-  age: number
-}>()
-
-props.name += 'hello' // [Vue warn] Set operation on key "name" failed: target is readonly.
+const user = shallowReactive({
+  name: 'hello',
+  child: reactive({
+    age: 5,
+  }),
+})
 ```
 
-But be careful, the readonly constraint is only applied to **primitve properties** in props. If the property is a non-primitive value, the warning won't show up when you mutate those props:
+In this example:
 
-```ts title="ChildComponent.vue" showLineNumbers
-const props = defineProps<{
-  user: {
-    name: string
-  }
-}>()
+- Mutating `user.name` will cause the component to re-render, because `user` is a shallow reactive proxy.
+- Replacing `user.child` with any other value will cause the component to re-render, because `user` is a shallow reactive proxy.
+- Mutating `user.child.age` will also cause the component to re-render, because `user.child` is a reactive proxy.
 
-props.user.name += 'hello' // This would work without warning!
+:::info
+
+Unlike `reactive()`, `shallowReactive()` does not go throught the [unwrap process](./unwrap-nested-ref) while making the proxy, so the return type of `shallowReactive()` is guaranteed to be the same as the type of arugment.
+
+:::
+
+### What Is Shallow Readonly?
+
+**Shallow readonly** means in an object, only the root-level properties are readonly; properties deeper than that are not readonly. We can use the [`shallowReadonly()`](https://vuejs.org/api/reactivity-advanced.html#shallowreadonly) function to create a shallow readonly object, for example:
+
+```ts
+import { shallowReadonly } from 'vue'
+
+const user = shallowReadonly({
+  name: 'hello',
+  child: {
+    age: 5,
+  },
+})
 ```
 
-You should **always avoid directly mutating props in child components** regardless of the type, so that the data flow of your components stays one-way (from top to bottom). If you have to mutate props in child components, you should use [`events`](https://vuejs.org/guide/components/events.html#component-events). The main concept is, parent component would be the only one that's allowed to mutate those values; all children do is to "trigger" those changes.
+In this example, `user` is declared as a shallow readonly object, which means:
+
+- We cannot mutate `user.name`.
+- We cannot replace `user.child` with any other value.
+- We **can** mutate `user.child.age`.
+
+To sum up, you can think of it this way: `props` acts just like a reactive proxy made by `shallowReactive()` and `shallowReadonly()`; it's just that all property values are coming from parent component.
+
+```ts
+import { shallowReactive, shalloeReadonly } from 'vue'
+
+const props =
+  shallowReadonly(
+    shallowReactive({
+      // ...
+    })
+  )
+```
+
+That's why we say `props` is a "shallow reactive-ish" proxy with shallow readonly constraint — it's not strictly "shallow reactive" due to how `shallowReactive()` works.
+
+:::info
+
+You should **always avoid directly mutating props in child components** so that the data flow of your components stays one-way (from top to bottom). If you have to mutate props in child components, you should use [`events`](https://vuejs.org/guide/components/events.html#component-events). The main concept is, parent component would be the only one that's allowed to mutate those values; all children do is to "trigger" those changes.
+
+:::
 
 ## The Reactivity of Props
 
-Have you ever been in a situation that **for some reason, some properties in your props are just not reactive**?
+Have you ever been in a situation that **for some reason, "some" properties in your props are just not reactive**?
 
-You spent a lot of time debugging but still can't find a solution. So you start to find some workaround:
-
-_What if I can just receive `Ref<T>` in props without unwrap, so that it's guaranteed to be reactive?_
-
-So maybe this kind of props definition would work:
-
-```ts
-import { Ref } from 'vue'
-
-const props = defineProps<{
-  name: Ref<string>
-}>()
-
-name.value = 'victory!'
-```
-
-That's actually not a very bad idea, but **don't do that!** The main reason is that it breaks the [readonly constraint](#readonly-constraint) we've mentioned above, which increases the chance of props getting modified by children.
-
-If that's the case, that means you've accidentally broke the reactivity of props. Since shallow-reactive proxy is also a proxy, you can just treat it like a reactive proxy. Check [here](./reactive#the-reactivity-of-a-reactive-proxy) for solutions!
-
-
-
-<details>
-  <summary>In case you're really curious about how to pass <code>Ref</code> down without being unwrapped...</summary>
-
-  The main concept here is to prevent Vue from automatically unwrapping `Ref<T>` in `<template>`.
-
-  1. Use a non top-level `Ref<T>` as the value of props, for example:
-
-  ```html title="ParentComponent.vue" showLineNumbers
-  <template>
-    <ChildComponent :name="user.name" />
-  </template>
-
-  <script lang="ts" setup>
-  import { ref } from 'vue'
-
-  const user = {
-    name: ref('hello'),
-  }
-  </script>
-  ```
-
-  2. Use a function to return `Ref<T>`, for example:
-
-  ```html title="ParentComponent.vue" showLineNumbers
-  <template>
-    <ChildComponent :name="getName()" />
-  </template>
-
-  <script lang="ts" setup>
-  import { ref } from 'vue'
-
-  const user = {
-    name: ref('hello'),
-  }
-
-  const getName = () => user.name
-  </script>
-  ```
-
-  3. Use [Provide / Inject](https://vuejs.org/guide/components/provide-inject.html)
-
-</details>
+For most of the time, that happens because you've accidentally broke the reactivity of props. Since `props` is a shallow reactive **proxy**, you can just treat it like a reactive proxy. Check [here](./reactive#the-reactivity-of-reactive-proxy) for solutions!
