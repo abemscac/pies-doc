@@ -1,5 +1,7 @@
 ---
 sidebar_position: 1
+description: Basic syntax of Vue 3.
+keywords: [piesdoc, vue3]
 ---
 
 # Basic Syntax
