@@ -9,11 +9,11 @@ export default function Home(): JSX.Element {
     <Layout
       title={translate({
         id: 'home.title',
-        description: 'Home title',
+        message: 'Pies Doc',
       })}
       description={translate({
         id: 'home.tagline',
-        description: 'Home tagline',
+        message: 'A handbook about the fundamentals of web development.',
       })}
     >
       <HomeHero />
