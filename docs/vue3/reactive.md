@@ -408,4 +408,4 @@ In short, `ref()` should only be used when declaring new states without referenc
 
 ## What Is `UnwrapNestedRef<T>`
 
-`UnwrapNestedRef<T>` is the **type** of the returned value of `reactive()`. Since it's not really necessary to know it because your IDE would have already done the most difficult part for you, and it's somewhat complicated as well, we think it's better to not include it here. But if you're still interested in learning what it is, feel free to visit the chapter of [`UnwrapNestedRef<T>`](./unwrap-nested-ref)!
+`UnwrapNestedRef<T>` is the **return type** of `reactive()`. Since it's not really necessary to know it because your IDE would have already done the most difficult part for you, and it's somewhat complicated as well, we think it's better to not include it here. But if you're still interested in learning what it is, feel free to visit the chapter of [`UnwrapNestedRef<T>`](./unwrap-nested-ref)!

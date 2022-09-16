@@ -57,8 +57,8 @@ export default function HomeFeatures() {
           paragraphs={[
             translate({
               id: 'home.features.how_text_0',
-              message: `Pies Doc explains the fundamentals! Instead of digging into the source code and
-              display something extremely raw, this handbook emphasizes the part that relates to
+              message: `Pies Doc explains the fundamentals! Instead of digging into the source code
+              and show you something extremely raw, this handbook emphasizes the part that relates to
               developers the most — the API itself.`,
             }),
             translate({

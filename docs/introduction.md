@@ -15,7 +15,7 @@ But don't worry, you don't need a lot of experience to get started; just follow 
 
 ## How Can Pies Doc Help You?
 
-Pies Doc explains the fundamentals! Instead of digging into the source code and display something extremely raw, this handbook emphasizes the part that relates to developers the most — the API itself.
+Pies Doc explains the fundamentals! Instead of digging into the source code and show you something extremely raw, this handbook emphasizes the part that relates to developers the most — the API itself.
 
 By learning how to use API correctly and the theory behind it, you will not only be able to identify what is anti-pattern, but also significantly reduce the bugs and strange workarounds brought by inappropriate API usage.
 
