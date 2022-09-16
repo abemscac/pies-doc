@@ -1,11 +1,14 @@
-<div style="text-align: center">
-  <h1>Pies Doc</h1>
-  <a href="https://piesdoc.com" target="_blank">
-    <img src="./static/img/logo-constrast.png" alt="Pies Doc logo" width="120px" height="auto">
+<h1 align="center">Pies Doc</h1>
+
+<div align="center">
+  <a href="https://piesdoc.com/" target="_blank">
+    <img src="./static/img/logo-constrast.png" alt="Pies Doc logo" width="180" height="auto">
   </a>
-  <p style="margin-top: 24px;">A handbook about the fundamentals of web development.</p>
+  <br />
+  <br />
+  <p>A handbook about the fundamentals of web development.</p>
   <h2>
-    <a href="https://piesdoc.com" target="_blank">Start Reading Now</a>
+    <a href="https://piesdoc.com/" target="_blank">Start Reading Now</a>
   </h2>
 </div>
 
