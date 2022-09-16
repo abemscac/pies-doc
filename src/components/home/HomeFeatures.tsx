@@ -10,11 +10,13 @@ interface IFeatureProps {
 
 const Feature = ({ title, paragraphs }: IFeatureProps) => {
   return (
-    <div className={clsx('col col--4')}>
+    <div className={clsx('col col--4', styles.col)}>
       <div className="text--center padding-horiz--md">
         <h3>{title}</h3>
         {paragraphs.map((paragraph, index) => (
-          <p key={index.toString()}>{paragraph}</p>
+          <p key={index.toString()} className={styles.paragraph}>
+            {paragraph}
+          </p>
         ))}
       </div>
     </div>
@@ -40,7 +42,7 @@ export default function HomeFeatures() {
             }),
             translate({
               id: 'home.features.who_text_1',
-              message: `However, you don't need a lot of experience to get started either;
+              message: `But don't worry, you don't need a lot of experience to get started;
               just follow the official tutorial to make a simple app if there's one,
               either a todo app or a counter app is fine, then you'll be all set! No matter
               which level you're at, you can all benefit from this handbook.`,
@@ -67,7 +69,10 @@ export default function HomeFeatures() {
             }),
             translate({
               id: 'home.features.how_text_2',
-              message: 'Never underestimate the power of the fundamentals!',
+              message: `Never underestimate the power of the fundamentals! Although "to learn the
+              fundamentals well" may not sound very cool and appealing, it is in fact an
+              indispensable element for being able to comprehend more advanced
+              knowledge.`,
             }),
           ]}
         />

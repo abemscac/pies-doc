@@ -11,7 +11,7 @@ keywords: [piesdoc, web, vue3, react]
 
 Pies Doc suits those who have **already learned the very basics of JavaScript**, and **have basic knowledge of the subject they're trying to learn**. If you are an absolute beginner with 0 experience with the subject, you may find the content of this handbook difficult to understand.
 
-However, you don't need a lot of experience to get started either; just follow the official tutorial to make a simple app if there's one, either a todo app or a counter app is fine, then you'll be all set! No matter which level you're at, you can all benefit from this handbook.
+But don't worry, you don't need a lot of experience to get started; just follow the official tutorial to make a simple app if there's one, either a todo app or a counter app is fine, then you'll be all set! No matter which level you're at, you can all benefit from this handbook.
 
 ## How Can Pies Doc Help You?
 
@@ -19,7 +19,7 @@ Pies Doc explains the fundamentals! Instead of digging into the source code and 
 
 By learning how to use API correctly and the theory behind it, you will not only be able to identify what is anti-pattern, but also significantly reduce the bugs and strange workarounds brought by inappropriate API usage.
 
-**Never underestimate the power of the fundamentals!**
+**Never underestimate the power of the fundamentals!** Although "to learn the fundamentals well" may not sound very cool and appealing, it is in fact an indispensable element for being able to comprehend more advanced knowledge.
 
 ## Why Pies Doc?
 

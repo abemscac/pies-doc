@@ -11,6 +11,14 @@
   overflow: hidden;
 }
 
+.container-light {
+  background-color: #2167aa;
+}
+
+.container-dark {
+  background-color: #1d3a56;
+}
+
 @media screen and (max-width: 996px) {
   .container {
     padding-top: 24px;
@@ -23,7 +31,15 @@
   height: 200px;
 }
 
-.actionButtonWrap {
+.title {
+  color: white;
+}
+
+.tagline {
+  color: white;
+}
+
+.action-button-wrap {
   display: flex;
   align-items: center;
   justify-content: center;

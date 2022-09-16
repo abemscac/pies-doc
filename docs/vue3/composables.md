@@ -8,7 +8,7 @@ keywords: [piesdoc, vue3, composables]
 
 The most powerful tool in Composition API!
 
-## What Is a Composable
+## What Is a Composable?
 
 A composable is a **function** that can be called from almost anywhere in a Vue app. In a composable, you can do most of the things you could do in `<script setup>`, and return anything you want to fulfill your requirements.
 
