@@ -1,8 +1,10 @@
 ---
 sidebar_position: 4
+description: What does reactive function do in Vue 3.
+keywords: [piesdoc, vue3, reactive, proxy]
 ---
 
-import Video from '@site/src/components/Video'
+import Video from '@site/src/widgets/Video'
 
 # `reactive()`
 
@@ -16,7 +18,7 @@ This one line definition actually sums it up very well, but it might have brough
 - What is a **reactive proxy**?
 - What is **`UnwrapNestedRef<T>`**? (optional)
 
-We'll try to explain most of these stuff in this chapter. But before doing that, let's take a look at a simple example of `reactive()`:
+We'll try to explain these stuff in this chapter. But before doing that, let's take a look at a simple example of `reactive()`:
 
 ```ts showLineNumbers
 import { reactive } from 'vue'
@@ -30,10 +32,7 @@ console.log(user.name) // 'hello'
 console.log(user.age) // 5
 ```
 
-In this example, the returned value of `reactive()` has exactly the same data structure as what we gave it, but that's not always the case.
-The reason is there's an unwrap process inside `reactive()`, but it rarely gets "triggered". We'll explain more in detail [below](#what-is-unwrapnestedreft).
-
-To mutate a reactive value, we can simply do it in the classic JavaScript way:
+In this example, the returned value of `reactive()` has exactly the same data structure as what we gave it (but that's not always the case!). To mutate the value of a reactive proxy, we can simply do it in the classic JavaScript way:
 
 ```ts showLineNumbers
 import { reactive } from 'vue'
@@ -43,16 +42,14 @@ const user = reactive({
   age: 5,
 })
 
-console.log(user.name) // 'hello'
-console.log(user.age) // 5
+console.log(user.name, user.age) // 'hello', 5
 
 // highlight-next-line
 user.name = 'world'
 // highlight-next-line
 user.age = 10
 
-console.log(user.name) // 'world'
-console.log(user.age) // 10
+console.log(user.name, user.age) // 'world', 10
 ```
 
 ## `reactive()` Only Works With Non-primitive Values
@@ -88,14 +85,13 @@ Even if you declare it using `let count = reactive(0)`, your component will stil
 If you don't know what [proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) is, don't worry;
 you can still learn `reactive()` very well without knowing it!
 
-Briefly speaking, a proxy is an object that allows you to run custom logic whenever someone tries to access or change the value in a targeted object.
-That's why reactive proxy is "reactive" — Vue re-renders the component for us when the value in a reactive proxy changes.
+Briefly speaking, a proxy is an object that allows you to run custom logic whenever someone tries to access or change the value in a targeted object. That's how Vue applies reactivity to reactive proxies.
 
 So you can just think of a reactive proxy as something that has almost the same data structure as the targeted object, the only difference is it runs some extra logic when the value changes.
 
 ### Non-reactive Value in `<template>`
 
-Let's start by looking at an example of **non-reactive value**, as known as the standard, plain JavaScript object.
+Let's start by looking at an example of **non-reactive value**, as known as the standard, normal JavaScript variable. For example, a plain object:
 
 ```html title="Non-reactive value" showLineNumbers
 <template>
@@ -106,12 +102,15 @@ Let's start by looking at an example of **non-reactive value**, as known as the 
 </template>
 
 <script setup>
+// highlight-start
 const user = {
   name: 'hello',
   age: 5,
 }
+// highlight-end
 
 const getOld = () => {
+  // highlight-next-line
   user.age++
   console.log(user.age)
 }
@@ -119,12 +118,11 @@ const getOld = () => {
 ```
 
 The logic of this component is very simple — every time we click "Get Old", `user.age` will be incremeneted by 1.
-In the very beginning, we see `hello is 5 years old` on the screen; after clicking "Get Old" for a couple of times, we find that despite the fact that `user.age` do gets updated, the number on the screen is still `5`.
+In the very beginning, we see `hello is 5 years old` on the screen; no matter how many times the button is clicked, the number on the screen will always be `5`.
 
 <Video src="/video/reactive_non-reactive-value.mov" />
 
-So why is this happening? The reason is that since `user` is not declared with either `ref()` or `reactive()`, it'll be nothing but a plain object in `<script>`.
-Vue components just don't care about the changes of these normal, non-reactive values.
+This happens because `user` is not a reactive variable declared by using either `ref()` or `reactive()`. Since it's a non-reactive variable, our component just don't care about its' changes. Even though the value of `user.age` did get updated, the component still didn't re-render.
 
 
 ### Reactive Proxy in `<template>`
@@ -142,24 +140,26 @@ Now let's take a look at an example of **reactive proxy**:
 <script setup>
 import { reactive } from 'vue'
 
+// highlight-start
 const user = reactive({
   name: 'hello',
   age: 5,
 })
+// highlight-end
 
 const getOld = () => {
+  // highlight-next-line
   user.age++
   console.log(user.age)
 }
 </script>
 ```
 
-This component is almost the same as the previous one, the only difference is we're now declaring `user` with `reactive()`.
-Besides, the component re-renders whenever we click "Get Old", which is exactly what we want.
+This component is almost the same as the previous one, the only difference is we're now declaring `user` with `reactive()`. Clicking the button for a couple of time, and you'll see the component finally gets re-rendered as how we've expected it to be.
 
 <Video src="/video/reactive_reactive-proxy.mov" />
 
-This happens because Vue is designed in such way that by default, components re-render whenever **reactive proxy** or **`Ref<T>`** changes. So if we declare `user` without using `reactive()` or `ref()`, Vue will not do anything when `user` changes because `user` is neither a reactive proxy nor a `Ref<T>`.
+So why would using `reactive()` make such difference? This is because Vue is designed in such way that by default, components re-render whenever **reactive proxy** or **`Ref<T>`** changes. So if we declare `user` without using `reactive()` or `ref()`, Vue will not do anything when `user` changes because `user` is neither a reactive proxy nor a `Ref<T>`.
 
 ### Both Reactive and Non-reactive Values
 
@@ -168,7 +168,7 @@ But be careful, that doens't mean the changes being made to non-reactive values 
 ```html title="Both reactive and non-reactive values" showLineNumbers
 <template>
   <div>
-    <h1>{{ userA.name }} is {{ userB.age }} years old</h1>
+    <h1>{{ cat.name }} is {{ dog.age }} years old</h1>
     <button @click="changeName">Change Name</button>
     <button @click="getOld">Get Old</button>
   </div>
@@ -177,46 +177,52 @@ But be careful, that doens't mean the changes being made to non-reactive values 
 <script setup>
 import { reactive } from 'vue'
 
-const userA = reactive({
+// highlight-start
+const cat = reactive({
   name: 'hello',
 })
+// highlight-end
 
 const changeName = () => {
-  userA.name += 'o'
+  // highlight-next-line
+  cat.name += 'o'
 }
 
-const userB = {
+// highlight-start
+const dog = {
   age: 5,
 }
+// highlight-end
 
 const getOld = () => {
-  userB.age++
+  // highlight-next-line
+  dog.age++
 }
 </script>
 ```
 
-In this example, we use both reactive and non-reactive values at the same time. The logic of this component is very similar to the previous one — clicking "Get Old" will incremenet `userB.age` by 1, and clicking "Change Name" will append an `o` to `userA.name`.
+In this example, we use both reactive and non-reactive values at the same time. The logic is simple — clicking "Change Name" will append an `o` to `cat.name`, and clicking "Get Old" will incremenet `dog.age` by 1.
 
-Here we declare `userA` as a reactive proxy, and declare `userB` as a non-reactive object. We know that the changes being made to `userA` will cause the component to re-render because `userA` is a reactive proxy, while the changes made to `userB` will not.
+Here we declare `cat` as a reactive proxy, and declare `dog` as a non-reactive object. We know that the changes being made to `cat` will cause the component to re-render because `cat` is a reactive proxy, while the changes being made to `dog` will not.
 
 At first we click "Change Name" for a couple of times, and each time we click it, the component re-renders with an `o` being appended to `hello`.
 
 <Video src="/video/reactive_both-0.mov" />
 
-Then we click "Get Old" for a couple of times as well, this time the component does not re-render. That's exepcted because `userB` is neither a reactive proxy nor a `Ref<T>`.
+Then we click "Get Old" for a couple of times as well, this time the component does not re-render. That's exepcted because `dog` is neither a reactive proxy nor a `Ref<T>`.
 
 <Video src="/video/reactive_both-1.mov" />
 
-Then we go back to click "Change Name" again, and something strange happens — the `5` on the screen is now being changed!
+Then we go back to click "Change Name" again, and something strange happened — the `5` on the screen is now being changed!
 
 <Video src="/video/reactive_both-2.mov" />
 
 Quite confusing, isn't it? The secret behind this is:
 
-- When we click "Get Old", the value of `userB.age` do gets updated; it's just not being reflected on the screen yet because the component does not re-render.
-- When we click "Change Name", `userA.name` gets updated; since `userA` is a reactive proxy, the component will now re-render with the latest state of variables in `<script>`.
+- When we click "Get Old", the value of `dog.age` do gets updated; it's just not being reflected on the screen yet because the component does not re-render.
+- When we click "Change Name", `cat.name` gets updated; since `cat` is a reactive proxy, the component will now re-render with the latest state of variables in `<script>`.
 
-So When using Vue 3, you should **always avoid such pattern** because it is more likely to cause bugs in your app. Knowing when to make a variable reactive is important, a simple rule of thumb would be:
+So When using Vue 3, you should **always avoid mixing reactive values and non-reactive values in `<template>`** because it is more likely to cause bugs in your app. Knowing when to make a variable reactive is important, a simple rule of thumb would be:
 
 - Always make a variable reactive (by using either `ref()` or `reactive()`) if the value **will change**, and **users must be informed of that change** on the screen.
 - Otherwise just make it non-reactive.
@@ -225,7 +231,7 @@ So When using Vue 3, you should **always avoid such pattern** because it is more
 
 ### Does Destructing Assignment Break Reactivity?
 
-A common mistake developers make is they take primitive values out from a reactive proxy, assigning them to some other variables, and think they are still "connected". The most common case is destructing assignment:
+A common mistake developers make is they take primitive values out from a reactive proxy, assigning them to some other variables, and think they are still reactive. The most common case is destructing assignment:
 
 ```ts showLineNumbers
 import { reactive } from 'vue'
@@ -236,19 +242,18 @@ const user = reactive({
   },
 })
 
+// highlight-next-line
 const { child } = user
 
-console.log(user.child.name) // 'hello'
-console.log(child.name) // 'hello'
+console.log(user.child.name, child.name) // 'hello', 'hello'
 
 // highlight-next-line
 child.name = 'world'
 
-console.log(user.child.name) // 'world'
-console.log(child.name) // 'world'
+console.log(user.child.name, child.name) // 'world', 'world'
 ```
 
-The above example demonstrates a common misconception that everything we get from reactive proxy is "connected" to the source, but it's acutally not. For example:
+The above example demonstrates a common misconception that everything we get from reactive proxy is always "connected" to the source, but it's acutally not! For example:
 
 ```ts showLineNumbers
 import { reactive } from 'vue'
@@ -258,13 +263,14 @@ const user = reactive({
   age: 5,
 })
 
+// highlight-next-line
 const { name: myName, age: myAge } = user
 
 console.log(user.name, myName) // 'hello', 'hello'
 console.log(user.age, myAge) // 5, 5
 ```
 
-We may think to ourselves "Okay, so now `myName` and `myAge` are connected to `user`", and proceed to mutate `user.name` and `user.age`:
+We may think to ourselves "Okay, so now `myName` and `myAge` must be connected to `user`", and proceed to mutate `user.name` and `user.age`:
 
 ```ts showLineNumbers
 import { reactive } from 'vue'
@@ -290,11 +296,11 @@ console.log(user.age, myAge) // 10, 5
 
 As you can see, the changes we made to `user` did not effect `myName` and `myAge` at all (and vice versa).
 
-_So there's a problem using destructing assignment with `reactive()`?_
+Why is it that in the first example, mutating `child.name` did effect `user.child`, while the same behavior cannot be observed in the second example?
 
-Not really. The same thing would happen even if we use `const myName = user.name` (because that's exactly what destructing assignment do), so it's not quite correct to say destructing assignment causes the problem.
+_Is it a problem by using destructing assignment with `reactive()`?_
 
-_But if it's not for destructing assignment, what is the real cause then?_
+Not really. The same thing would happen even if we use `const myName = user.name` (because that's exactly what destructing assignment does), so it's not quite correct to say destructing assignment causes the problem.
 
 The answer is actually very simple. All we have to do is to recap how variable works in JavaScript, and you'll know it right away!
 
@@ -305,15 +311,15 @@ const myName = user.name
 const myAge = user.age
 ```
 
-Because `user.name` (string) and `user.age` (number) are both **primitive values**, they are being **passed by value** when declaring `myName` and `myAge`; that means `myName` and `myAge` will be new variables with new memory addresses, thus they "disconnect" from `user`.
+Because `user.name` (string) and `user.age` (number) are both **primitive values**, they will get passed to `myName` and `myAge` **by value**; that means `myName` and `myAge` will now be new variables with new memory addresses, thus they "disconnect" from `user`.
 
-So as long as the target value is non-primitive, you can use as many destructing assignment as you want while keeping reactivity (but not recommended though!).
+So technically, as long as the target value is non-primitive, you can use as many destructing assignment with `reactive()` as you want while keeping reactivity. But we don't recommend doing this because it creates inconsistent behavior between these variables — some of them are reactive, while some of them are not.
 
 ### How to Keep Reactivity
 
 So is there a way that we can use the convenient destructing assignment syntax with `reactive()`, but keeping reactivity at the same time? Yes, there is! The closest we can get is to use [`toRef()`](https://vuejs.org/api/reactivity-utilities.html#toref) or [`toRefs()`](https://vuejs.org/api/reactivity-utilities.html#torefs).
 
-`toRef()` and `toRefs()` do exactly what they say — turn something into `Ref<T>`(s). These two functions are very similar to each other, but there's still a difference; in a nutshell, **`toRefs()` = a lot of `toRef()`**. For example:
+`toRef()` and `toRefs()` do exactly what they say — turning something into `Ref<T>`(s). These two functions are very similar to each other, but there's still a difference; in a nutshell, **`toRefs()` = a lot of `toRef()`**. For example:
 
 ```ts showLineNumbers
 import { reactive, toRef, toRefs } from 'vue'
@@ -324,15 +330,82 @@ const user = reactive({
 })
 
 // We can either do this:
-const myName = toRef(user, 'name')
-const myAge = toRef(user, 'age')
+// highlight-start
+const name = toRef(user, 'name')
+const age = toRef(user, 'age')
+// highlight-end
 
 // Or this:
-const { name: myName, age: myAge } = toRefs(user)
+// highlight-next-line
+const { name, age } = toRefs(user)
 ```
 
-Most of the time we'll just use `toRefs()` because it's slightly more convenient than `toRef()`, but the results are the same. The `Ref<T>` generated by `toRef()` and `toRefs()` are always connected to the source, which is `user` in this example. By using `toRef()` and `toRefs()`, we no longer have to worry about if a property is primitive or not. Just turn it into a `Ref<T>`, and everything would work as expected!
+Most of the time we'll just use `toRefs()` because it's slightly more convenient than `toRef()`, but the results are the same. The `Ref<T>` generated by `toRef()` and `toRefs()` are always connected to the source, which means reactivity will be kept. By using `toRef()` and `toRefs()`, we no longer have to worry about if a property is primitive or not. Just turn it into a `Ref<T>`, and everything would work as expected!
+
+
+:::info
+
+In the above example, will we get the same result if we replace `toRef()` with `ref()`? (are they the same thing?)
+
+```ts showLineNumbers
+import { reactive, ref } from 'vue'
+
+const user = reactive({
+  name: 'hello',
+  age: 5,
+})
+
+// Will this work?
+// highlight-start
+const name = ref(user.name)
+const age = ref(user.age)
+// highlight-end
+```
+
+The answer is **no** — `name` and `age` will **not** be connected to `user`. They will be treated as separate `Ref<T>`s.
+
+This is because since `user.name` and `user.age` are both primitive values, they will be passed to `ref()` **by value**. So writing `const name = ref(user.name)` will equal to `const name = ref('hello')`, which then creates a individual `Ref<T>` with `hello` as initial value.
+
+Furthermore, even though the return type of `ref()` and `toRef()` are both `Ref<T>`, they are actually returning different class instances that runs different logic.
+
+But be careful, if the target object is a non-primitive value, both `ref()` and `toRef()` would connect to the same source, and updating them would both cause the component to re-render. For example:
+
+
+```ts showLineNumbers
+import { reactive, ref, toRef } from 'vue'
+
+const user = reactive({
+  name: 'hello',
+  child: {
+    age: 5,
+  },
+})
+
+// highlight-start
+const cat = ref(user.child)
+const dog = toRef(user, 'child')
+// highlight-end
+
+console.log(user.child.age, cat.value.age, dog.value.age) // 5, 5, 5
+
+// highlight-next-line
+cat.value.age = 10
+
+console.log(user.child.age, cat.value.age, dog.value.age) // 10, 10, 10
+
+// highlight-next-line
+dog.value.age = 15
+
+console.log(user.child.age, cat.value.age, dog.value.age) // 15, 15, 15
+```
+
+To avoid confusion, we recommend:
+
+- Use `ref()` only when declaring states that is not connected to any source value.
+- Use `toRef()` or `toRefs()` only when declaring states that is connected to a specific source value.
+
+:::
 
 ## What Is `UnwrapNestedRef<T>`
 
-`UnwrapNestedRef<T>` is the **type** of the returned value of `reactive()`. Since it's not really necessary to know it because your IDE would have already done the most difficult part for you, and it's somewhat complicated as well, we think it's better to not include it here. But if you're still interested in learning it, feel free to visit the chapter of [`UnwrapNestedRef<T>`](./unwrap-nested-ref)!
+`UnwrapNestedRef<T>` is the **type** of the returned value of `reactive()`. Since it's not really necessary to know it because your IDE would have already done the most difficult part for you, and it's somewhat complicated as well, we think it's better to not include it here. But if you're still interested in learning what it is, feel free to visit the chapter of [`UnwrapNestedRef<T>`](./unwrap-nested-ref)!

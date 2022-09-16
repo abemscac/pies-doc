@@ -1,14 +1,16 @@
 ---
 sidebar_position: 6
+description: What are props in Vue 3.
+keywords: [piesdoc, vue3, props]
 ---
 
-import Video from '@site/src/components/Video';
+import Video from '@site/src/widgets/Video';
 
 # Props
 
 ## What Are Props?
 
-Props are **properties coming from parent component**. These properties are stored in an object which most of the time is named `props`.
+Props are **properties coming from parent component**. These properties are stored in an object that, for most of the time, is being called `props`.
 
 For example, if you declare your props in a component like this:
 
@@ -39,7 +41,7 @@ const myAge = ref(5)
 
 ## Shallow Reactive and Shallow Readonly
 
-Here's an interesting fact: the `props` object is actually a **shallow reactive-ish proxy** with **shallow readonly** constraint! (We'll explain the "-ish" below.)
+Here's an interesting fact: the `props` object is actually a **non-strict shallow reactive proxy** with **shallow readonly** constraint!
 
 ### What Is Shallow Reactive?
 
@@ -83,7 +85,7 @@ In this example:
 
 :::info
 
-Unlike `reactive()`, `shallowReactive()` does not go throught the [unwrap process](./unwrap-nested-ref) while making the proxy, so the return type of `shallowReactive()` is guaranteed to be the same as the type of arugment.
+Unlike `reactive()`, `shallowReactive()` does not go throught the [unwrap process](./unwrap-nested-ref) while making a proxy, so the return type of `shallowReactive()` is guaranteed to be the same as the type of arugment.
 
 :::
 
@@ -108,10 +110,10 @@ In this example, `user` is declared as a shallow readonly object, which means:
 - We cannot replace `user.child` with any other value.
 - We **can** mutate `user.child.age`.
 
-To sum up, you can think of it this way: `props` acts just like a reactive proxy made by `shallowReactive()` and `shallowReadonly()`; it's just that all property values are coming from parent component.
+To sum up, you can think of `props` as a reactive proxy made by `shallowReactive()` and `shallowReadonly()`; it's just that all property values are coming from parent component.
 
 ```ts showLineNumbers
-import { shallowReactive, shalloeReadonly } from 'vue'
+import { shallowReactive, shallowReadonly } from 'vue'
 
 const props =
   shallowReadonly(
@@ -120,8 +122,6 @@ const props =
     })
   )
 ```
-
-That's why we say `props` is a "shallow reactive-ish" proxy with shallow readonly constraint — it's not strictly "shallow reactive" due to how `shallowReactive()` works.
 
 :::info
 
@@ -133,4 +133,4 @@ You should **always avoid directly mutating props in child components** so that 
 
 Have you ever been in a situation that **for some reason, "some" properties in your props are just not reactive**?
 
-For most of the time, that happens because you've accidentally broke the reactivity of props. Since `props` is a shallow reactive **proxy**, you can just treat it like a reactive proxy. Check [here](./reactive#the-reactivity-of-reactive-proxy) for solutions!
+For most of the time, that means you've accidentally broke the reactivity of props. Since `props` is a shallow reactive proxy, you can just treat it like a reactive proxy. Check [here](./reactive#the-reactivity-of-reactive-proxy) for solutions!

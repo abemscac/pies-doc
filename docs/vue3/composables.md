@@ -1,5 +1,7 @@
 ---
 sidebar_position: 7
+description: What are composables in Vue 3.
+keywords: [piesdoc, vue3, composables]
 ---
 
 # Composables
@@ -12,13 +14,13 @@ A composable is a **function** that can be called from almost anywhere in a Vue 
 
 :::info
 
-You might be wondering what's the difference between a (utility) function and a composable, because "a function that can be called from almost anywhere in a Vue app" sounds just like a utility function. Generally speaking, if any Vue-specific feature is used within the function (for example, `ref()` and `onMounted()`), we would call it a **composable** instead of a normal function.
+You might be wondering what's the difference between a (utility) function and a composable, because the statement "a function that can be called from almost anywhere in a Vue app" sounds just like a utility function. Generally speaking, if any Vue-specific feature is used within the function (for example, `ref()` and `onMounted()`), we would call it a **composable** instead of a normal function.
 
 :::
 
 :::caution
 
-Despite the fact that composables can be called from almost anywhere in the app (because they're functions), it may not work if it's called before Vue instance is set up. For example, calling `onMounted()` before your Vue instance is set up is apparently not going to work.
+Despite the fact that composables can be called from almost anywhere in a Vue app (because they're functions), it may not work if it's called before Vue instance is set up. For example, calling `onMounted()` before your Vue instance is set up is apparently not going to work.
 
 :::
 
@@ -57,7 +59,7 @@ onMounted(async () => {
 
 :::caution
 
-You should never manage your API like this! We only write it in this way for the sake of simplicity. If you're not sure what to do, a simple encapsulation would be a good start:
+You should probably not manage your API like this! We only write it in this way for the sake of simplicity. If you're not sure what to do, a simple encapsulation would be a good start because it's more readable and more maintainable:
 
 ```ts showLineNumbers
 export const useUserApi = () => {
@@ -70,7 +72,7 @@ export const useUserApi = () => {
 ```
 :::
 
-Since a lot of pages in the app are fetching data on mount, we would have to repeat the similar code again and again. Instead of doing that, we can make a composable and shove those code in it. For example:
+Since a lot of pages in the app are fetching data on mount, we would have to repeat the similar code again and again. Instead of doing that, we can make a composable and shove these code in it. For example:
 
 ```ts title="UseFetchOnMount.ts" showLineNumbers
 import { ref, onMounted } from 'vue'
@@ -95,9 +97,9 @@ export const useFetchOnMount = <T>(url: string, initialValue: T) => {
 <details>
   <summary>For those who are from React...</summary>
 
-  If you've learned **React Hooks API**, you might be wondering why we can't just return something like `[loading.value, data.value]` so that we can omit the `.value` outside composables.
+  If you've learned React Hooks API, you might be wondering why we can't just return something like `[loading.value, data.value]` so that we can omit the `.value` outside composables.
 
-  This is because React is using JSX, which means almost every piece of code in a component is being re-run on each re-render; but things are not the same in Vue. In a Vue component, `<script setup>` and `setup()` would only run once for each instance, so if we return `Ref<T>.value` instead of `Ref<T>` itself, we would lose the reactivity on these states.
+  This is because React is using JSX, which means almost every piece of code in a component is being re-run on each re-render, but things are not the same in Vue. In a Vue component, `<script setup>` and `setup()` would only run once for each instance, so if we return `Ref<T>.value` instead of `Ref<T>` itself, we would lose the reactivity on these states.
 </details>
 
 The code in this composable is pretty much the same as the original code in the component; we're just moving it to a `.ts` file so that it's more reusable and testable. After we've done implementing it, we're now ready to use it in our components:
@@ -151,7 +153,7 @@ With the help of composables, we're now able to reuse some functionalities that'
 
 However, there are a few important things to keep in mind:
 
-- Reusability is not the only thing we should take into consideration before making composables; if the logic of a component is somewhat complicated, it's totally fine to "cut" (modularize) that huge feature into several small features, even if only one component within the whole app is using it. This way our codebase would be more maintainable and testable, comparing with putting everything in a single component.
+- Reusability is not the only thing to be taken into consideration before making composables; if the logic of a component is somewhat complicated, it's totally fine to "cut" (modularize) that huge feature into several small features, even if only one component within the whole app is using it. This way our codebase would be more maintainable and testable, comparing with putting everything in a single component.
 - Component is not the only place you can use composable; you can also use a composable in another composable!
 - Things like `defineProps()` and `defineEmits()` are not allowed in composables; they only work when directly used in `<script setup>`.
-- **More reusability does NOT equal to better code!** A lot of developers would try to modify an existing composable instead of creating a new one in order to reuse it in even more components. It is very common to see composables go out of control in order to handle all kinds of (edge) cases — more and more arguments/methods are added, making things way more complicated than it should be; and the cost of refactoring/replacement would only get higher as time goes on. Think wisely before adding new features to composables.
+- **More reusability does NOT equal to better code!** A lot of developers would try to modify an existing composable instead of creating a new one in order to reuse it in even more components. It is very common to see composables go out of control in this kind of situation — in order to handle all kinds of (edge) cases, more and more arguments/methods are added, making things way more complicated than it should be; and the cost of refactoring/replacement would only get higher as time goes on. Don't be afraid to create new composables if the old one starts to get too complicated.
