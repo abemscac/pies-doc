@@ -11,7 +11,7 @@ Learn the unwrap process of `reactive()`.
 
 :::caution Prerequisites
 
-You must learn [`ref()`](./ref) and [`reactive()`](./reactive) before getting into this chapter.
+You must learn [`ref()`](./ref-and-ref) and [`reactive()`](./reactive) before getting into this chapter.
 
 :::
 
