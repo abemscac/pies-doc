@@ -313,7 +313,7 @@ const myAge = user.age
 
 Because `user.name` (string) and `user.age` (number) are both **primitive values**, they will get passed to `myName` and `myAge` **by value**; that means `myName` and `myAge` will now be new variables with new memory addresses, thus they "disconnect" from `user`.
 
-So technically, as long as the target value is non-primitive, you can use as many destructing assignment with `reactive()` as you want while keeping reactivity. But we don't recommend doing this because it creates inconsistent behavior between these variables — some of them are reactive, while some of them are not.
+So technically, as long as the target value is non-primitive, you can use as many destructing assignment with `reactive()` as you want while keeping reactivity. But we don't recommend doing this because it creates inconsistent behavior between variables (some of them are reactive, and some of them are not).
 
 ### How to Keep Reactivity
 
@@ -345,7 +345,7 @@ Most of the time we'll just use `toRefs()` because it's slightly more convenient
 
 :::info
 
-In the above example, will we get the same result if we replace `toRef()` with `ref()`? (are they the same thing?)
+In the above example, will we get the same result if we replace `toRef()` with `ref()`? For example:
 
 ```ts showLineNumbers
 import { reactive, ref } from 'vue'
@@ -355,14 +355,17 @@ const user = reactive({
   age: 5,
 })
 
-// Will this work?
+// Originally we did this.
+const { name, age } = toRefs(user)
+
+// Can we achieve the same goal by doing this?
 // highlight-start
 const name = ref(user.name)
 const age = ref(user.age)
 // highlight-end
 ```
 
-The answer is **no** — `name` and `age` will **not** be connected to `user`. They will be treated as separate `Ref<T>`s.
+The answer is **no** — `name` and `age` will **not** be connected to `user` if we use `ref()`. They will be treated as separate `Ref<T>`s.
 
 This is because since `user.name` and `user.age` are both primitive values, they will be passed to `ref()` **by value**. So writing `const name = ref(user.name)` will equal to `const name = ref('hello')`, which then creates a individual `Ref<T>` with `hello` as initial value.
 
@@ -399,10 +402,7 @@ dog.value.age = 15
 console.log(user.child.age, cat.value.age, dog.value.age) // 15, 15, 15
 ```
 
-To avoid confusion, we recommend:
-
-- Use `ref()` only when declaring states that is not connected to any source value.
-- Use `toRef()` or `toRefs()` only when declaring states that is connected to a specific source value.
+In short, `ref()` should only be used when declaring new states without referencing any kind of source, while `toRef()` and `toRefs()` should only be used when declaring states that is referencing a source to keep reactivity.
 
 :::
 

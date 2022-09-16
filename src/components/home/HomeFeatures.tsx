@@ -37,7 +37,7 @@ export default function HomeFeatures() {
               id: 'home.features.who_text_0',
               message: `Pies Doc suits those who have already learned the very basics of
               JavaScript, and have basic knowledge of the subject they're trying to
-              learn. If you are an absolute beginner with 0 experience with the subject,
+              learn. If you are an absolute beginner with 0 experience in the subject,
               you may find the content of this handbook difficult to understand.`,
             }),
             translate({

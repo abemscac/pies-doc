@@ -58,9 +58,8 @@ class RefImp<T> implements Ref<T> {
 
 - As we've mentioned before, `RefImpl` is a class with only one public property `value`.
 - If the argument is a primitive value, `RefImpl` will use it as `this.value`.
-- If the argument is not a primitive value, `RefImpl` will just call `reactive()` and use the returned value as `this.value`.
+- If the argument is not a primitive value, `RefImpl` will just call `reactive()` and use the returned value as `this.value`; so by using `ref()`, you're actually using `reactive()` as well. You just didn't realize it!
 - The `track(this.value)` works very differently than the source code; but the point is, `RefImpl` will "track" the changes of `this.value` when needed so that reactivity can be fulfilled.
-- By using `ref()`, you're actually using `reactive()` as well (if the argument is not a primitive value); you just didn't realize it!
 
 ### How `reactive()` Works
 
