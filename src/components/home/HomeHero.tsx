@@ -23,12 +23,10 @@ export default function HomeHero() {
           alt="Pies Doc Logo"
         />
         <h1 className={clsx('hero__title', styles.title)}>
-          <Translate id="home.title" description="Home title">
-            Pies Doc
-          </Translate>
+          <Translate id="home.title">Pies Doc</Translate>
         </h1>
         <p className={clsx('hero__subtitle', styles.tagline)}>
-          <Translate id="home.subtitle" description="Home subtitle">
+          <Translate id="home.tagline">
             A handbook about the fundamentals of web development.
           </Translate>
         </p>
@@ -37,9 +35,7 @@ export default function HomeHero() {
             className="button button--secondary button--lg"
             to="/docs/introduction"
           >
-            <Translate id="home.startLearning" description="Start learning">
-              Start Learning →
-            </Translate>
+            <Translate id="home.startLearning">Start Learning →</Translate>
           </Link>
         </div>
       </div>

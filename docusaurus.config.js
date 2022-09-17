@@ -24,7 +24,7 @@ const config = {
   // to replace "en" with "zh-Hans".
   i18n: {
     defaultLocale: 'en',
-    locales: ['en'],
+    locales: ['en', 'zh-Hant'],
   },
 
   presets: [
@@ -70,17 +70,16 @@ const config = {
             label: 'Docs',
           },
           // { to: '/blog', label: 'Blog', position: 'left' },
-          // TODO: open this when chinese go online.
-          // {
-          //   type: 'localeDropdown',
-          //   position: 'right',
-          //   dropdownItemsAfter: [
-          //     {
-          //       to: 'https://github.com/abemscac/pies-doc/issues/27',
-          //       label: 'Help us translate more languages!',
-          //     },
-          //   ],
-          // },
+          {
+            type: 'localeDropdown',
+            position: 'right',
+            dropdownItemsAfter: [
+              {
+                to: 'https://github.com/abemscac/pies-doc/issues/26',
+                label: '🌐 Help us translate!',
+              },
+            ],
+          },
           {
             href: 'https://github.com/abemscac/pies-doc',
             label: 'GitHub',

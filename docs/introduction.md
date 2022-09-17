@@ -27,4 +27,4 @@ Bad code is everywhere. From apps with hundreds of thousands of active users to 
 
 Unfortunately, we, the developers, are the source of these bad code. The problem is, most of the developers didn't realize what they wrote is bad, one of the reason is because they didn't learn the fundamentals well enough.
 
-We want to change this. With the help of Pies Doc, a 100% free handbook, we hope that more and more people in this industry will start to care about their code quality, and help eliminate as much bad code as they can.
+We want to change this. We hope that with the help of Pies Doc, a 100% free handbook, more and more people in this industry will start to care about their code quality, and help eliminate as much bad code as they can.
