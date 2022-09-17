@@ -96,9 +96,9 @@ export default function HomeFeatures() {
             }),
             translate({
               id: 'home.features.why_text_2',
-              message: `We want to change this. With the help of Pies Doc, a 100% free handbook,
-              we hope that more and more people in this industry will start to care
-              about their code quality, and help eliminate as much bad code as they can.`,
+              message: `We want to change this. We hope that with the help of Pies Doc, a 100%
+              free handbook, more and more people in this industry will start to care about their
+              code quality, and help eliminate as much bad code as they can.`,
             }),
           ]}
         />
