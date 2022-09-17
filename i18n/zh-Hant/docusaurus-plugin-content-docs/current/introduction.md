@@ -1,7 +1,7 @@
 ---
 title: 簡介
 sidebar_position: 1
-description: 派氏文件簡介。
+description: 派氏文件簡介
 keywords: [piesdoc, web, vue3, react]
 ---
 
