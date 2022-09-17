@@ -245,8 +245,7 @@ For example, the following component will work without any warning/error:
 ```
 
 - There are 2 `mounted` lifecycle hooks getting registered, and **both of them works**.
-- `upperCaseName` in `computed` is referencing the `name` we returned in `setup()`.
-- We could define data and methods in `setup()`, but that is now overlapping with `data()` and `methods: { ... }`; this means we may have to check multiple places to find the source of a variable in a component.
+- We could define data and methods in `setup()`, but that is now overlapping with `data` and `methods` options; this means we may have to check multiple places to find the source of a variable in a component.
 
 Things would only get worse as your app gets bigger, so we strongly recommend you to **avoid mixing Options API and Composition API** like this at all cost!
 :::
