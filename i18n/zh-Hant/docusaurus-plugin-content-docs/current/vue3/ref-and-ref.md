@@ -89,7 +89,7 @@ console.log(user.value) // { name: 'world', age: 5 }
 
 雖然 `ref()` 的回傳值看起來是一個長得像 `{ value: 'hello' }` 的簡單對象 (plain object，或稱 POJO)，事實上他不是！`ref()` 回傳的其實是一個叫做 `RefImpl` 的類別 (class) 實體 (instance)，而且這個類別只有一個公開屬性 `value`。所以從使用者的角度來看 (你和我，開發人員)，我們可以直接把 `RefImpl` 看做是 `Ref<T>`，因為他們有著相同的公開屬性。
 
-此外，`ref()` 並不是盲目的把數值包成 `Ref<T>` 的結構而已，但是現在還不需要知道實際的邏輯。我們會在 [`ref()` 或 `reactive()`](./ref-or-reactive) 章節做更詳細的描述。
+此外，`ref()` 並不是盲目的把數值包成 `Ref<T>` 的結構而已，但是現在還不需要知道實際的邏輯。我們會在 [`ref()` 還是 `reactive()`](./ref-or-reactive) 章節做更詳細的描述。
 :::
 
 很好，我們已經大致了解 `Ref<T>` 在 `<script>` 中運作的原理了。現在我們來看看 `Ref<T>` 如何在 `<template>` 中運作！
@@ -183,7 +183,7 @@ const user = {
 
 </details>
 
-太棒了，現在你知道 `Ref<T>` 在 `<template>` 中是如何運作的了！這個知識在使用[組合式函數](./composables) (composable) 時尤其重要。若是不了解這些知識，我們的 `<template>` 最後就會出現一大堆本來可以被避免的 `.value`，造成程式碼的可讀性降低。
+太棒了，現在你知道 `Ref<T>` 在 `<template>` 中是如何運作的了！這個知識在使用[組合式函式](./composables) (composable) 時尤其重要。若是不了解這些知識，我們的 `<template>` 最後就會出現一大堆本來可以被避免的 `.value`，造成程式碼的可讀性降低。
 
 ## `ComputedRef<T>` 也屬於 `Ref<T>`
 
