@@ -62,7 +62,7 @@ import Badge from '@site/src/widgets/Badge'
 
 - 一定要看看新的 [`emits`](https://vuejs.org/guide/components/events.html#declaring-emitted-events) 選項！
 
-- Vue 3 裡面有一個新的輔助函數 (helper function) [`defineComponent()`](https://vuejs.org/api/general.html#definecomponent)。若您想要在定義元件的時候有一些介面的幫助，您可以這樣做：
+- Vue 3 裡面有一個新的輔助函式 (helper function) [`defineComponent()`](https://vuejs.org/api/general.html#definecomponent)。若您想要在定義元件的時候有一些介面的幫助，您可以這樣做：
 
   ```html title="MyComponent.vue" showLineNumbers
   <script>

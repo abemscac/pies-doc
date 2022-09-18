@@ -139,6 +139,6 @@ If you REALLY want a function to be reactive (which we cannot think of any good 
 
 Anything other than primitive value and function falls into this category. For example, plain object, Array, Map, etc.
 
-In these cases, it doesn't really matter if you use `ref()` or `reactive()`; because under these circumstances, the inner value returned by `ref()` and `reactive()` are exactly the same; the `.value` after `Ref<T>` would be the only difference.
+In these cases, it doesn't really matter if you use `ref()` or `reactive()`, because under these circumstances, `reactive()` will be the one to generate the final value. The `.value` after `Ref<T>` would be the only difference.
 
 Since none is better than the other, using either `ref()` or `reactive()` is fine. Just make sure **the whole team/project is following the same rule when choosing `ref()` and `reactive()`** for code consistency and you'll be just fine!
