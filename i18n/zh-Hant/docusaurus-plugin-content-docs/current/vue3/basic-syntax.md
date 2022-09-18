@@ -44,7 +44,7 @@ h1 {
 - 主要的差別是 `<script>` 標籤中多了一個 `setup` 屬性；這個屬性只能和組合式API一起使用。
 - TypeScript 在 Vue 3 中已有官方支援，我們只要在 `<script>` 標籤中加上 `lang="ts"` 屬性，就能開始用 TypeScript 撰寫組件。
 - [`<style>`](https://vuejs.org/api/sfc-spec.html#style) 標籤依然是非必要的，[`scoped` 屬性](https://vue-loader.vuejs.org/guide/scoped-css.html#scoped-css) 也還在。
-- 模版語法 (template syntax) 和 Vue 2 一樣，分別是雙大括弧 `{{ }}`、`v-on` (縮寫是 `@`) 和 `v-bind` (縮寫是 `:`)。
+- 模版語法 (template syntax) 和 Vue 2 一樣，分別是雙大括弧 `{{ }}`、`v-on` (縮寫為 `@`) 和 `v-bind` (縮寫為 `:`)。
 
 :::info
 
