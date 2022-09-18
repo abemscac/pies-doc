@@ -74,15 +74,15 @@ fruits.value[0] = 'cherry'
 console.log(fruits.value) // ['cherry', 'banana']
 
 // object
-const somebody = ref({
+const user = ref({
   name: 'hello'
   age: 5,
 })
-console.log(somebody.value) // { name: 'hello', age: 5 }
+console.log(user.value) // { name: 'hello', age: 5 }
 
 // highlight-next-line
-somebody.value.name = 'world'
-console.log(somebody.value) // { name: 'world', age: 5 }
+user.value.name = 'world'
+console.log(user.value) // { name: 'world', age: 5 }
 ```
 
 :::info
@@ -175,7 +175,7 @@ Do you know why there's such difference?
   <summary>This happens because... (think about it for a while before revealing the answer!)</summary>
 
   - Both `age` and `user` are exposed as top-level properties in `<script setup>`.
-  - Since `name` is a top-level `Ref<T>` in `<script setup>`, it gets auto-unwrapped in `<template>`, which means `{{ age }}` in `<template>` will equal to `age.value` in `<script setup>`, thus resolves to `5`.
+  - Since `age` is a top-level `Ref<T>` in `<script setup>`, it gets auto-unwrapped in `<template>`, which means `{{ age }}` in `<template>` will equal to `age.value` in `<script setup>`, thus resolves to `5`.
   - In JavaScript, `toFixed` is a method defined in the prototype of number; `5` is a number, so `5.toFixed` will evaluate to that function, thus showing `function toFixed() { [native code] }` on the screen.
   - Although `user.age` and `age` are exactly the same variable in `<script setup>`, `{{ user.age }}` will **not** get auto-unwrapped in `<template>` because `user.age` is not a top-level property — `user` is!
   - Since `user.age` is not auto-unwrapped in `<template>`, `{{ user.age }}` in `<template>` will equal to `user.age` in `<script setup>`, which is a `Ref<T>`.
