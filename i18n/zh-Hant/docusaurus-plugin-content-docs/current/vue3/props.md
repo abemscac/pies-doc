@@ -91,7 +91,7 @@ const user = shallowReactive({
 
 ### 什麼是淺層唯讀 (Shallow Readonly)？
 
-**淺層唯讀**指的是在一個物件中，只有頂層屬性具有唯讀的限制；所有非頂層屬性都不具有唯讀的限制。我們可以使用 [`shallowReadonly()`](https://vuejs.org/api/reactivity-advanced.html#shallowreadonly) 函式來建議一個淺層唯讀物件，例如：
+**淺層唯讀**指的是在一個物件中，只有頂層屬性具有唯讀的限制；所有非頂層屬性都不具有唯讀的限制。我們可以使用 [`shallowReadonly()`](https://vuejs.org/api/reactivity-advanced.html#shallowreadonly) 函式來建立一個淺層唯讀物件，例如：
 
 ```ts showLineNumbers
 import { shallowReadonly } from 'vue'
@@ -110,7 +110,7 @@ const user = shallowReadonly({
 - 我們無法將 `user.child` 取代為其他數值。
 - 我們**可以**修改 `user.child.age`。
 
-總結一下，您可以將 `props` 想像成一個使用 `shallowReactive()` 和 `shallowReadonly()` 宣告出來的淺響應代理；只不過所有的薯性值都是由父元件傳遞下來的。
+總結一下，您可以將 `props` 想像成是一個使用 `shallowReactive()` 和 `shallowReadonly()` 宣告出來的淺響應代理；只不過所有的屬性值都是由父元件傳遞下來的。
 
 ```ts showLineNumbers
 import { shallowReactive, shallowReadonly } from 'vue'
@@ -125,12 +125,12 @@ const props =
 
 :::info
 
-您應該**極力避免從子元件直接修改 `props`**，如此一來才能維持單向資料流 (從上方流向下方)。如果您的子元件需要修改 props 的數值，您應該使用[自定義事件](https://vuejs.org/guide/components/events.html#component-events) (events)。主要的概念是，只有父元件才被允許修改 props 的數值，子元件做的只是「觸發」那些做出改變的事件而已。
+您應該**極力避免從子元件直接修改 `props`**，如此一來才能維持單向資料流 (從上方流向下方)。若您的子元件需要修改 props 的數值，您應該使用[自定義事件](https://vuejs.org/guide/components/events.html#component-events) (events)。主要的概念是，只有父元件才被允許修改 props 的數值，子元件做的只是「觸發」那些做出改變的事件而已。
 
 :::
 
 ## Props 的響應性
 
-您是否曾經遇過**出於某種原因，「某些」 props 中的屬性就是不具有響應性**？
+您是否曾經遇過**出於某種原因，「某些」props 中的屬性就是不具有響應性**？
 
 在大多數情況下，這意味著您不小心破壞了 props 的響應性。由於 `props` 物件是一個淺響應代理，您可以把它當成是響應式代理來處理。看看[這裡](./reactive#響應式代理的響應性)提到的解決方法！
