@@ -9,7 +9,7 @@ keywords: [piesdoc, vue3, ref, reactive]
 
 :::caution 先修章節
 
-建議您在學習完 [`ref()`](./ref-and-ref#what-is-ref) 和 [`reactive()`](./reactive#what-is-reactive) 之後再閱讀此章節。
+建議您在學習完 [`ref()`](./ref-and-ref#什麼是-ref) 和 [`reactive()`](./reactive#什麼是-reactive) 之後再閱讀此章節。
 
 :::
 

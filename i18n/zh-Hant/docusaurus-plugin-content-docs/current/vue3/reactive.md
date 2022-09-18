@@ -8,7 +8,7 @@ import Video from '@site/src/widgets/Video'
 
 # `reactive()`
 
-## 什麼是 `reactive()`?
+## 什麼是 `reactive()`？
 
 `reactive()` 是一個**函式**，只接收一個**非原始型別**的參數，並且回傳一個類型為 `UnwrapNestedRef<T>` 的 **響應式代理** (reactive proxy)。
 
@@ -16,7 +16,7 @@ import Video from '@site/src/widgets/Video'
 
 - 什麼是**非原始型別**？
 - 什麼是**響應式代理**？
-- 什麼是 **`UnwrapNestedRef<T>`**? (不見得要學)
+- 什麼是 **`UnwrapNestedRef<T>`**？ (不見得要學)
 
 我們將在本章中嘗試解釋這些內容。但在此之前，我們先來看一個 `reactive()` 的簡單範例：
 
@@ -74,8 +74,8 @@ const count = reactive(0) // value cannot be made reactive: 0
 
 :::info
 
-- 若您需要響應式的原始型別，您應該使用 [`ref()`](./ref-and-ref#what-is-ref)。
-- 我們會在 [`ref()` 還是 `reactive()`](./ref-or-reactive#how-reactive-works) 章節中詳細說明 `reactive()` 是如何運作的。
+- 若您需要響應式的原始型別，您應該使用 [`ref()`](./ref-and-ref#什麼是-ref)。
+- 我們會在 [`ref()` 還是 `reactive()`](./ref-or-reactive#reactive-的運作原理) 章節中詳細說明 `reactive()` 是如何運作的。
 
 :::
 
@@ -83,9 +83,9 @@ const count = reactive(0) // value cannot be made reactive: 0
 
 如果您不知道什麼是[代理](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) (proxy)，不用擔心；就算不知道他是什麼，您也可以把 `reactive()` 學得很好！
 
-簡單來說，代理指的是一個特別的物件，能讓我們在某個特定物件被存取或修改時執行額外的邏輯。這就是 Vue 將響應性 (reactivity) 套用到響應性代理上的方式。
+簡單來說，代理指的是一個特別的物件，能讓我們在某個特定物件被存取或修改時執行額外的邏輯。這就是 Vue 將響應性 (reactivity) 套用到響應式代理上的方式。
 
-所以您可以把響應性代理想像成是一個和目標物件長得一模一樣的東西，只是當他的數值改變時，他會幫我們執行一些額外的邏輯。
+所以您可以把響應式代理想像成是一個和目標物件長得一模一樣的東西，只是當他的數值改變時，他會幫我們執行一些額外的邏輯。
 
 ### `<template>` 中的非響應性數值
 
