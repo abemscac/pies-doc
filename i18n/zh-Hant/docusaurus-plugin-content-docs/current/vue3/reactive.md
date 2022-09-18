@@ -75,7 +75,7 @@ const count = reactive(0) // value cannot be made reactive: 0
 :::info
 
 - 若您需要響應式的原始型別，您應該使用 [`ref()`](./ref-and-ref#what-is-ref)。
-- 我們會在 [`ref()` 或 `reactive()`](./ref-or-reactive#how-reactive-works) 章節中詳細說明 `reactive()` 是如何運作的。
+- 我們會在 [`ref()` 還是 `reactive()`](./ref-or-reactive#how-reactive-works) 章節中詳細說明 `reactive()` 是如何運作的。
 
 :::
 
