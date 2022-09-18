@@ -1,24 +1,24 @@
 ---
 sidebar_position: 2
-description: 如何在 Vue 3 使用不同的方法定義組件
+description: 如何在 Vue 3 使用不同的方法定義元件
 keywords: [piesdoc, vue3]
 ---
 
 import Badge from '@site/src/widgets/Badge'
 
-# 定義組件
+# 定義元件
 
-學習如何在 Vue 3 使用不同的方法定義組件。
+學習如何在 Vue 3 使用不同的方法定義元件。
 
-在 Vue 3 中定義組件有很多方法，我們想展示幾個工作上較常見的模式。
+在 Vue 3 中定義元件有很多方法，我們想展示幾個工作上較常見的模式。
 
 ## 1. 傳統選項式 API
 
-選項式 API 在 Vue 3 依然有用，而且幾乎一樣！若您直接將 Vue 2 的組件複製到 Vue 3 專案中，也許在解決一些小問題之後他們就能運作良好。
+選項式 API 在 Vue 3 依然有用，而且幾乎一樣！若您直接將 Vue 2 的元件複製到 Vue 3 專案中，也許在解決一些小問題之後他們就能運作良好。
 
 話雖如此，我們還是強烈建議您嘗試新的組合式 API，而不要黏著選項式 API 不放。否則升級到 Vue 3 又有什麼意義呢，對吧？
 
-但是別誤會，選項式 API 仍然是一個好工具！他在 Vue 3 中仍然是一個有效的定義組件方法。
+但是別誤會，選項式 API 仍然是一個好工具！他在 Vue 3 中仍然是一個有效的定義元件方法。
 
 ```html title="傳統選項式 API" showLineNumbers
 <template>
@@ -62,7 +62,7 @@ import Badge from '@site/src/widgets/Badge'
 
 - 一定要看看新的 [`emits`](https://vuejs.org/guide/components/events.html#declaring-emitted-events) 選項！
 
-- Vue 3 裡面有一個新的輔助函數 (helper function) [`defineComponent()`](https://vuejs.org/api/general.html#definecomponent)。若您想要在定義組件的時候有一些介面的幫助，您可以這樣做：
+- Vue 3 裡面有一個新的輔助函數 (helper function) [`defineComponent()`](https://vuejs.org/api/general.html#definecomponent)。若您想要在定義元件的時候有一些介面的幫助，您可以這樣做：
 
   ```html title="MyComponent.vue" showLineNumbers
   <script>
@@ -70,7 +70,7 @@ import Badge from '@site/src/widgets/Badge'
 
   export default defineComponent({
     props: {
-      // 平常的組件內容
+      // 平常的元件內容
     },
   })
   </script>

@@ -10,7 +10,7 @@ import Video from '@site/src/widgets/Video'
 
 ## What Is `reactive()`?
 
-`reactive()` is a **function** that takes a **non-primitive** value as argument,and returns a **reactive proxy** of type `UnwrapNestedRef<T>`.
+`reactive()` is a **function** that takes a **non-primitive** value as argument, and returns a **reactive proxy** of type `UnwrapNestedRef<T>`.
 
 This one line definition actually sums it up very well, but it might have brought so many questions to your head:
 
@@ -82,8 +82,7 @@ Even if you declare it using `let count = reactive(0)`, your component will stil
 
 ## What Is a Reactive Proxy?
 
-If you don't know what [proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) is, don't worry;
-you can still learn `reactive()` very well without knowing it!
+If you don't know what [proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) is, don't worry; you can still learn `reactive()` very well without knowing it!
 
 Briefly speaking, a proxy is an object that allows you to run custom logic whenever someone tries to access or change the value in a targeted object. That's how Vue applies reactivity to reactive proxies.
 
@@ -317,7 +316,7 @@ So technically, as long as the target value is non-primitive, you can use as man
 
 ### How to Keep Reactivity
 
-So is there a way that we can use the convenient destructing assignment syntax with `reactive()`, but keeping reactivity at the same time? Yes, there is! The closest we can get is to use [`toRef()`](https://vuejs.org/api/reactivity-utilities.html#toref) or [`toRefs()`](https://vuejs.org/api/reactivity-utilities.html#torefs).
+So is there a way that we can use the convenient destructing assignment syntax with `reactive()`, but keeping reactivity at the same time? Yes, there is! The closest we can get is to use [`toRef()`](https://vuejs.org/api/reactivity-utilities.html#toref) and [`toRefs()`](https://vuejs.org/api/reactivity-utilities.html#torefs).
 
 `toRef()` and `toRefs()` do exactly what they say — turning something into `Ref<T>`(s). These two functions are very similar to each other, but there's still a difference; in a nutshell, **`toRefs()` = a lot of `toRef()`**. For example:
 
@@ -345,7 +344,7 @@ Most of the time we'll just use `toRefs()` because it's slightly more convenient
 
 :::info
 
-In the above example, will we get the same result if we replace `toRef()` with `ref()`? For example:
+In the above example, will we get the same result if we replace `toRefs()` with `ref()`? For example:
 
 ```ts showLineNumbers
 import { reactive, ref } from 'vue'
