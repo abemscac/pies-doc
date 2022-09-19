@@ -1,5 +1,6 @@
 import React, { useRef } from 'react'
 import useLazyLoad from '../hooks/UseLazyLoad'
+import styles from './Video.module.css'
 
 export interface IVideo {
   src: string
@@ -24,7 +25,7 @@ const Video = ({ src, autoPlay }: IVideo) => {
   })
 
   return (
-    <video ref={videoRef} width="100%" controls autoPlay={autoPlay}>
+    <video ref={videoRef} className={styles.video} controls autoPlay={autoPlay}>
       {visible && <source type="video/mp4" src={src} />}
     </video>
   )
