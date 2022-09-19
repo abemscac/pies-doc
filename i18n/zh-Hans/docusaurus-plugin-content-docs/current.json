@@ -1,0 +1,22 @@
+{
+  "version.label": {
+    "message": "Next",
+    "description": "The label for version current"
+  },
+  "sidebar.tutorialSidebar.category.Vue 3": {
+    "message": "Vue 3",
+    "description": "The label for category Vue 3 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Vue 3.link.generated-index.description": {
+    "message": "学习 Vue 3 的基础知识。",
+    "description": "The generated-index page description for category Vue 3 in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.React": {
+    "message": "React",
+    "description": "The label for category React in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.React.link.generated-index.description": {
+    "message": "学习 React 的基础知识。",
+    "description": "The generated-index page description for category React in sidebar tutorialSidebar"
+  }
+}
