@@ -96,7 +96,7 @@ console.log(user.value) // { name: 'world', age: 5 }
 
 ## `<template>` 中的 `Ref<T>`
 
-在 Vue 2，我們可以使用三種不同的語法在 `<template>` 中存取 `<script>` 的變數 — 雙大括弧 `{{ }}`、`v-on` (縮寫為 `@`) 和 `v-bind` (縮寫為 `:`)。這三種語法在 Vue 3 中仍然存在，但是邏輯上有小小的不同。以這個元件為例：
+在 Vue 2，我們可以使用三種不同的語法在 `<template>` 中存取 `<script>` 的變數—雙大括弧 `{{ }}`、`v-on` (縮寫為 `@`) 和 `v-bind` (縮寫為 `:`)。這三種語法在 Vue 3 中仍然存在，但是邏輯上有小小的不同。以這個元件為例：
 
 ```html showLineNumbers
 <template>
