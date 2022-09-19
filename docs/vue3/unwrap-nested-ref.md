@@ -1,7 +1,7 @@
 ---
 title: UnwrapNestedRef<T>
 sidebar_position: 8
-description: Introduce the unwrap mechanism of reactive function in Vue 3.
+description: Introduce the unwrap mechanism in reactive() function in Vue 3.
 keywords: [piesdoc, vue3, unwrapnestedref, reactive]
 ---
 
@@ -56,7 +56,7 @@ So to get `hello` from `we`, the correct way would be `we.value.have.a.dog.name`
 
 In this chapter, we'll try to explain how this secret unwrap mechanism works in `reactive()`.
 
-## What Is `UnwrapNestedRef<T>`
+## What Is `UnwrapNestedRef<T>`?
 
 `UnwrapNestedRef<T>` is the **return type** of `reactive()` which pretty much explains itself — unwrap all of the nested `Ref`s in `T`.
 
@@ -138,4 +138,4 @@ const user = {
 }
 ```
 
-In this example, mutating any property inside `user.friend.child` will cause the component to re-render, while mutating any other property will not. In this case, using `ref()` would be slight better because by seeing `.value`, you'll know that it's probably a `Ref<T>` (but not guaranteed). Still, it's recommended to avoid such pattern for better maintainability.
+In this example, mutating any property inside `user.friend.child` will cause the component to re-render, while mutating any other property will not. In this case, using `ref()` would be slight better than using `reactive()` because by seeing `.value`, you'll know that it's probably a `Ref<T>` (but not guaranteed). Still, it's recommended to avoid such pattern because it's difficult to understand.
