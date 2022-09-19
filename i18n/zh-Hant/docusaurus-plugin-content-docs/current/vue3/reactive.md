@@ -115,7 +115,7 @@ const getOld = () => {
 </script>
 ```
 
-這個元件的邏輯很簡單 — 每次我們點擊 "Get Old"，`user.age` 都會增加 1。一開始我們在螢幕上看見 `hello is 5 years old`，無論我們點擊按鈕多少次，畫面上的數字永遠會是 `5`。
+這個元件的邏輯很簡單—每次我們點擊 "Get Old"，`user.age` 都會增加 1。一開始我們在螢幕上看見 `hello is 5 years old`，無論我們點擊按鈕多少次，畫面上的數字永遠會是 `5`。
 
 <Video src="/video/reactive_non-reactive-value.mov" />
 
@@ -198,7 +198,7 @@ const getOld = () => {
 </script>
 ```
 
-在這個範例中，我們同時使用了響應式和非響應式數值。他的邏輯很簡單 — 點擊 "Change Name" 會在 `cat.name` 的後面加上一個 `o`，而點擊 "Get Old" 會使得 `dog.age` 增加 1。
+在這個範例中，我們同時使用了響應式和非響應式數值。他的邏輯很簡單—點擊 "Change Name" 會在 `cat.name` 的後面加上一個 `o`，而點擊 "Get Old" 會使得 `dog.age` 增加 1。
 
 我們在這裡將 `cat` 宣告為響應式代理，`dog` 則是被宣告為非響應式數值。我們知道 `cat` 的改變會導致元件重新渲染，而 `dog` 的改變則不會，因為 `cat` 是一個響應式代理的緣故。
 
@@ -210,7 +210,7 @@ const getOld = () => {
 
 <Video src="/video/reactive_both-1.mov" />
 
-接著我們回頭點擊 "Change Name" 一次，奇怪的事就發生了 — 畫面上的 `5` 竟然改變了！
+接著我們回頭點擊 "Change Name" 一次，奇怪的事就發生了—畫面上的 `5` 竟然改變了！
 
 <Video src="/video/reactive_both-2.mov" />
 
@@ -301,7 +301,7 @@ _這是我們在 `reactive()` 身上使用解構賦值所導致的問題嗎？_
 
 答案其實很間單。我們需只要複習一下變數在 JavaScript 中運作的方式，您馬上就會了解其中的原因了！
 
-在 JavaScript 中，數值只能經由兩種方式被傳遞 — **傳值**或是**傳參考**。原始型別總是透過**傳值**的方式被傳遞，而非原始型別總是透過**傳參考**的方式被傳遞。因此，透過寫下 `const { name: myName, age: myName } = user`，我們其實就是在寫：
+在 JavaScript 中，數值只能經由兩種方式被傳遞—**傳值**或是**傳參考**。原始型別總是透過**傳值**的方式被傳遞，而非原始型別總是透過**傳參考**的方式被傳遞。因此，透過寫下 `const { name: myName, age: myName } = user`，我們其實就是在寫：
 
 ```js showLineNumbers
 const myName = user.name
@@ -316,7 +316,7 @@ const myAge = user.age
 
 所以是否存在一個方法讓我們在對著 `reactive()` 使用解構賦值的同時，又能保有變數的響應性呢？有的！最接近的解決方案是 [`toRef()`](https://vuejs.org/api/reactivity-utilities.html#toref) 和 [`toRefs()`](https://vuejs.org/api/reactivity-utilities.html#torefs)。
 
-`toRef()` 和 `toRefs()` 的功能和他們的名稱所描述的的一樣 — 將某個東西轉換為 `Ref<T>` 的形式。這兩個函式非常相近，但還是有一點小差異；總的來說，**`toRefs()` = 很多個 `toRef()`**。例如：
+`toRef()` 和 `toRefs()` 的功能和他們的名稱所描述的的一樣—將某個東西轉換為 `Ref<T>` 的形式。這兩個函式非常相近，但還是有一點小差異；總的來說，**`toRefs()` = 很多個 `toRef()`**。例如：
 
 ```ts showLineNumbers
 import { reactive, toRef, toRefs } from 'vue'
