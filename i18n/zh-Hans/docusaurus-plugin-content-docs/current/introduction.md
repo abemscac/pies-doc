@@ -2,7 +2,7 @@
 title: 简介
 sidebar_position: 1
 description: 派氏文件简介
-keywords: [派氏文件, 网页, 网页开发, vue3, vue教程, react教程]
+keywords: [派氏文件, 网页开发教程, vue3教程, react教程]
 ---
 
 # 简介

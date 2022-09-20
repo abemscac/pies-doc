@@ -54,7 +54,13 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
-      metadata: [{ name: 'keywords', content: 'web, vue3, react, piesdoc' }],
+      metadata: [
+        {
+          name: 'keywords',
+          content:
+            'piesdoc, web development tutorial, vue3 tutorial, react tutorial',
+        },
+      ],
       navbar: {
         title: 'Pies Doc',
         logo: {

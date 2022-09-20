@@ -2,7 +2,7 @@
 title: 簡介
 sidebar_position: 1
 description: 派氏文件簡介
-keywords: [派氏文件, 網頁, 網頁開發, vue3, vue教學, react教學]
+keywords: [派氏文件, 網頁開發教學, vue3教學, react教學]
 ---
 
 # 簡介
