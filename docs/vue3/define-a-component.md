@@ -132,7 +132,7 @@ onMounted(() => {
 
 :::info
 
-You may have noticed that we're using `defineProps()` and `defineEtmis()` without importing them, this is because those functions are [**compiler macros**](https://vuejs.org/api/sfc-script-setup.html#defineprops-defineemits). Vue will show a warning in console if you explicitly import and use them in a component.
+You may have noticed that we're using `defineProps()` and `defineEmits()` without importing them, this is because those functions are [**compiler macros**](https://vuejs.org/api/sfc-script-setup.html#defineprops-defineemits). Vue will show a warning in console if you explicitly import and use them in a component.
 
 :::
 
@@ -189,7 +189,7 @@ Another option is to use the new [`setup()`](https://vuejs.org/api/composition-a
 It's almost the same with `<script setup>`, the main differences are:
 
 1. `props` must be defined using `props` option instead of `defineProps()`, because `defineProps()` only works in `<script setup>`. This means we will not be able to use some convenient features like [type-only props/emit declarations](https://vuejs.org/api/sfc-script-setup.html#typescript-only-features).
-2. Emitted events must be defined using `emits` option instead of `defineEmits()`, because `defineEtmis()` only works in `<script setup>`.
+2. Emitted events must be defined using `emits` option instead of `defineEmits()`, because `defineEmits()` only works in `<script setup>`.
 3. `props` can be directly accessed in `<template>`, but variables declared in `setup()` must be returned in the function to make them accessible in `<template>`.
 
 If you're using SFC, we recommend you to just use `<script setup>` instead because there's less boilerplate.

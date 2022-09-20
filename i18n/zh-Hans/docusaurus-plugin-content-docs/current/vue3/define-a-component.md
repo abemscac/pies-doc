@@ -132,7 +132,7 @@ onMounted(() => {
 
 :::info
 
-您可能已经注意到，我们使用 `defineProps()` 和 `defineEtmis()` 却没有定义或汇入他们，这是因为他们是 [**编译器宏函数**](https://vuejs.org/api/sfc-script-setup.html#defineprops-defineemits)。如果您在组件中汇入并使用他们，Vue 反而会在主控台中显示警告讯息。
+您可能已经注意到，我们使用 `defineProps()` 和 `defineEmits()` 却没有定义或汇入他们，这是因为他们是 [**编译器宏函数**](https://vuejs.org/api/sfc-script-setup.html#defineprops-defineemits)。如果您在组件中汇入并使用他们，Vue 反而会在主控台中显示警告讯息。
 
 :::
 
@@ -189,7 +189,7 @@ onMounted(() => {
 这个模式看起来和 `<script setup>` 差不多，主要的差别是：
 
 1. `props` 必须使用 `props` 选项来定义而非 `defineProps()`，因为 `defineProps()` 只能在 `<script setup>` 中使用。这代表我们无法使用一些方便的新功能，例如 [仅使用类型来定义 props/emit](https://vuejs.org/api/sfc-script-setup.html#typescript-only-features)。
-2. 自定义事件必须使用 `emits` 选项来定义而非 `defineEmits()`，因为 `defineEtmis()` 只能在 `<script setup>` 中使用.
+2. 自定义事件必须使用 `emits` 选项来定义而非 `defineEmits()`，因为 `defineEmits()` 只能在 `<script setup>` 中使用.
 3. `props` 可以直接被 `<template>` 存取，但是在 `setup()` 里面定义的变量必须被包在一个物件中并返回，才能在 `<template>` 中被存取。
 
 若您使用 SFC，我们建议您使用 `<script setup>`，因为他的样板码 (boilerplate) 比较少。
