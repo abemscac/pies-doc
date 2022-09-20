@@ -12,7 +12,7 @@ import Badge from '@site/src/widgets/Badge'
 
 在 Vue 3 中定义组件有很多方法，我们想展示几个工作上较常见的模式。
 
-## 1. 传统选项式 API
+## 1. 传统选项式 API (Options API)
 
 选项式 API 在 Vue 3 依然有用，而且几乎一样！若您直接将 Vue 2 的组件复制到 Vue 3 专案中，也许在解决一些小问题之后他们就能运作良好。
 

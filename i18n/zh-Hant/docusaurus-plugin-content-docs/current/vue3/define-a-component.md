@@ -12,7 +12,7 @@ import Badge from '@site/src/widgets/Badge'
 
 在 Vue 3 中定義元件有很多方法，我們想展示幾個工作上較常見的模式。
 
-## 1. 傳統選項式 API
+## 1. 傳統選項式 API (Options API)
 
 選項式 API 在 Vue 3 依然有用，而且幾乎一樣！若您直接將 Vue 2 的元件複製到 Vue 3 專案中，也許在解決一些小問題之後他們就能運作良好。
 
