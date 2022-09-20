@@ -154,7 +154,7 @@ const getOld = () => {
 </script>
 ```
 
-This component is almost the same as the previous one, the only difference is we're now declaring `user` with `reactive()`. Clicking the button for a couple of time, and you'll see the component finally gets re-rendered as how we've expected it to be.
+This component is almost the same as the previous one, the only difference is we're now declaring `user` with `reactive()`. Clicking the button for a couple of times, and you'll see the component finally gets re-rendered as how we've expected it to be.
 
 <Video src="/video/reactive_reactive-proxy.mov" />
 
@@ -366,9 +366,9 @@ const age = ref(user.age)
 
 The answer is **no** — `name` and `age` will **not** be connected to `user` if we use `ref()`. They will be treated as separate `Ref<T>`s.
 
-This is because since `user.name` and `user.age` are both primitive values, they will be passed to `ref()` **by value**. So writing `const name = ref(user.name)` will equal to `const name = ref('hello')`, which then creates a individual `Ref<T>` with `hello` as initial value.
+This is because since `user.name` and `user.age` are both primitive values, they will be passed to `ref()` **by value**. So writing `const name = ref(user.name)` will equal to `const name = ref('hello')`, which then creates an individual `Ref<T>` with `hello` as initial value.
 
-Furthermore, even though the return type of `ref()` and `toRef()` are both `Ref<T>`, they are actually returning different class instances that runs different logic.
+Furthermore, even though the return type of `ref()` and `toRef()` are both `Ref<T>`, they are actually returning different class instances that run different logic.
 
 But be careful, if the target object is a non-primitive value, both `ref()` and `toRef()` would connect to the same source, and updating them would both cause the component to re-render. For example:
 

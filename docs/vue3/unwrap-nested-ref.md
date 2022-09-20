@@ -43,7 +43,7 @@ const we = ref({
 })
 ```
 
-To get `hello` from `we`, it's very natural to think that we have to use `we.value.have.a.dog.value.name` because both `we` and `dog` are variables declared by using `ref()`, thus creating a nested structure.
+To get `hello` from `we`, it's very natural to think that we have to use `we.value.have.a.dog.value.name` because both `we` and `dog` are variables declared by `ref()`, thus creating a nested structure.
 
 But when you try to run that code, you'll get an error that says `TypeError: Cannot read properties of undefined (reading 'name')`. How come?
 

@@ -60,6 +60,6 @@ Similar to the `export default { ... }` in Options API, the `setup` attribute on
 
 Also, there **cannot be more than one `<script setup>`** in a SFC, just like how we cannot `export default` multiple times in a single file. You can have as many `<script>` as you want, just remember only one of them can be decorated with `setup` attribute.
 
-## Defining a component
+## Define a component
 
 There are multiple ways to define a component in Vue 3, `<script setup>` is just one of them. Options API still works, and there's a new `setup()` option in Options API. Make sure to check out [Define a Component](./define-a-component) for more details.
