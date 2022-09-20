@@ -2,7 +2,7 @@
 title: UnwrapNestedRef<T>
 sidebar_position: 8
 description: Introduce the unwrap mechanism in reactive() function in Vue 3.
-keywords: [piesdoc, vue3, unwrapnestedref, reactive]
+keywords: [piesdoc, vue3, vue unwrapnestedref, vue reactive, vue unwrap]
 ---
 
 # `UnwrapNestedRef<T>`

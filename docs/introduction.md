@@ -2,7 +2,7 @@
 title: Introduction
 sidebar_position: 1
 description: The introduction of Pies Doc.
-keywords: [piesdoc, web, vue3, react]
+keywords: [piesdoc, web, web development, vue3, vue tutorial, react tutorial]
 ---
 
 # Introduction

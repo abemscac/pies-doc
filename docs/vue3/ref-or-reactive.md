@@ -2,7 +2,7 @@
 title: ref() or reactive()
 sidebar_position: 5
 description: Compare the differences between ref and reactive in Vue 3.
-keywords: [piesdoc, vue3, ref, reactive]
+keywords: [piesdoc, vue3, vue ref, vue reactive, vue ref or reactive]
 ---
 
 # `ref()` or `reactive()`

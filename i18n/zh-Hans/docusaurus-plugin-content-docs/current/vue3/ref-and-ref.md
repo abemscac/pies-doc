@@ -2,7 +2,7 @@
 title: Ref<T> 和 ref()
 sidebar_position: 3
 description: 说明 Vue 3 ref() 函数的功用
-keywords: [piesdoc, vue3, ref]
+keywords: [派氏文件, vue3, vue ref, vue响应性]
 ---
 
 # `Ref<T>` 和 `ref()`

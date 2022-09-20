@@ -1,7 +1,7 @@
 ---
 sidebar_position: 7
 description: Vue 3 中的组合式函数 (组合式函数) 是什么
-keywords: [piesdoc, vue3, 组合式函数]
+keywords: [派氏文件, vue3, vue组合式函数, 组合式函数]
 ---
 
 # 组合式函数

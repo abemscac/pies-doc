@@ -1,7 +1,7 @@
 ---
 sidebar_position: 7
 description: Vue 3 中的組合式函式 (組合式函式) 是什麼
-keywords: [piesdoc, vue3, 組合式函式]
+keywords: [派氏文件, vue3, vue組合式函式, 組合式函式]
 ---
 
 # 組合式函式

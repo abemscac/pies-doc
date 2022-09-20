@@ -1,7 +1,7 @@
 ---
 sidebar_position: 2
 description: How to define a component in various ways in Vue 3.
-keywords: [piesdoc, vue3]
+keywords: [piesdoc, vue3, vue component, vue define component]
 ---
 
 import Badge from '@site/src/widgets/Badge'

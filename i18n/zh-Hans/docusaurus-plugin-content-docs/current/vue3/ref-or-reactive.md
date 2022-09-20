@@ -2,7 +2,7 @@
 title: ref() 还是 reactive()
 sidebar_position: 5
 description: 比较 Vue 3 ref() 和 reactive() 函数的差异
-keywords: [piesdoc, vue3, ref, reactive]
+keywords: [派氏文件, vue3, vue ref, vue reactive, vue ref和reactive]
 ---
 
 # `ref()` 还是 `reactive()`

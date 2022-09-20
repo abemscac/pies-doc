@@ -1,7 +1,7 @@
 ---
 sidebar_position: 7
 description: What are composables in Vue 3.
-keywords: [piesdoc, vue3, composables]
+keywords: [piesdoc, vue3, vue composables, vue tutorial]
 ---
 
 # Composables

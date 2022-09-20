@@ -1,7 +1,7 @@
 ---
 sidebar_position: 2
 description: 如何在 Vue 3 使用不同的方法定義元件
-keywords: [piesdoc, vue3]
+keywords: [派氏文件, vue3, vue元件, vue定義元件]
 ---
 
 import Badge from '@site/src/widgets/Badge'

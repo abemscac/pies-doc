@@ -1,7 +1,7 @@
 ---
 sidebar_position: 1
 description: Vue 3 基本语法
-keywords: [piesdoc, vue3]
+keywords: [派氏文件, vue3, vue基本语法, vue教程]
 ---
 
 # 基本语法

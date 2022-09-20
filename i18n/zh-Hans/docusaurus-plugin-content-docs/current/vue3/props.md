@@ -1,7 +1,7 @@
 ---
 sidebar_position: 6
 description: Vue 3 中的 props 是什么
-keywords: [piesdoc, vue3, props]
+keywords: [派氏文件, vue3, vue props]
 ---
 
 import Video from '@site/src/widgets/Video';

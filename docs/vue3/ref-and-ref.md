@@ -2,7 +2,7 @@
 title: Ref<T> and ref()
 sidebar_position: 3
 description: What does ref function do in Vue 3.
-keywords: [piesdoc, vue3, ref]
+keywords: [piesdoc, vue3, vue ref, vue reactivity]
 ---
 
 # `Ref<T>` and `ref()`
