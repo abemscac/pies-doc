@@ -112,7 +112,7 @@ const unwrapRef = <T>(arg: T): UnwrapRef<T> => {
 }
 ```
 
-The above pseudocode just sums everything up! Take your time to read and understand the pseudocode, hopefully it will give you a decent understanding of how the unwrap mechanism works in `reactive()`!
+The above pseudocode sums everything up! Take your time to read and understand the pseudocode, hopefully it will give you a decent understanding of how the unwrap mechanism works in `reactive()`!
 
 Below here we'll just highlight some commonly seen scenarios, and things you should pay attention to.
 
@@ -122,7 +122,7 @@ Below here we'll just highlight some commonly seen scenarios, and things you sho
 
 ## Partial Reactive Object
 
-When using Vue 3, you should try to **avoid declaring partial reactive object** because usually the are the source of bugs. For example:
+When using Vue 3, you should try to **avoid declaring partial reactive object** because usually they are a source of bugs. For example:
 
 
 ```ts showLineNumbers
@@ -138,4 +138,4 @@ const user = {
 }
 ```
 
-In this example, mutating any property inside `user.friend.child` will cause the component to re-render, while mutating any other property will not. In this case, using `ref()` would be slight better than using `reactive()` because by seeing `.value`, you'll know that it's probably a `Ref<T>` (but not guaranteed). Still, it's recommended to avoid such pattern because it's difficult to understand.
+In this example, mutating any property inside `user.friend.child` will cause the component to re-render, while mutating any other property will not. In this case, using `ref()` would be slight better than using `reactive()` because by seeing `.value`, you'll know that it's probably a `Ref<T>` (but not guaranteed). Still, it's recommended to avoid this pattern because it's difficult to understand.

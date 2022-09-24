@@ -58,18 +58,18 @@ export default function HomeFeatures() {
             translate({
               id: 'home.features.how_text_0',
               message: `Pies Doc explains the fundamentals! Instead of digging into the source code
-              and show you something extremely raw, this handbook emphasizes the part that relates to
+              and showing you something extremely raw, this handbook emphasizes the part that relates to
               developers the most — the API itself.`,
             }),
             translate({
               id: 'home.features.how_text_1',
-              message: `By learning how to use API correctly and the theory behind it, you
-              will not only be able to identify what is anti-pattern, but also significantly
+              message: `By learning how to use the API correctly and the theory behind it, you
+              will not only be able to identify anti-patterns, but also significantly
               reduce the bugs and strange workarounds brought by inappropriate API usage.`,
             }),
             translate({
               id: 'home.features.how_text_2',
-              message: `Never underestimate the power of the fundamentals! Although "to learn the
+              message: `Never underestimate the power of the fundamentals! Although "learn the
               fundamentals well" may not sound very cool and appealing, it is in fact an
               indispensable element for being able to comprehend more advanced
               knowledge.`,

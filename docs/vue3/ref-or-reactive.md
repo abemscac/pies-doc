@@ -32,7 +32,7 @@ In order to know how to choose between `ref()` and `reactive()`, it's essential 
 The following pseudocode gives us a decent concept of how `ref()` works in Vue 3. Although it is extremely simplified and rearranged, we're still able to get the main idea of what's going on inside `ref()`:
 
 ```ts showLineNumbers
-import { reactvie, Ref } from 'vue'
+import { reactive, Ref } from 'vue'
 
 const ref = (arg) => {
   if (arg is Ref) {
@@ -137,8 +137,8 @@ If you REALLY want a function to be reactive (which we cannot think of any good 
 
 ### Any Other Type
 
-Anything other than primitive value and function falls into this category. For example, plain object, Array, Map, etc.
+Anything other than primitive values and functions fall into this category. For example, plain object, Array, Map, etc.
 
-In these cases, it doesn't really matter if you use `ref()` or `reactive()`, because under these circumstances, `reactive()` will be the one to generate the final value. The `.value` after `Ref<T>` would be the only difference.
+In these cases, it doesn't really matter if you use `ref()` or `reactive()`, because under these circumstances, `reactive()` will be the one to generate the final value. The `.value` after `Ref<T>` is the only difference.
 
-Since none is better than the other, using either `ref()` or `reactive()` is fine. Just make sure **the whole team/project is following the same rule when choosing `ref()` and `reactive()`** for code consistency and you'll be just fine!
+Since neither is better than the other, using either `ref()` or `reactive()` is fine. Just make sure **the whole team/project is following the same rule when choosing `ref()` and `reactive()`** for code consistency and you'll be just fine!

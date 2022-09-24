@@ -10,7 +10,7 @@ import Video from '@site/src/widgets/Video';
 
 ## What Are Props?
 
-Props are **properties coming from parent component**. These properties are stored in an object that, for most of the time, is being called `props`.
+Props are **properties coming from the parent component**. These properties are stored in an object that, for most of the time, is being called `props`.
 
 For example, if you declare your props in a component like this:
 
@@ -85,7 +85,7 @@ In this example:
 
 :::info
 
-Unlike `reactive()`, `shallowReactive()` does not go throught the [unwrap process](./unwrap-nested-ref) while making a proxy, so the return type of `shallowReactive()` is guaranteed to be the same as the type of arugment.
+Unlike `reactive()`, `shallowReactive()` does not go through the [unwrap process](./unwrap-nested-ref) while making a proxy, so the return type of `shallowReactive()` is guaranteed to be the same as the type of argument.
 
 :::
 
@@ -110,7 +110,7 @@ In this example, `user` is declared as a shallow readonly object, which means:
 - We cannot replace `user.child` with any other value.
 - We **can** mutate `user.child.age`.
 
-To sum up, you can think of `props` as a reactive proxy made by `shallowReactive()` and `shallowReadonly()`; it's just that all property values are coming from parent component.
+To sum it up, you can think of `props` as a reactive proxy made by `shallowReactive()` and `shallowReadonly()`; it's just that all property values are coming from parent component.
 
 ```ts showLineNumbers
 import { shallowReactive, shallowReadonly } from 'vue'
@@ -125,7 +125,7 @@ const props =
 
 :::info
 
-You should **always avoid directly mutating props in child components** so that the data flow of your components stays one-way (from top to bottom). If you have to mutate props in child components, you should use [`events`](https://vuejs.org/guide/components/events.html#component-events). The main concept is, parent component would be the only one that's allowed to mutate those values; all children do is to "trigger" those changes.
+You should **always avoid directly mutating props in child components** so that the data flow of your components stays one-way (from top to bottom). If you have to mutate props in child components, you should use [`events`](https://vuejs.org/guide/components/events.html#component-events). The main concept is, parent component is the only one that's allowed to mutate those values; all children do is to "trigger" those changes.
 
 :::
 

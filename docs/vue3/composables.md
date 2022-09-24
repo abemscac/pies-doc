@@ -20,7 +20,7 @@ You might be wondering what's the difference between a (util) function and a com
 
 :::caution
 
-Despite the fact that composables can be called from almost anywhere in a Vue app (because they're functions), it may not work if it's called before Vue instance is set up. For example, calling `onMounted()` before your Vue instance is set up is apparently not going to work.
+Despite the fact that composables can be called from almost anywhere in a Vue app (because they're functions), it may not work if it's called before Vue instance is set up. For example, calling `onMounted()` before your Vue instance is set up is not going to work.
 
 :::
 
@@ -72,7 +72,7 @@ export const useUserApi = () => {
 ```
 :::
 
-Since a lot of pages in the app are fetching data on mount, we would have to repeat the similar code again and again. Instead of doing that, we can make a composable and shove these code in it. For example:
+Since a lot of pages in the app fetch data on mount, we would have to repeat the similar code again and again. Instead of doing that, we can make a composable and shove the code in it. For example:
 
 ```ts title="UseFetchOnMount.ts" showLineNumbers
 import { ref, onMounted } from 'vue'
@@ -102,7 +102,7 @@ export const useFetchOnMount = <T>(url: string, initialValue: T) => {
   This is because React is using JSX, which means almost every piece of code in a component is being re-run on each re-render, but things are not the same in Vue. In a Vue component, `<script setup>` and `setup()` would only run once for each instance, so if we return `Ref<T>.value` instead of `Ref<T>` itself, we would lose the reactivity on these states.
 </details>
 
-The code in this composable is pretty much the same as the original code in the component; we're just moving it to a `.ts` file so that it's more reusable and testable. After we've done implementing it, we're now ready to use it in our components:
+The code in this composable is pretty much the same as the original code in the component; we're just moving it to a `.ts` file so that it's more reusable and testable. After we're done implementing it, we're now ready to use it in our components:
 
 ```html title="UsersPage.vue" showLineNumbers
 <template>
@@ -149,7 +149,7 @@ const [loadingProducts, products] = useFetchOnMount('/products', [])
 </script>
 ```
 
-With the help of composables, we're now able to reuse some functionalities that's shared across the whole app, thus reduce duplicate code.
+With the help of composables, we're now able to reuse some functionality that's shared across the whole app, thus reducing duplicate code.
 
 However, there are a few important things to keep in mind:
 

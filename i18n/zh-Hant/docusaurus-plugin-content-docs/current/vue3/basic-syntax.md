@@ -54,7 +54,7 @@ Vue 3 有個 [在 CSS 裡面使用 `v-bind`](https://vuejs.org/api/sfc-css-featu
 
 ## `<script setup>`
 
-什麼是 `<scrtip setup>`？ 這個 `setup` 屬性又有什麼用處？
+什麼是 `<script setup>`？ 這個 `setup` 屬性又有什麼用處？
 
 和選項式 API (Options API) 中的 `export default { ... }` 相似，`<script>` 中的 `setup` 屬性是用來告訴 Vue 這個 `<script>` 區塊裡面的程式碼代表這個元件的定義。所有我們在選項式 API 裡面能做到的事情，在 `<script setup>` 裡面也都能做到。
 

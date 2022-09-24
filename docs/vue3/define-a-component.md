@@ -8,8 +8,6 @@ import Badge from '@site/src/widgets/Badge'
 
 # Define a Component
 
-Learn a couple of ways to define a component in Vue 3.
-
 There are multiple ways to define a component in Vue 3, we want to bring up some commonly seen patterns you may use in your everyday life.
 
 ## 1. Legacy Options API
@@ -86,7 +84,7 @@ But don't get me wrong, Options API is still a great tool! It's still a valid wa
 
 This is the most popular option at the moment. If you've leaned React Hooks API, you may find the coding styles very similar. If you don't, don't worry! It's actually very easy to understand.
 
-By default there's no `this` in `<script setup>` whether you use function or arrow function. So if don't like `this`, this will be a good news!
+By default there's no `this` in `<script setup>` whether you use function or arrow function. So if don't like `this`, this will be good news!
 
 ```html title="Composition API with <script setup>" showLineNumbers
 <template>

@@ -32,7 +32,7 @@ keywords: [派氏文件, vue3, vue ref, vue reactive, vue ref和reactive]
 下面的伪代码 (pseudocode) 能大概让我们知道 `ref()` 在 Vue 3 中是如何运作的。虽然这个伪代码经过极度的化简和改写，我们还是能一窥 `ref()` 的运作原理：
 
 ```ts showLineNumbers
-import { reactvie, Ref } from 'vue'
+import { reactive, Ref } from 'vue'
 
 const ref = (arg) => {
   if (arg is Ref) {
