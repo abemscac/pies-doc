@@ -18,7 +18,7 @@ This one line definition actually sums it up very well, but it might have brough
 - What is a **reactive proxy**?
 - What is **`UnwrapNestedRef<T>`**? (optional)
 
-We'll try to explain these stuff in this chapter. But before doing that, let's take a look at a simple example of `reactive()`:
+We'll try to explain these things in this chapter. But before doing that, let's take a look at a simple example of `reactive()`:
 
 ```ts showLineNumbers
 import { reactive } from 'vue'
@@ -75,7 +75,7 @@ Even if you declare it using `let count = reactive(0)`, your component will stil
 
 :::info
 
-- If you really need reactive primitive values, you should use [`ref()`](./ref-and-ref#what-is-ref).
+- If you need reactive primitive values, you should use [`ref()`](./ref-and-ref#what-is-ref).
 - We'll talk more about how `reactive()` works in [`ref()` or `reactive()`](./ref-or-reactive#how-reactive-works).
 
 :::
@@ -116,12 +116,12 @@ const getOld = () => {
 </script>
 ```
 
-The logic of this component is very simple — every time we click "Get Old", `user.age` will be incremeneted by 1.
+The logic of this component is very simple — every time we click "Get Old", `user.age` will be incremented by 1.
 In the very beginning, we see `hello is 5 years old` on the screen; no matter how many times the button is clicked, the number on the screen will always be `5`.
 
 <Video src="/video/reactive_non-reactive-value.mov" />
 
-This happens because `user` is not a reactive variable declared by using either `ref()` or `reactive()`. Since it's a non-reactive variable, our component just don't care about its' changes. Even though the value of `user.age` did get updated, the component still didn't re-render.
+This happens because `user` is not a reactive variable declared by using either `ref()` or `reactive()`. Since it's a non-reactive variable, our component just doesn't care about its changes. Even though the value of `user.age` did get updated, the component still didn't re-render.
 
 
 ### Reactive Proxy in `<template>`
@@ -154,7 +154,7 @@ const getOld = () => {
 </script>
 ```
 
-This component is almost the same as the previous one, the only difference is we're now declaring `user` with `reactive()`. Clicking the button for a couple of times, and you'll see the component finally gets re-rendered as how we've expected it to be.
+This component is almost the same as the previous one, the only difference is we're now declaring `user` with `reactive()`. Click the button a couple of times, and you'll see the component finally gets re-rendered as we expected it to be.
 
 <Video src="/video/reactive_reactive-proxy.mov" />
 
@@ -162,7 +162,7 @@ So why would using `reactive()` make such difference? This is because Vue is des
 
 ### Both Reactive and Non-reactive Values
 
-But be careful, that doens't mean the changes being made to non-reactive values will never be reflected on the screen. Let's take a look at the following example:
+But be careful, that doesn't mean the changes being made to non-reactive values will never be reflected on the screen. Let's take a look at the following example:
 
 ```html title="Both reactive and non-reactive values" showLineNumbers
 <template>
@@ -200,15 +200,15 @@ const getOld = () => {
 </script>
 ```
 
-In this example, we use both reactive and non-reactive values at the same time. The logic is simple — clicking "Change Name" will append an `o` to `cat.name`, and clicking "Get Old" will incremenet `dog.age` by 1.
+In this example, we use both reactive and non-reactive values at the same time. The logic is simple — clicking "Change Name" will append an `o` to `cat.name`, and clicking "Get Old" will increment `dog.age` by 1.
 
 Here we declare `cat` as a reactive proxy, and declare `dog` as a non-reactive object. We know that the changes being made to `cat` will cause the component to re-render because `cat` is a reactive proxy, while the changes being made to `dog` will not.
 
-At first we click "Change Name" for a couple of times, and each time we click it, the component re-renders with an `o` being appended to `hello`.
+At first we click "Change Name" a couple of times, and each time we click it, the component re-renders with an `o` being appended to `hello`.
 
 <Video src="/video/reactive_both-0.mov" />
 
-Then we click "Get Old" for a couple of times as well, this time the component does not re-render. That's exepcted because `dog` is neither a reactive proxy nor a `Ref<T>`.
+Then we click "Get Old" a couple of times as well, this time the component does not re-render. That's expected because `dog` is neither a reactive proxy nor a `Ref<T>`.
 
 <Video src="/video/reactive_both-1.mov" />
 
@@ -252,7 +252,7 @@ child.name = 'world'
 console.log(user.child.name, child.name) // 'world', 'world'
 ```
 
-The above example demonstrates a common misconception that everything we get from reactive proxy is always "connected" to the source, but it's acutally not! For example:
+The above example demonstrates a common misconception that everything we get from reactive proxy is always "connected" to the source, but it's actually not! For example:
 
 ```ts showLineNumbers
 import { reactive } from 'vue'
@@ -297,7 +297,7 @@ As you can see, the changes we made to `user` did not effect `myName` and `myAge
 
 Why is it that in the first example, mutating `child.name` did effect `user.child`, while the same behavior cannot be observed in the second example?
 
-_Is it a problem by using destructing assignment with `reactive()`?_
+_Is it a problem to use a destructing assignment with `reactive()`?_
 
 Not really. The same thing would happen even if we use `const myName = user.name` (because that's exactly what destructing assignment does), so it's not quite correct to say destructing assignment causes the problem.
 

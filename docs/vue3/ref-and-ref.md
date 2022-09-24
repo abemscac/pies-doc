@@ -27,7 +27,7 @@ interface Ref<T> {
 }
 ```
 
-A `Ref<T>` contain only **one** value of any type, so you can have:
+A `Ref<T>` contains only **one** value of any type, so you can have:
 
 - `Ref<number>`
 - `Ref<number[]>`
@@ -114,7 +114,7 @@ const name = ref('hello')
 
 Because `name` is a `Ref<T>`, it is very reasonable to think that `<div>{{ name.value }}</div>` will evaluate to `<div>hello</div>`. But when this component gets rendered, the output HTML will actually be `<div></div>`, without `hello` in the middle — where's our `hello`?
 
-In Vue 3, when we try to access `Ref<T>` from `<template>`, **sometimes** (yes, SOMETIMES!) they will be automatically unwrapped. To **unwrap** (or [**unref**](https://vuejs.org/api/reactivity-utilities.html#unref)) means to take the `value` out from `Ref<T>`. Hence, we must omit the `.value` behind a `Ref<T>` in `<template>` under some circumstances because Vue auto-unwrap them sometimes. So what are these "circumstances"?
+In Vue 3, when we try to access `Ref<T>` from `<template>`, **sometimes** (yes, SOMETIMES!) they will be automatically unwrapped. To **unwrap** (or [**unref**](https://vuejs.org/api/reactivity-utilities.html#unref)) means to take the `value` out from `Ref<T>`. Hence, we must omit the `.value` behind a `Ref<T>` in `<template>` under some circumstances because Vue auto-unwraps them sometimes. So what are these "circumstances"?
 
 The rule is simple: Vue will only auto-unwrap a `Ref<T>` in `<template>` if it is exposed as a **top-level property** in `<script setup>`. This rule also applies to v-on and v-bind.
 
@@ -183,7 +183,7 @@ Do you know why there's such difference?
 
 </details>
 
-Great, now you know how `Ref<T>` works in `<template>`! This is especially important when using [composables](./composables). Without knowing this, you will end up writing so many `.value` in `<template>` that could have been avoided, which decreases the readibility of your code.
+Great, now you know how `Ref<T>` works in `<template>`! This is especially important when using [composables](./composables). Without knowing this, you will end up writing so many `.value` in `<template>` that could have been avoided, which decreases the readability of your code.
 
 ## `ComputedRef<T>` Is Also `Ref<T>`
 
