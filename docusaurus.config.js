@@ -150,6 +150,11 @@ const config = {
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
       },
+      algolia: {
+        appId: 'RDT9BID7L2',
+        apiKey: '8e6e4b2423171ecafbbe4a4d95322cdd',
+        indexName: 'pies',
+      },
     }),
 }
 
