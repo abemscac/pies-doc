@@ -17,7 +17,7 @@ keywords: [派氏文件, vue3, vue ref, vue响应性]
 
 ## 什么是 `Ref<T>`？
 
-`Ref<T>` 是只有一个公开属性 `value` 的**型别**。
+`Ref<T>` 是一个**型别**，它只有一个公开属性 `value`。
 
 简单的 `Ref<T>` 介面如下：
 
@@ -187,6 +187,6 @@ const user = {
 
 ## `ComputedRef<T>` 也属于 `Ref<T>`
 
-`ComputedRef<T>` 是 [`computed()`](https://vuejs.org/api/reactivity-core.html#computed) 的 **返回型别**。
+`ComputedRef<T>` 是 [`computed()`](https://vuejs.org/api/reactivity-core.html#computed) 的**返回型别**。
 
 `ComputedRef<T>` 继承自 `Ref<T>`，所以他们运作的逻辑很相似 — `ComputedRef<T>` 也只有一个公开属性 `value`，当他处于 `<script setup>` 中的顶层时，在 `<template>` 中也会被自动解包。

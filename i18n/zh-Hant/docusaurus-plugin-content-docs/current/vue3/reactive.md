@@ -10,7 +10,7 @@ import Video from '@site/src/widgets/Video'
 
 ## 什麼是 `reactive()`？
 
-`reactive()` 是一個**函式**，只接收一個**非原始型別**的參數，並且回傳一個類型為 `UnwrapNestedRef<T>` 的 **響應式代理** (reactive proxy)。
+`reactive()` 是一個**函式**，只接收一個**非原始型別**的參數，並且回傳一個類型為 `UnwrapNestedRef<T>` 的**響應式代理** (reactive proxy)。
 
 這一行其實已經很好的做完總結了，但是他可能給你帶來了你很多問題：
 
