@@ -8,19 +8,13 @@ keywords: [piesdoc, vue3, vue composables, vue tutorial]
 
 The most powerful tool in Composition API!
 
-## What Is a Composable?
+## What Are Composables?
 
-A composable is a **function** that can be called from almost anywhere in a Vue app. In a composable, you can do most of the things you could do in `<script setup>`, and return anything you want to fulfill your requirements.
+Composables are **functions** that can be called within any component in Vue. In a composable, you can do most of the things you could do in `<script setup>`, and return anything (or nothing) to fulfill your requirements.
 
 :::info
 
-You might be wondering what's the difference between a (util) function and a composable, because the statement "a function that can be called from almost anywhere in a Vue app" sounds just like a utility function. Generally speaking, if any Vue-specific feature is used within the function (for example, `ref()` and `onMounted()`), we would call it a **composable** instead of a normal function.
-
-:::
-
-:::caution
-
-Despite the fact that composables can be called from almost anywhere in a Vue app (because they're functions), it may not work if it's called before Vue instance is set up. For example, calling `onMounted()` before your Vue instance is set up is not going to work.
+You might be wondering what's the difference between a (util) function and a composable, because the statement "functions that can be called within any component in Vue" sounds just like a utility function. Generally speaking, if any Vue-specific feature is used within the function (for example, `ref()` and `onMounted()`), we would call it a **composable** instead of a normal function.
 
 :::
 
@@ -59,7 +53,7 @@ onMounted(async () => {
 
 :::caution
 
-You should probably not manage your API like this! We only write it in this way for the sake of simplicity. If you're not sure what to do, a simple encapsulation would be a good start because it's more readable and more maintainable:
+You probably don't want to manage your API like this! We only write it in this way for the sake of simplicity. If you're not sure what to do, a simple encapsulation would be a good start because it's more readable and more maintainable:
 
 ```ts showLineNumbers
 export const useUserApi = () => {
@@ -72,7 +66,7 @@ export const useUserApi = () => {
 ```
 :::
 
-Since a lot of pages in the app fetch data on mount, we would have to repeat the similar code again and again. Instead of doing that, we can make a composable and shove the code in it. For example:
+Since a lot of pages in the app fetch data on mount, we would have to repeat similar code again and again. Instead of doing that, we can make a composable and shove the code in it. For example:
 
 ```ts title="UseFetchOnMount.ts" showLineNumbers
 import { ref, onMounted } from 'vue'
