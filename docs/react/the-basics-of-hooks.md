@@ -135,7 +135,7 @@ Even if you call it multiple times (whether in the same file or not), the value 
 import React from 'react'
 import { useFetchOnMount } from '../somewhere-else/UseFetchOnMount'
 
-export const MyComponent = () => {
+export const Example = () => {
   const [userState, setUserState] = useFetchOnMount('/users', [])
   const [productState, setProductState] = useFetchOnMount('/products', [])
 

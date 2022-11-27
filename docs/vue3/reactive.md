@@ -119,7 +119,7 @@ const getOld = () => {
 The logic of this component is very simple — every time we click "Get Old", `user.age` will be incremented by 1.
 In the very beginning, we see `hello is 5 years old` on the screen; no matter how many times the button is clicked, the number on the screen will always be `5`.
 
-<Video src="/video/reactive_non-reactive-value.mov" />
+<Video src="/video/vue3/reactive_non-reactive-value.mov" />
 
 This happens because `user` is not a reactive variable declared by using either `ref()` or `reactive()`. Since it's a non-reactive variable, our component just doesn't care about its changes. Even though the value of `user.age` did get updated, the component still didn't re-render.
 
@@ -156,7 +156,7 @@ const getOld = () => {
 
 This component is almost the same as the previous one, the only difference is we're now declaring `user` with `reactive()`. Click the button a couple of times, and you'll see the component finally gets re-rendered as we expected it to be.
 
-<Video src="/video/reactive_reactive-proxy.mov" />
+<Video src="/video/vue3/reactive_reactive-proxy.mov" />
 
 So why would using `reactive()` make such difference? This is because Vue is designed in such way that by default, components re-render whenever **reactive proxy** or **`Ref<T>`** changes. So if we declare `user` without using `reactive()` or `ref()`, Vue will not do anything when `user` changes because `user` is neither a reactive proxy nor a `Ref<T>`.
 
@@ -206,15 +206,15 @@ Here we declare `cat` as a reactive proxy, and declare `dog` as a non-reactive o
 
 At first we click "Change Name" a couple of times, and each time we click it, the component re-renders with an `o` being appended to `hello`.
 
-<Video src="/video/reactive_both-0.mov" />
+<Video src="/video/vue3/reactive_both-0.mov" />
 
 Then we click "Get Old" a couple of times as well, this time the component does not re-render. That's expected because `dog` is neither a reactive proxy nor a `Ref<T>`.
 
-<Video src="/video/reactive_both-1.mov" />
+<Video src="/video/vue3/reactive_both-1.mov" />
 
 Then we go back to click "Change Name" again, and something strange happened — the `5` on the screen is now being changed!
 
-<Video src="/video/reactive_both-2.mov" />
+<Video src="/video/vue3/reactive_both-2.mov" />
 
 Quite confusing, isn't it? The secret behind this is:
 
