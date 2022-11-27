@@ -117,7 +117,7 @@ const getOld = () => {
 
 这个组件的逻辑很简单—每次我们点击 "Get Old"，`user.age` 都会增加 1。一开始我们在萤幕上看见 `hello is 5 years old`，无论我们点击按钮多少次，画面上的数字永远会是 `5`。
 
-<Video src="/video/reactive_non-reactive-value.mov" />
+<Video src="/video/vue3/reactive_non-reactive-value.mov" />
 
 发生这种情况的原因是 `user` 不是一个使用 `ref()` 或 `reactive()` 宣告出来的响应式数值。由于它是一个非响应式数值，我们的组件根本不在乎他发生了什么变化。即使 `user.age` 的数值的确改变了，我们的组件还是没有重新渲染。
 
@@ -154,7 +154,7 @@ const getOld = () => {
 
 这个组件和上面那个几乎一样，唯一的差别是我们现在使用 `reactive()` 来宣告 `user`。随意点击按钮几次，您会发现组件终于按照预期的重新渲染了。
 
-<Video src="/video/reactive_reactive-proxy.mov" />
+<Video src="/video/vue3/reactive_reactive-proxy.mov" />
 
 为什么使用 `reactive()` 就会产生这样的差别呢？原因是 Vue 的组件被设计成在预设情况下，只有在**响应式代理**或是 **`Ref<T>`** 的数值发生变化时，才会重新渲染。所以只要我们没有使用 `reactive()` 或 `ref()` 来宣告 `user`，我们的组件就不会在他发生变化时重新渲染，因为 `user` 既不是响应式代理，也不是 `Ref<T>`。
 
@@ -204,15 +204,15 @@ const getOld = () => {
 
 一开始我们随意点击 "Change Name" 几次，每次点击组件都会重新渲染，画面上的 `hello` 会随着每次的点击逐次增加一个 `o`。
 
-<Video src="/video/reactive_both-0.mov" />
+<Video src="/video/vue3/reactive_both-0.mov" />
 
 接下来我们点击 "Get Old" 几次，这次组件并没有重新渲染。这在我们的预料之内，因为 `dog` 既不是响应式代理也不是 `Ref<T>`。
 
-<Video src="/video/reactive_both-1.mov" />
+<Video src="/video/vue3/reactive_both-1.mov" />
 
 接着我们回头点击 "Change Name" 一次，奇怪的事就发生了—画面上的 `5` 竟然改变了！
 
-<Video src="/video/reactive_both-2.mov" />
+<Video src="/video/vue3/reactive_both-2.mov" />
 
 很让人困惑对吧？这背后的祕密是：
 

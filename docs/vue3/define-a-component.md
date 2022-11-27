@@ -62,7 +62,7 @@ But don't get me wrong, Options API is still a great tool! It's still a valid wa
 
 - There's also a new [`defineComponent()`](https://vuejs.org/api/general.html#definecomponent) helper function in Vue 3. If you would like to see some type interfaces while defining components, you can use it like this:
 
-  ```html title="MyComponent.vue" showLineNumbers
+  ```html title="Example.vue" showLineNumbers
   <script>
   import { defineComponent } from 'vue'
 
@@ -121,7 +121,7 @@ const incrementAge = () => {
   emit('incrementAge')
 }
 
-// Register lifecycle hooks.
+// Register life-cycle hooks.
 onMounted(() => {
   console.log('I am mounted!')
 })
@@ -168,7 +168,7 @@ Another option is to use the new [`setup()`](https://vuejs.org/api/composition-a
         context.emit('incrementAge')
       }
 
-      // Register lifecycle hooks.
+      // Register life-cycle hooks.
       onMounted(() => {
         console.log('I am mounted!')
       })
@@ -242,7 +242,7 @@ For example, the following component will work without any warning/error:
 </script>
 ```
 
-- There are 2 `mounted` lifecycle hooks getting registered, and **both of them works**.
+- There are 2 `mounted` life-cycle hooks getting registered, and **both of them works**.
 - We could define data and methods in `setup()`, but that is now overlapping with `data` and `methods` options; this means we may have to check multiple places to find the source of a variable in a component.
 
 Things would only get worse as your app gets bigger, so we strongly recommend you to **avoid mixing Options API and Composition API** like this at all cost!

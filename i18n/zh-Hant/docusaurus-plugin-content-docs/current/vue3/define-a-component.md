@@ -64,7 +64,7 @@ import Badge from '@site/src/widgets/Badge'
 
 - Vue 3 裡面有一個新的輔助函式 (helper function) [`defineComponent()`](https://vuejs.org/api/general.html#definecomponent)。若您想要在定義元件的時候有一些介面的幫助，您可以這樣做：
 
-  ```html title="MyComponent.vue" showLineNumbers
+  ```html title="Example.vue" showLineNumbers
   <script>
   import { defineComponent } from 'vue'
 
