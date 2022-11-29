@@ -10,11 +10,9 @@ import Video from '@site/src/widgets/Video'
 
 ## What Is `useRef()`?
 
-`useRef()` ("Ref" means "Reference") is a built-in [**hook**](./the-basics-of-hooks.md) that takes an argument of any type, and returns an object of type `MutableRefObject<T>` with that argument as the initial value of `current`. But what is this `MutableRefObject<T>`?
+`useRef()` (`Ref` means "Reference") is a built-in [**hook**](./the-basics-of-hooks.md) that takes an argument of any type, and returns an object of type `MutableRefObject<T>` with that argument as the initial value. But what is this `MutableRefObject<T>`?
 
-`MutableRefObject<T>` is the **return type** of `useRef()`. There's only one public property `current` in `MutableRefObject<T>`.
-
-A simple interface for `MutableRefObject<T>` would look like this:
+`MutableRefObject<T>` is the **return type** of `useRef()`. A simple interface for `MutableRefObject<T>` would look like this:
 
 ```ts showLineNumbers
 interface MutableRefObject<T> {
@@ -91,7 +89,7 @@ However, the mutation of `MutableRefObject<T>` will **not** cause the component 
 
 :::caution
 
-Please beware that since mutating `MutableRefObject<T>` will not cause the component to re-render, any effect (`useEffect()`, `useMemo()`, or `useCallback()`) that depends on this value will **not** get executed after mutation, unless any other **state** in the same depedency array is being changed at the same time. For example:
+Please beware that since mutating `MutableRefObject<T>` will not cause the component to re-render, any effect (`useEffect()`, `useMemo()`, or `useCallback()`) depends on this value will **not** get computed after mutation, unless any other **state** in the same depedency array is being changed at the same time. For example:
 
 - No side effect will be executed, no matter how many times `name.current` changes.
   ```ts showLineNumbers
@@ -120,23 +118,25 @@ Please beware that since mutating `MutableRefObject<T>` will not cause the compo
 
 Simply put, **putting any `MutableRefObject<T>` into a dependency array (of effect) is meaningless**.
 
-Furthermore, `MutableRefObject<T>` will always give you the latest value, even in a memoized function. Take `useCallback()` as an example:
+Furthermore, `MutableRefObject<T>` will always give you the latest value, even in a memoized function. This ensures that our app would work as expected even if `MutableRefObject<T>` is not in the dependency array of any effect. Let's use `useCallback()` as an example:
 
 ```ts showLineNumbers
 import { useRef, useCallback } from 'react'
 
+// highlight-next-line
 const name = useRef('hello')
 
-const click = useCallback(() => {
+const logName = useCallback(() => {
+  // highlight-next-line
   console.log(name.current)
 }, [])
 ```
 
-In this example, neither `name` nor `name.current` is in the dependency array of `useCallback()`; however, we'll always get the latest value of `name.current` in `click()` even if `click()` is being memoized by an `useCallback()` with an empty dependency array.
+In this example, `name.current` is not in the dependency array of `useCallback()`; however, we'll always get the latest value of `name.current` in `click()` even if `click()` is being memoized by an `useCallback()` with an empty dependency array.
 
 <Video src="/video/react/use-ref_always-latest.mov" />
 
-The same rule applies to `useEffect()` and `useMemo()`.
+The same rule can be applied to `useEffect()` and `useMemo()` as well.
 
 :::
 
@@ -174,17 +174,95 @@ export const Example = () => {
 }
 ```
 
-By putting a `MutableRefObject<T>` in the `ref` props of a DOM element, you'll be able to manipulate element object in a vanilla JavaScript way.
+By putting a `MutableRefObject<T>` in the `ref` attribute of a DOM element, you'll be able to manipulate element object in a vanilla JavaScript way.
 
 <Video src="/video/react/use-ref_html-element.mov" />
 
-However, you should only use this when standard props/state cannot fulfill your requirements. For example, calculating the width/height of a DOM element, or focusing on a specific `<input>`.
+However, you should **only use this when standard props/state cannot fulfill your requirements**. For example, calculating the width/height of a DOM element, or focusing on a specific `<input>`.
 
 ### Component Instances
 
-Similar to DOM elements, you can acquire the instance of any child component by binding it to a `MutableRefObject<T>`. For example:
+:::info
 
-TODO
+- **This only works when targeted child component is a class component**; acquiring the instance of a child-function component is not supported at the moment. So if there's no class component in your project, feel free to skip this example!
+- For child-function components, only [`forwardRef()`](./forward-ref) is supported.
+
+:::
+
+Similar to DOM elements, you can acquire the instance of any child-class component by binding it to a `MutableRefObject<T>`. For example:
+
+```tsx title="Parent.tsx" showLineNumbers
+import React, { useRef } from 'react'
+  // highlight-next-line
+import { Child } from './Child'
+
+export const Parent = () => {
+  // highlight-next-line
+  const child = useRef<Child>(null)
+
+  const makeChilGetOld = () => {
+  // highlight-next-line
+    child.current?.getOld()
+  }
+
+  return (
+    <div>
+      {/* highlight-next-line */}
+      <Child ref={child} />
+      <button onClick={makeChilGetOld}>Make Child Get Old</button>
+    </div>
+  )
+}
+```
+
+```tsx title="Child.tsx" showLineNumbers
+import React, { Component } from 'react'
+
+interface IChildProps {}
+
+interface IChildState {
+  age: number
+}
+
+class Child extends Component<IChildProps, IChildState> {
+  constructor(props: IChildProps) {
+    super(props)
+    // highlight-start
+    this.state = {
+      age: 5,
+    }
+    // highlight-end
+    this.getOld = this.getOld.bind(this)
+  }
+
+  getOld() {
+    this.setState((prevState) => ({
+      ...prevState,
+      age: prevState.age + 1,
+    }))
+  }
+
+  render() {
+    return <h1>Hello, I am {this.state.age} years old</h1>
+  }
+}
+```
+
+In this example:
+
+- `Child` is a class component with state `{ age: number }`, and a method `getOld()` to increment `this.state.age`.
+- `Parent`, the parent of `Child`, uses reference to acquire the instance of `Child`.
+- We can call the `getOld()` method in `Child` by clicking the "Make Child Get Old" button in `Parent`.
+
+<Video src="/video/react/use-ref_component-instance.mov" />
+
+If you tried to `console.log(child.current)` in `Parent`, you'll see the class instance of `Child`:
+
+<img src="/img/react/use-ref_component-instance.png" alt="Value of the instance of class component" />
+
+Since everything is now exposed to parent component, you should be very careful when dealing with this instance; even calling the `setState()` of children in parent is now doable (which is a **terrible** idea).
+
+Same as creating references of DOM elements, you should **only do this when standard props/state cannot fulfill your requirements**, which usually happens when you try to integrate 3rd party components into your app.
 
 ### Uncontrolled Components
 
