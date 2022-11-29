@@ -24,8 +24,8 @@ Class components has existed for a long time. Before Hooks API came out, it was 
 
 In class components:
 
-- Component (class) must extend `React.Component` to make it a React component.
-- Props, states, and methods must be accessed using `this` keyword.
+- Component (class) must extend `React.Component<P, S>` to make it a React component; `P` and `S` are optional types for props and state respectively.
+- Props, state, and methods must be accessed using `this` keyword.
 - Props would be the first argument of constructor; we can access props outside constructor using `this.props`.
 - States are stored in an object called `state` which is initiated in the constructor.
 - `React.Component` provides us a `setState()` method to update values in `this.state`.
@@ -38,8 +38,14 @@ In class components:
 ```tsx showLineNumbers
 import React, { Component } from 'react'
 
-export class App extends Component {
-  constructor(props) {
+interface IAppProps {}
+
+interface IAppState {
+  age: number
+}
+
+export class App extends Component<IAppProps, IAppState> {
+  constructor(props: IAppProps) {
     super(props)
     this.state = {
       age: 5,
