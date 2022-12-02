@@ -146,7 +146,7 @@ Below here we'll list some commonly seen cases where we think `useRef()` may com
 
 ### DOM Elements
 
-You can acquire the instance of any DOM element by binding it to a `MutableRefObject<T>`. For example:
+You can get the instance of any DOM element by binding it to a `MutableRefObject<T>`. For example:
 
 ```tsx
 import React, { useRef } from 'react'
@@ -184,12 +184,11 @@ However, you should **only use this when standard props/state cannot fulfill you
 
 :::info
 
-- **This only works when targeted child component is a class component**; acquiring the instance of a child-function component is not supported at the moment. So if there's no class component in your project, feel free to skip this example!
-- For child-function components, only [`forwardRef()`](./forward-ref) is supported.
+By default this only works with class-child components. If you wish to achieve the same functionality with function-child components, use [`useImperativeHandle()`](./forward-ref#useimperativehandle) instead.
 
 :::
 
-Similar to DOM elements, you can acquire the instance of any child-class component by binding it to a `MutableRefObject<T>`. For example:
+Similar to DOM elements, you can get the instance of any child-class component by binding it to a `MutableRefObject<T>`. For example:
 
 ```tsx title="Parent.tsx" showLineNumbers
 import React, { useRef } from 'react'
@@ -224,14 +223,14 @@ interface IChildState {
   age: number
 }
 
-class Child extends Component<IChildProps, IChildState> {
+export class Child extends Component<IChildProps, IChildState> {
   constructor(props: IChildProps) {
     super(props)
-    // highlight-start
+    // State
     this.state = {
       age: 5,
     }
-    // highlight-end
+    // Methods
     this.getOld = this.getOld.bind(this)
   }
 
@@ -250,9 +249,18 @@ class Child extends Component<IChildProps, IChildState> {
 
 In this example:
 
+- Although we didn't define a props called `ref` in `Child`, we can still use it without any issue because that part is already covered when we extends `Component`.
 - `Child` is a class component with state `{ age: number }`, and a method `getOld()` to increment `this.state.age`.
-- `Parent`, the parent of `Child`, uses reference to acquire the instance of `Child`.
+- `Parent`, the parent of `Child`, uses reference to get the instance of `Child`.
 - We can call the `getOld()` method in `Child` by clicking the "Make Child Get Old" button in `Parent`.
+
+<details>
+  <summary>
+    Will it work if we explicitly define a <code>ref</code> props in <code>Child</code>?
+  </summary>
+
+  **Unfortunately, no**. If we explicitly define a `ref` props in any component, React will ignore that property and give us `undefined`. The only way to get the `ref` being passed down from parent is to use [`forwardRef()`](./forward-ref).
+</details>
 
 <Video src="/video/react/use-ref_component-instance.mov" />
 

@@ -47,9 +47,11 @@ interface IAppState {
 export class App extends Component<IAppProps, IAppState> {
   constructor(props: IAppProps) {
     super(props)
+    // State
     this.state = {
       age: 5,
     }
+    // Methods
     this.getOld = this.getOld.bind(this)
   }
 
