@@ -28,8 +28,6 @@ There are two generic types in `forwardRef<T, P>()`; `T` is the type of value be
 
 ## Example
 
-### Function Components
-
 `forwardRef()` is essential for us to use `ref` attribute on function-child components. However, unlike how `ref` works on class components, we still can't get the instance of a function component with `forwardRef()` alone. We can only get the instance of a DOM element, or passing the reference down to a deeper component at most.
 
 For example, if we have a component like this:
@@ -53,7 +51,7 @@ export const InputGroup = (props: IInputGroupProps) => {
 }
 ```
 
-In parent component, we may use it like this:
+In the parent component, we may use it like this:
 
 ```tsx title="Parent.tsx" showLineNumbers
 import React from 'react'
@@ -73,7 +71,7 @@ The result would look like this:
 
 <Video src="/video/react/forward-ref_0.mov" />
 
-Our app works fine at first, however, we're now required to add a new feature — focuses on "Last Name" input when a button in `Parent` is clicked. Since the `<input>` tag is placed inside `InputGroup`, there doesn't seem to be an elegant way to do it.
+Everything works well at first, however, we're now required to add a new feature — focuses on "Last Name" input when a button in `Parent` is clicked. Since the `<input>` tag is placed inside `InputGroup`, there doesn't seem to be an elegant way to do this.
 
 This is where `forwardRef()` could be useful. We could use it to make `ref` attribute available on function components, and forward the reference to the `<input>` inside `InputGroup`. For example:
 
@@ -101,7 +99,7 @@ export const InputGroup = forwardRef<HTMLInputElement, IInputGroupProps>(
 )
 ```
 
-As you can see, `ref` is not a member of props; instead, `forwardRef()` puts it in the second parameter for us to use. After binding the `ref` to the `<input>` tag, we can now use `useRef()` from `Parent` to get the instance of `<input>` in `InputGroup`:
+As you can see, `ref` is not a member of props; instead, `forwardRef()` puts it in the second parameter for us to use. After binding the `ref` to the `<input>` tag, we can finally use `useRef()` to get the instance of `<input>` from `Parent`:
 
 ```tsx title="Parent.tsx" showLineNumbers
 import React, { useRef } from 'react'
@@ -119,7 +117,7 @@ export const Parent = () => {
     <div>
       <InputGroup label="First Name" />
       {/* highlight-next-line */}
-      <InputGroup ref={lastNameInput} label="Last Name" />
+      <InputGroup label="Last Name" ref={lastNameInput} />
       <button onClick={focusLastNameInput}>
         Focus Last Name Input
       </button>
@@ -130,20 +128,77 @@ export const Parent = () => {
 
 <Video src="/video/react/forward-ref_1.mov" />
 
-### Class Components
+<details>
+  <summary>Does <code>forwardRef()</code> work with class components?</summary>
 
-Since class components are not functions, we have to wrap them inside `forwardRef()` to make it work. For example:
+  Yes, but we don't recommend this because we had to do some weird tricks to make it work with class components. For example:
 
-```tsx showLineNumbers
-import React, { Component, forwardRef } from 'react'
+  ```tsx title="InputGroup.tsx" showLineNumbers
+  import React, { Component, forwardRef } from 'react'
 
-export const Example = forwardRef((ref, props) => {
-  class MyComponent extends Component {
-    
+  interface IInputGroupProps {
+    label: string
   }
-})
-```
 
+  interface IInputGroupState {}
+
+  export const InputGroup = forwardRef<HTMLInputElement, IInputGroupProps>(
+    (props, ref) => {
+      // highlight-next-line
+      class MyComponent extends Component<IInputGroupProps, IInputGroupState> {
+        render() {
+          return (
+            <div>
+              <label>{this.props.label}</label>
+              {/* highlight-next-line */}
+              <input ref={ref} />
+            </div>
+          )
+        }
+      }
+
+      // highlight-next-line
+      return <MyComponent {...props} />
+    }
+  )
+  ```
+
+  In order to use the `ref` from `forwardRef()` in a class component, we have to wrap the definition of class component inside `forwardRef()` (or do something similar).
+  
+  After all it's the same — we're still using function component, aren't we? It's just that the contents are coming from a class component that's defined inside a function component!
+  
+  Furthermore, since `MyComponent` is defined inside `InputGroup`, every time `InputGroup` re-renders, `MyComponent` is going to be redefined again. Thus, the "old" `<MyComponent {...props} />` will unmount, and the "new" `<MyComponent {...props} />` will mount within every render, causing you to lose everything in the old `MyComponent`.
+
+  <Video src="/video/react/forward-ref_with-class-component.mov" />
+
+  To solve this problem, the easiest solution would be to memoize the definition of `MyComponent` before the very first render and only use it since then. For example:
+
+  ```tsx title="InputGroup.tsx" showLineNumbers
+  import React, { Component, forwardRef } from 'react'
+
+  // highlight-next-line
+  let MemoizedComponent: Component
+
+  export const InputGroup = forwardRef(
+    (props, ref) => {
+      class MyComponent extends Component {
+        // ...
+      }
+
+      // highlight-start
+      if (!MemoizedComponent) {
+        MemoizedComponent = MyComponent
+      }
+      // highlight-end
+
+      // highlight-next-line
+      return <MemoizedComponent {...props} />
+    }
+  )
+  ```
+
+  All in all, forget about using `forwardRef()` with class components — just use the built-in `ref` from `React.Component`!
+</details>
 
 ## `useImperativeHandle()`
 
@@ -159,9 +214,9 @@ The way `useImperativeHandle()` works is like "intercepting" the `ref` and retur
 
 ### Example
 
-Since `useImperativeHandle()` is a hook, it is not feasible to use it in a class component. If for any reason you must use it with class components (not recommended), you can wrap the class component inside a function like how we demonstrate [above](#class-components).
+With the help of `useImperativeHandle()`, we can now call methods defined in children from parent, just like what `ref` attribute could do on class components.
 
-With the help of `useImperativeHandle()`, we can now do the same thing `ref` could do on class components. The example below is the function component version of [this example](./use-ref#component-instances) we've mentioned in `useRef()`.
+We cannot stress this enought; **only use this when standard props/state cannot fulfill your requirements**. The example below is the function component version of [this example](./use-ref#component-instances) we've mentioned in `useRef()`.
 
 ```tsx title="Parent.tsx" showLineNumbers
 import React, { useRef } from 'react'
