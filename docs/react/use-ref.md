@@ -1,4 +1,5 @@
 ---
+title: useRef()
 sidebar_position: 5
 description: Introduce what is useRef() and when to useRef() in React.
 keywords: [piesdoc, react, react useRef]
@@ -6,7 +7,14 @@ keywords: [piesdoc, react, react useRef]
 
 import Video from '@site/src/widgets/Video'
 
+
 # `useRef()`
+
+:::info
+
+For class components, use [`createRef()`](https://reactjs.org/docs/refs-and-the-dom.html#creating-refs) instead.
+
+:::
 
 ## What Is `useRef()`?
 
@@ -174,7 +182,7 @@ export const Example = () => {
 }
 ```
 
-By putting a `MutableRefObject<T>` in the `ref` attribute of a DOM element, you'll be able to manipulate element object in a vanilla JavaScript way.
+By putting a `MutableRefObject<T>` in the `ref` attribute of a DOM element, you'll be able to manipulate element object in a vanilla JavaScript way. Notice that we must use `null` as the initial value of reference if the target is a DOM element.
 
 <Video src="/video/react/use-ref_html-element.mov" />
 
