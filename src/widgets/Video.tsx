@@ -4,10 +4,11 @@ import styles from './Video.module.css'
 
 export interface IVideo {
   src: string
+  height?: string
   autoPlay?: boolean
 }
 
-const Video = ({ src, autoPlay }: IVideo) => {
+const Video = ({ src, height, autoPlay }: IVideo) => {
   const videoRef = useRef<HTMLVideoElement>()
 
   const onVisible = () => {
@@ -25,7 +26,13 @@ const Video = ({ src, autoPlay }: IVideo) => {
   })
 
   return (
-    <video ref={videoRef} className={styles.video} controls autoPlay={autoPlay}>
+    <video
+      ref={videoRef}
+      className={styles.video}
+      height={height}
+      controls
+      autoPlay={autoPlay}
+    >
       {visible && <source type="video/mp4" src={src} />}
     </video>
   )

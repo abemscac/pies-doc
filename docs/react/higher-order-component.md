@@ -1,5 +1,5 @@
 ---
-sidebar_position: 10
+sidebar_position: 11
 description: Introduce the higher order component (HOC) in React.
 keywords: [piesdoc, react, react hoc]
 ---

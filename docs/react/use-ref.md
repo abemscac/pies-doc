@@ -152,9 +152,9 @@ The same rule can be applied to `useEffect()` and `useMemo()` as well.
 
 Below here we'll list some commonly seen cases where we think `useRef()` may come in handy.
 
-### DOM Elements
+### DOM Nodes
 
-You can get the instance of any DOM element by binding it to a `MutableRefObject<T>`. For example:
+You can get the instance of any DOM node by binding it to a `MutableRefObject<T>`. For example:
 
 ```tsx
 import React, { useRef } from 'react'
@@ -182,11 +182,11 @@ export const Example = () => {
 }
 ```
 
-By putting a `MutableRefObject<T>` in the `ref` attribute of a DOM element, you'll be able to manipulate element object in a vanilla JavaScript way. Notice that we must use `null` as the initial value of reference if the target is a DOM element.
+By putting a `MutableRefObject<T>` in the `ref` attribute of a DOM node, you'll be able to manipulate [Element](https://developer.mozilla.org/en-US/docs/Web/API/Element) object in a vanilla JavaScript way. Notice that we must use `null` as the initial value of reference if the target is a DOM node.
 
 <Video src="/video/react/use-ref_html-element.mov" />
 
-However, you should **only use this when standard props/state cannot fulfill your requirements**. For example, calculating the width/height of a DOM element, or focusing on a specific `<input>`.
+However, you should **only use this when standard props/state cannot fulfill your requirements**. For example, calculating the width/height of a DOM node, or focusing on a specific `<input>`.
 
 ### Component Instances
 
@@ -196,7 +196,7 @@ By default this only works with class-child components. If you wish to achieve t
 
 :::
 
-Similar to DOM elements, you can get the instance of any child-class component by binding it to a `MutableRefObject<T>`. For example:
+Similar to DOM nodes, you can get the instance of any child-class component by binding it to a `MutableRefObject<T>`. For example:
 
 ```tsx title="Parent.tsx" showLineNumbers
 import React, { useRef } from 'react'
@@ -278,7 +278,7 @@ If you tried to `console.log(child.current)` in `Parent`, you'll see the class i
 
 Since everything is now exposed to parent component, you should be very careful when dealing with this instance; even calling the `setState()` of children in parent is now doable (which is a **terrible** idea).
 
-Same as creating references of DOM elements, you should **only do this when standard props/state cannot fulfill your requirements**, which usually happens when you try to integrate 3rd party components into your app.
+Same as creating references of DOM nodes, you should **only do this when standard props/state cannot fulfill your requirements**, which usually happens when you try to integrate 3rd party components into your app.
 
 ### Uncontrolled Components
 
