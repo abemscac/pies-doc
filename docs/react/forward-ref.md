@@ -28,7 +28,7 @@ There are two generic types in `forwardRef<T, P>()`; `T` is the type of value be
 
 ## Example
 
-`forwardRef()` is essential for us to use `ref` attribute on function-child components. However, unlike how `ref` works on class components, we still can't get the instance of a function component with `forwardRef()` alone. We can only get the instance of a DOM element, or passing the reference down to a deeper component at most.
+`forwardRef()` is essential for us to use `ref` attribute on function-child components. However, unlike how `ref` works on class components, we still can't get the instance of a function component with `forwardRef()` alone. We can only get the instance of a DOM node, or passing the reference down to a deeper component at most.
 
 For example, if we have a component like this:
 
