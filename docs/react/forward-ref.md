@@ -214,7 +214,7 @@ The way `useImperativeHandle()` works is like "intercepting" the `ref` and retur
 
 ### Example
 
-With the help of `useImperativeHandle()`, we can now call methods defined in children from parent, just like what `ref` attribute could do on class components.
+With the help of `useImperativeHandle()`, we can now call the methods defined in children from parent, just like what `ref` attribute could do on class components.
 
 We cannot stress this enought; **only use this when standard props/state cannot fulfill your requirements**. The example below is the function component version of [this example](./use-ref#component-instances) we've mentioned in `useRef()`.
 

@@ -234,15 +234,12 @@ interface IChildState {
 export class Child extends Component<IChildProps, IChildState> {
   constructor(props: IChildProps) {
     super(props)
-    // State
     this.state = {
       age: 5,
     }
-    // Methods
-    this.getOld = this.getOld.bind(this)
   }
 
-  getOld() {
+  getOld = () => {
     this.setState((prevState) => ({
       ...prevState,
       age: prevState.age + 1,
