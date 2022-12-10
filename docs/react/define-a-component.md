@@ -30,7 +30,6 @@ In class components:
 - States are stored in an object called `state` which is initiated in the constructor.
 - `React.Component` provides us a `setState()` method to update values in `this.state`.
 - `render()` method, which usually returns a JSX element, must be explicitly defined.
-- `bind()` must be used on all methods that access `this`, so that the `this` in those methods can point to the correct lexical context. However, `render()` is an exception — we don't have to use `bind()` on `render()`.
 - Each life-cycle hook can only be registered once by using a predefined method. For example, `componentDidMount()`.
 
 ### Example
@@ -47,19 +46,16 @@ interface IAppState {
 export class App extends Component<IAppProps, IAppState> {
   constructor(props: IAppProps) {
     super(props)
-    // State
     this.state = {
       age: 5,
     }
-    // Methods
-    this.getOld = this.getOld.bind(this)
   }
 
   componentDidMount() {
     console.log('I am mounted.')
   }
 
-  getOld() {
+  getOld = () => {
     this.setState((prevState) => {
       const nextAge = prevState.age + 1
       return {
