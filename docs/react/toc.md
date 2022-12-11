@@ -6,12 +6,12 @@ description: TOC
 - [x] Define A Component
 - [x] Reactive Values
 - [ ] The Basics of Hooks
-  - What Is A Hook?
+  - What Are Hooks?
   - Example (**no built-in hook used**)
   - Advanced Example
 - [ ] `useState()`
 - [ ] `useEffect()`
-- [ ] Reactivity
+- [x] Reactivity
   - How Reactive Value Works in a Component
     ...it "binds" all reactive values to all methods declared in the component. 
   - When Will a Reactive Value Be Updated
@@ -26,6 +26,6 @@ description: TOC
   - `useCallback()`
 - [ ] `useContext()`
 - [ ] `useReducer()`
-- [ ] Higher Order Components
-  - What Is A Higher Order Component?
+- [ ] Higher Order Components (HOCs)
+  - What Are HOCs?
   - Example

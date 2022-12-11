@@ -16,7 +16,7 @@ Due to the fact that class components do not appear as often as it did before, a
 
 :::note
 
-Feel free to skip this part if you think you don't need to learn class components!
+Feel free to skip this part if you think you don't need class components!
 
 :::
 

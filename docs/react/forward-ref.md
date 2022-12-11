@@ -1,6 +1,6 @@
 ---
-sidebar_position: 6
-description: Introduce the usage and commonly seen issues of forwardRef in React.
+sidebar_position: 9
+description: Introduce the usage and commonly seen issues of forwardRef() in React.
 keywords: [piesdoc, react, react forwardRef]
 ---
 
@@ -39,9 +39,7 @@ interface IInputGroupProps {
   label: string
 }
 
-export const InputGroup = (props: IInputGroupProps) => {
-  const { label } = props
-
+export const InputGroup = ({ label }: IInputGroupProps) => {
   return (
     <div>
       <label>{label}</label>
@@ -85,9 +83,7 @@ interface IInputGroupProps {
 // highlight-next-line
 export const InputGroup = forwardRef<HTMLInputElement, IInputGroupProps>(
   // highlight-next-line
-  (props, ref) => {
-    const { label } = props
-
+  ({ label }, ref) => {
     return (
       <div>
         <label>{label}</label>

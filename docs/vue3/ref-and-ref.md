@@ -37,7 +37,7 @@ A `Ref<T>` contains only **one** value of any type, so you can have:
 
 ## What Is `ref()`?
 
-`ref()` is a **function** that takes an argument of any type, and returns a `Ref<T>` object with that argument as its' `value`. For example:
+`ref()` is a **function** that takes an argument of any type, and returns a `Ref<T>` object with that argument as its `value`. For example:
 
 ```ts showLineNumbers
 import { ref } from 'vue'

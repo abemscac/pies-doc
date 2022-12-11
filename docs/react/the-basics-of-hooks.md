@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 description: Introduce the basics of hooks in React.
 keywords: [piesdoc, react, react hoc]
 ---
@@ -15,154 +15,17 @@ Hooks are **functions** that can be called within any component in React. In a h
 :::info
 
 - You might be wondering what's the difference between a (util) function and a hook, because the statement "functions that can be called within any component in React" sounds just like a utility function. Generally speaking, if any React-specific feature is used within the function (for example, `useState()` and `useEffect()`), we would call it a **hook** instead of a normal function.
-- You could return a JSX element or a component in a hook, but that'll actually make it another component instead of a "hook"!
+- A component and a hook are actually not that different from TODO perspective; if you returns a JSX element in a hook, that'll actually make it a component!
+
 :::
 
 ## Example
 
-To give you a basic concept of what hooks really are, we'll use a commonly seen scenario — **fetching data on mount** as an example. In this scenario, usually we would need the following states (assuming the data is an array of users): 
+TODO
 
-- A `loading` state to indicate if the API call is still going on.
-- A `users` state to store the API response (an array of user).
+## Advanced Example
 
-So in your component, you would probably do it like this:
-
-```tsx title="UsersPage.tsx" showLineNumbers
-import React, { useState, useEffect } from 'react'
-
-export const UsersPage = () => {
-  const [state, setState] = useState({
-    loading: true,
-    users: [],
-  })
-
-  const fetchUsers = async () => {
-    const response = await fetch('/users')
-    const users = await respnose.json()
-    setState({
-      loading: false,
-      users,
-    })
-  }
-
-  useEffect(() => {
-    fetchUsers()
-  }, [])
-
-  return (
-    <div>
-      {state.loading ? (
-        <span>Loading...</span>
-      ) : (
-        <table>
-          {/* Render users here */}
-        </table>
-      )}
-    </div>
-  );
-}
-```
-
-:::caution
-
-You probably don't want to manage your API like this! We only write it in this way for the sake of simplicity. If you're not sure what to do, a simple encapsulation would be a good start because it's more readable and more maintainable:
-
-```ts showLineNumbers
-export const useUserApi = () => {
-  const getUsers = () => fetch('/users')
-
-  return {
-    getUsers,
-  }
-}
-```
-:::
-
-Since a lot of pages in the app fetch data on mount, we would have to repeat similar code again and again. Instead of doing that, we can make a hook and shove the code in it. For example:
-
-```ts title="UseFetchOnMount.ts" showLineNumbers
-import { useState, useEffect } from 'react'
-
-export const useFetchOnMount = <T>(url: string, initialValue: T) => {
-  const [state, setState] = useState({
-    loading: true,
-    data: initialValue,
-  })
-
-  const fetchData = async () => {
-    const response = await fetch('/users')
-    const data = await respnose.json()
-    setState({
-      loading: false,
-      data,
-    })
-  }
-
-  useEffect(() => {
-    fetchData()
-  }, [])
-
-  return [state, setState]
-}
-```
-
-The code in this hook is pretty much the same as the original code in the component; we're just moving it to a `.ts` file so that it's more reusable and testable. The naming convention of hooks is `useSomething()` (starting with `use`), so we can name our custom hook `useFetchOnMount()`. After we're done implementing it, we're now ready to use it in our components:
-
-```tsx title="UsersPage.tsx" showLineNumbers
-import React from 'react'
-import { useFetchOnMount } from '../somewhere-else/UseFetchOnMount'
-
-export const UsersPage = () => {
-  const [state, setState] = useFetchOnMount('/users', [])
-
-  return (
-    <div>
-      {state.loading ? (
-        <span>Loading...</span>
-      ) : (
-        <table>
-          {/* Render users here */}
-        </table>
-      )}
-    </div>
-  );
-}
-```
-
-Even if you call it multiple times (whether in the same file or not), the value returned by `useFetchOnMount()` will still be independent due to how it's implemented.
-
-```tsx showLineNumbers
-import React from 'react'
-import { useFetchOnMount } from '../somewhere-else/UseFetchOnMount'
-
-export const Example = () => {
-  const [userState, setUserState] = useFetchOnMount('/users', [])
-  const [productState, setProductState] = useFetchOnMount('/products', [])
-
-  return (
-    <div>
-      <div className="users">
-        {userState.loading ? (
-          <span>Loading users...</span>
-        ) : (
-          <table>
-            {/* Render users here */}
-          </table>
-        )}
-      </div>
-      <div className="products">
-        {productState.loading ? (
-          <span>Loading products...</span>
-        ) : (
-          <table>
-            {/* Render products here */}
-          </table>
-        )}
-      </div>
-    </div>
-  )
-}
-```
+TODO
 
 ## Conclusion
 
