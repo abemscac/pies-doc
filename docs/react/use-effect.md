@@ -1,6 +1,6 @@
 ---
-sidebar_position: 7
-description: Introduce the usage and commonly seen issues of useEffect() hook in React.
+sidebar_position: 5
+description: Introduce the usage and commonly seen issues of useEffect() in React.
 keywords: [piesdoc, react, react useEffect]
 ---
 

@@ -1,5 +1,5 @@
 ---
-sidebar_position: 8
+sidebar_position: 10
 description: Introduce the optimization functions in React, including React.memo(), useMemo(), and useCallback().
 keywords: [piesdoc, react, react optimization functions, React.memo, useMemo, useCallback, react tutorial]
 ---

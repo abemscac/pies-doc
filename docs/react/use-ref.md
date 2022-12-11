@@ -1,7 +1,7 @@
 ---
 title: useRef()
-sidebar_position: 5
-description: Introduce what is useRef() and when to useRef() in React.
+sidebar_position: 8
+description: Introduce the usage and commonly seen issues of useRef() in React.
 keywords: [piesdoc, react, react useRef]
 ---
 
@@ -186,7 +186,7 @@ By putting a `MutableRefObject<T>` in the `ref` attribute of a DOM node, you'll 
 
 <Video src="/video/react/use-ref_html-element.mov" />
 
-However, you should **only use this when standard props/state cannot fulfill your requirements**. For example, calculating the width/height of a DOM node, or focusing on a specific `<input>`.
+However, you should **only use this when standard props/states cannot fulfill your requirements**. For example, calculating the width/height of a DOM node, or focusing on a specific `<input>`.
 
 ### Component Instances
 
@@ -254,17 +254,17 @@ export class Child extends Component<IChildProps, IChildState> {
 
 In this example:
 
-- Although we didn't define a props called `ref` in `Child`, we can still use it without any issue because that part is already covered when we extends `Component`.
+- Although we didn't define a prop called `ref` in `Child`, we can still use it without any issue because that part is already covered when we extends `Component`.
 - `Child` is a class component with state `{ age: number }`, and a method `getOld()` to increment `this.state.age`.
 - `Parent`, the parent of `Child`, uses reference to get the instance of `Child`.
 - We can call the `getOld()` method in `Child` by clicking the "Make Child Get Old" button in `Parent`.
 
 <details>
   <summary>
-    Will it work if we explicitly define a <code>ref</code> props in <code>Child</code>?
+    Will it work if we explicitly define a <code>ref</code> prop in <code>Child</code>?
   </summary>
 
-  **Unfortunately, no**. If we explicitly define a `ref` props in any component, React will ignore that property and give us `undefined`. The only way to get the `ref` being passed down from parent is to use [`forwardRef()`](./forward-ref).
+  **Unfortunately, no**. If we explicitly define a `ref` prop in any component, React will ignore that property and give us `undefined`. The only way to get the `ref` being passed down from parent is to use [`forwardRef()`](./forward-ref).
 </details>
 
 <Video src="/video/react/use-ref_component-instance.mov" />
@@ -275,7 +275,7 @@ If you tried to `console.log(child.current)` in `Parent`, you'll see the class i
 
 Since everything is now exposed to parent component, you should be very careful when dealing with this instance; even calling the `setState()` of children in parent is now doable (which is a **terrible** idea).
 
-Same as creating references of DOM nodes, you should **only do this when standard props/state cannot fulfill your requirements**, which usually happens when you try to integrate 3rd party components into your app.
+Same as creating references of DOM nodes, you should **only do this when standard props/states cannot fulfill your requirements**, which usually happens when you try to integrate 3rd party components into your app.
 
 ### Uncontrolled Components
 
@@ -358,13 +358,16 @@ Sometimes we would want to share a value between two different life-cycles, usua
 import React, { useEffect } from 'react'
 import SomeRandomLibrary from 'some-random-library'
 
-export const Example = (props) => {
-    // highlight-next-line
-  const { property } = props
+interface IExampleProps {
+  something: string
+}
+
+// highlight-next-line
+export const Example = ({ something }: IExampleProps) => {
 
   useEffect(() => {
     // highlight-next-line
-    const thatFunction = SomeRandomLibrary.init(property)
+    const thatFunction = SomeRandomLibrary.init(something)
   }, [])
   
   const doSomething = () => {
@@ -385,7 +388,7 @@ In this example:
 
 - `SomeRandomLibrary.init()` is a method that initializes the library (usually asynchronous).
 - `SomeRandomLibrary.init()` will return a function, which is expected to be called every time the button is clicked.
-- `SomeRandomLibrary.init()` depends on a prop `property`; considering there will probably be multiple instances of this component with different props, it makes more sense to initialize them individually.
+- `SomeRandomLibrary.init()` depends on a prop `something`; considering there will probably be multiple instances of this component with different props, it makes more sense to initialize them individually.
 
 Here, we call `SomeRandomLibrary.init()` after the component is mounted, which is the most reasonable timing for initialization. The most obvious solution would be to move `SomeRandomLibrary.init()` in `doSomething()` so that we can access `thatFunction()` right after the initialization is done. However, since `SomeRandomLibrary.init()` is used to initialize the library, calling it multiple times may lead to unwanted results like waste of resources or errors. Therefore, the most appropriate way would be to store `thatFunction()` in a variable so that we can access it later. But how can we do this?
 
@@ -395,15 +398,17 @@ We want to make sure each component instance has its own `thatFunction()`, but w
 import React, { useRef, useEffect } from 'react'
 import SomeRandomLibrary from 'some-random-library'
 
-export const Example = (props) => {
-  const { property } = props
+interface IExampleProps {
+  something: string
+}
 
+export const Example = ({ something }: IExampleProps) => {
   // highlight-next-line
   const thatFunction = useRef<() => void>()
 
   useEffect(() => {
     // highlight-next-line
-    thatFunction.crrent = SomeRandomLibrary.init(property)
+    thatFunction.crrent = SomeRandomLibrary.init(something)
   }, [])
   
   const doSomething = () => {
@@ -425,17 +430,19 @@ Declaring a variable outside the component seems like a solution, but that'll ac
 import React, { useEffect } from 'react'
 import SomeRandomLibrary from 'some-random-library'
 
+interface IExampleProps {
+  something: string
+}
+
 // Be careful!
 // All instances of this component will share the same value in this way!
 // highlight-next-line
 let thatFunction: (() => void) | undefined = undefined
 
-export const Example = (props) => {
-  const { property } = props
-
+export const Example = ({ something }: IExampleProps) => {
   useEffect(() => {
     // highlight-next-line
-    thatFunction = SomeRandomLibrary.init(property)
+    thatFunction = SomeRandomLibrary.init(something)
   }, [])
   
   const doSomething = () => {

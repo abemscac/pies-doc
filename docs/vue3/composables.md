@@ -25,7 +25,7 @@ To give you a basic concept of what composables really are, we'll use a commonly
 - A `loading` state to indicate if the API call is still going on.
 - A `users` state to store the API response (an array of user).
 
-So in your component, you would probably do it like this:
+So in your component, you would probably do this:
 
 ```html title="UsersPage.vue" showLineNumbers
 <template>
@@ -40,8 +40,10 @@ So in your component, you would probably do it like this:
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
 
+// highlight-start
 const loading = ref(true)
 const users = ref([])
+// highlight-end
 
 onMounted(async () => {
   const response = await fetch('/users')

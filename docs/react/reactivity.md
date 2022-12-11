@@ -1,6 +1,6 @@
 ---
-sidebar_position: 4
-description: Introduce how reactive values work, and what happens when a component re-renders in React.
+sidebar_position: 6
+description: Introduce how reactive values work and what happens when a component re-renders in React.
 keywords: [piesdoc, react, react reactivity, react component rendering]
 ---
 
@@ -8,37 +8,55 @@ import Video from '@site/src/widgets/Video'
 
 # Reactivity
 
-Probably the most important part in React!
+:::caution Prerequisites
 
-This chapter is crucial for understanding how reactive values work in React. If you're not having a good time dealing with states, this chapter might be able to save you.
+You must learn the following chapters before getting into this chapter:
 
-We'll also talk about **re-rendering** in this chapter. However, we don't talk about virtual DOM, nor do we talk about complicated algorithms; instead, we talk about the most relevant things for users (you and me, the developers) — how exactly does re-render effect our components.
+- [`Reactive Values`](./reactive-values)
+- [`useState()`](./use-state)
+- [`useEffect()`](./use-effect)
 
-This is going to be a long chapter! Take your time reading this chapter, be patient, it's worth it!
+:::
+
+This chapter is crucial for understanding how reactive value works in a React component. If you're not having a good time dealing with states, this chapter might be able to save you.
+
+In this chapter, we'll talk about **re-rendering**. However, we don't talk about virtual DOM, nor do we talk about any complicated algorithm; instead, we talk about the most relevant things for users (you and me, the developers) — what exactly will re-render do to a component.
+
+This is going to be a long chapter! Take your time reading it, be patient, it's worth it!
 
 ## How Reactive Value Works in a Component
 
 We've all been confused by how states work in React. Let's start this chapter with following example:
 
-```ts showLineNumbers
-import { useState } from 'react'
+```tsx showLineNumbers
+import React, { useState } from 'react'
 
-const [count, setCount] = useState(0)
-
-const click = () => {
-  console.log('count before setCount():', count)
-
+export const Example = () => {
   // highlight-next-line
-  setCount(5)
-  console.log('count right after setCount():', count)
-  
-  setTimeout(() => {
-    console.log('count 3 seconds after setCount():', count)
-  }, 3000)
+  const [count, setCount] = useState(0)
+
+  const click = () => {
+    console.log('count before setCount():', count)
+
+    // highlight-next-line
+    setCount(5)
+    console.log('count right after setCount():', count)
+    
+    setTimeout(() => {
+      console.log('count 3 seconds after setCount():', count)
+    }, 3000)
+  }
+
+  return (
+    <div>
+      <h1>Count: {count}</h1>
+      <button onClick={click}>
+        Click Me
+      </button>
+    </div>
+  )
 }
 ```
-
-<Video src="/video/react/reactivity_state-with-timeout.mov" />
 
 In this example, we use three `console.log()` successively to print out the value of `count`:
 
@@ -46,15 +64,15 @@ In this example, we use three `console.log()` successively to print out the valu
 2. Right after `setCount()` is called.
 3. 5 seconds after `setCount()` is called.
 
-From one of the example in [Reactive Values](./reactive-values#reactive-values-1), we already know that changes made by functions like `setState()` will not be applied immediately, so currently it's acceptable to see the second `console.log()` showing `0` (we'll talk about the real cause [below](#when-will-reactive-values-be-updated)!. But why is it that in the video, we clearly see that the number on the screen changed from `0` to `5` after the button is clicked, but the last `console.log()` still shows `0`? It's because reactive value works differently than you might think! (yeah, of course)
+<Video src="/video/react/reactivity_state-with-timeout.mov" />
 
-Think of it this way: in React, a component does not access a reactive value right when you need it; instead **it uses reactive values to define everything before each render**, then it shows stuff on the screen. Let's use the same example to explain this idea:
+From one of the example in [Reactive Values](./reactive-values#reactive-values-1), we already know that changes made by functions like `setState()` will not be applied immediately, so currently it's acceptable to see the second `console.log()` showing `0` (we'll talk about the real cause [below](#when-will-reactive-values-be-updated)!) But why is it that in the video, when we clearly see the number on the screen has changed from `0` to `5`, the last `console.log()` still shows `0`?
+
+In React, a component does not wait until you need to use the reactive value to read it; instead, in each render, **it reads reactive values and use them to define everything first**, then it shows stuff on the screen.
+
+To explain this idea in a much simpler way, just think of it as **find and replace**. Let's take a look at the `click()` function in this component:
 
 ```ts showLineNumbers
-import { useState } from 'react'
-
-const [count, setCount] = useState(0)
-
 const click = () => {
   console.log('count before setCount():', count)
 
@@ -67,13 +85,11 @@ const click = () => {
 }
 ```
 
-In the first render, the value of `count` is `0`. Thus, React will define `click()` by replacing all occurrences of `count` in `click()` with the latest value in this render, which is `0`. Simply put, this is what the component does in the first render:
+In the first render, the value of `count` is `0`. Thus, React will define `click()` by replacing all occurrences of `count` with its value in this render, which is `0`.
+
+Simply put, this is what the component did while defining `click()`:
 
 ```ts showLineNumbers
-import { useState } from 'react'
-
-const [count, setCount] = useState(0)
-
 const click = () => {
   // highlight-next-line
   console.log('count before setCount():', 0)
@@ -89,9 +105,9 @@ const click = () => {
 }
 ```
 
-Notice how all the `count` are replaced by the value of `count` in the first render, which is `0`. This is why we always get `0` no matter how we access `count` in `click()` in the first render — it is destined to be `0`!
+Notice how all the `count` are replaced by `0`. This explains why we still get `0` in the timeout, even though the `count` on the screen has already been updated to `5`.
 
-Here's another example which does not work as how we expected for the same reason:
+Here's another example that "broke" for the same reason:
 
 ```ts showLineNumbers
 import { useState } from 'react'
@@ -107,24 +123,27 @@ const click = () => {
 }
 ```
 
-In this example, after `click()` is executed once, the value of `count` will be `1` instead of `3`. How come?
+In this example, after `click()` is executed, the value of `count` will be `1` instead of `3`. How come?
 
-In the very beginning, the value of `count` is `0`, which means `setCount(count + 1)` in `click()` will all evaluate to `setCount(0 + 1)`. So in the first render, the component will define `click()` as a function that runs `setCount(0 + 1)` for three times.
+In the very beginning, the value of `count` is `0`, which means `setCount(count + 1)` will all evaluate to `setCount(0 + 1)`. So in the first render, the component will define `click()` as a function that runs `setCount(0 + 1)` for three times, which does nothing but update the value of `count` to `1`.
 
-Great, now you know the cause to these commonly see issues! From these example, we've learned a very important lesson — in a React component, **everything works by rendering**, not by time. **Reactive values can only represent the status of a component in a specific render.**. That's why a component needs to **re-render**. But what exactly does re-render do?
+From these example, we've learned a very important lesson — in a React component, **everything works by rendering**, not by time. **Reactive values can only represent the status of a component in a specific render, even in a halfway through function call**. That's why a component needs to **re-render**. But what exactly does re-render do?
 
 ## What Happens When A Component Re-Renders?
 
-As we've mentioned in [Reactive Values](./reactive-values#what-does-render-mean), "re-render" means any subsequent render after the very first render. But what actually happens when a component re-renders? Let's walk through a render-by-render analysis of a counter app to see what actually happens when a component re-renders.
+As we've mentioned in [Reactive Values](./reactive-values#what-does-render-mean), re-render means any subsequent render after the very first render. But what actually happens when a component re-renders? Let's walk through a render-by-render analysis of a counter app to see what actually happens when a component re-renders:
 
 ```tsx showLineNumbers
 import React, { useState } from 'react'
 
 export const Example = () => {
+  // highlight-next-line
   const [count, setCount] = useState(0)
 
+  // highlight-next-line
   const countPlusFive = count + 5
 
+  // highlight-next-line
   const increment = () => {
     setCount(count + 1)
   }
@@ -133,23 +152,27 @@ export const Example = () => {
     <div>
       <h1>Count: {count}</h1>
       <h2>Count + 5: {countPlusFive}</h2>
-      <button onClick={increment}>Increment</button>
+      <button onClick={increment}>
+        Increment
+      </button>
     </div>
   )
 }
 ```
 
-Let's start by reviewing the members of this component:
+First, let's review the members of this component:
 
-- Props
-  - None
-- States
-  - `count`
-- Local variables (any non-[reference](./use-ref) value we declare in a component; value, function, etc.)
-  - `countPlusFive`
-    - Dependencies: `count`
-  - `increment()`
-    - Dependencies: `count`
+- Reactive values
+  - Props
+    - None
+  - States
+    1. `count`
+- Non-reactive values
+  - [References](./use-ref)
+    - None
+  - Normal values (all non-reactive, non-reference values declared in a component)
+    1. `countPlusFive`
+    2. `increment()`
 
 The only state in this component is `count`, and we can update `count` by clicking the "Increment" button.
 
@@ -157,39 +180,38 @@ The only state in this component is `count`, and we can update `count` by clicki
 
 ### The First Render (Initialization)
 
-In the first render, React initializes the component according to the following logic:
+In the first render, React initializes the component according to the following steps:
 
 1. Runs `const [count, setCount] = useState(0)` to make `count` and `setCount()` available.
 2. Runs `const countPlusFive = count + 5`; since the initial value of `count` is `0`, all of the occurrences of `count` will be replaced by `0`, so `countPlusFive` will evaluate to `0 + 5`.
-3. Runs `const increment = () => { ... }`; since the initial value of `count` is `0`, all of the occurrences of `count` will be replaced by `0`, so `setCount(count + 1)` will evaluate to `setCount(0 + 1)`. This means when `increment()` is called, the value of `count` will be updated to `0 + 1`, which means `1`.
+3. Runs `const increment = () => { ... }`; since the initial value of `count` is `0`, all of the occurrences of `count` will be replaced by `0`, so `setCount(count + 1)` will evaluate to `setCount(0 + 1)`. This means when `increment()` is called, the value of `count` will be updated to `0 + 1`, which is `1`.
 4. Binds all necessary values to the JSX elements in the return section while rendering all child components, and do the return.
 
-#### The Second Render (The First Re-Render)
+### The Second Render (The First Re-Render)
 
-After the "Increment" button is clicked for once, the value of `count` will be updated from `0` to `1`; since `count` is a state, this change will cause the component to re-render. After `count` has been updated, React re-renders the component by re-running every single piece of code in the component from top to bottom:
+After the "Increment" button is clicked once, the value of `count` will be updated from `0` to `1`. Since `count` is a reactive value, this change will cause the component to re-render. Thus, React re-renders the component by re-running every single piece of code in the component from top to bottom:
 
-1. Runs `const [count, setCount] = useState(0)`; however, thanks to how `useState()` works internally, `count` and `setCount()` will **not** be redefined; they still point to the same variables in the previous render.
-  - The value of a state may change between renders, but `setState()` will not — it'll always points to the same function!
+1. Runs `const [count, setCount] = useState(0)`. However, thanks to how `useState()` works internally, `count` and `setCount()` will **not** be redefined; they will still point to the same variables as in the previous render.
 2. Runs `const countPlusFive = count + 5`.
-  - Since `countPlusFive` is a local variable, React will redefine it during re-render.
-  - Since the value of `count` has been changed from `0` to `1`, `count + 5` will evaluate to `1 + 5` in this render.
+    - Since `countPlusFive` is a normal value, React will redefine it during re-render.
+    - The value of `count` has been updated from `0` to `1`, so `count + 5` will evaluate to `1 + 5` in this render.
 3. Runs `const increment = () => { ... }`.
-  - Since `increment()` is a local variable, React will redefine it during re-render.
-  - Since the value of `count` has been changed from `0` to `1`, `setCount(count + 1)` will evaluate to `setCount(1 + 1)`. This means when `increment()` is called, the value of `count` will be updated to `1 + 1`, which is `2`.
-4. Binds all necessary values to the JSX elements in the return section while re-rendering all child components, and do the return.
+    - Since `increment()` is a normal value, React will redefine it during re-render.
+    - The value of `count` has been updated from `0` to `1`, so `setCount(count + 1)` will evaluate to `setCount(1 + 1)`. This means when `increment()` is called, the value of `count` will be updated to `1 + 1`, which is `2`.
+4. Binds all necessary values to the JSX elements in the return section while re-rendering all children, and do the return.
 
 Any subsequent render will just follow the same rule as the the first re-render, with no exception.
 
-As you can see, the first render and re-render are actually not that different from each other; they both follow the same rule — runs the code in a component from top to bottom. **The definitions of everything are still the same in each render; the only difference is the value of reactive variables**. Please keep in mind that:
+As you can see, render and re-render are actually not that different from each other; they both follow the same rule — runs the code in a component from top to bottom. Therefore, in each render, **the definitions of everything are still the same as in the previous render; the only difference is the value of reactive variables**. Please keep in mind that:
 
-- Reactive values will never change within the same render. In other words, **in each render, reactive values are actually constants**.
-- **By default, all non-reference variables get redefined during re-render**. You can prevent this from happening by using memoization hooks like [`useMemo()`](./optimization-functions#usememo) and [`useCallback()`](./optimization-functions#usecallback).
+- Reactive values will never change within the same render. In other words, **reactive values can actually be seen as constants in each render**; they only change in the next render.
+- **By default, all normal values get redefined during re-render**. You can prevent this from happening by using memoization functions like [`useMemo()`](./optimization-functions#usememo) and [`useCallback()`](./optimization-functions#usecallback).
 
-:::warn
+:::caution
 
-Since local variable gets redefined during re-render, we need to be careful when dealing with them.
+Since normal values are redefined during re-render, we need to be careful when dealing with them.
 
-1. If there's a JSX element (or child component) in a local variable, they will do a full reload instead of re-render (unmount and mount again). For example:
+- When a component re-renders, if a normal value contains any JSX element or component, it will do a full reload (unmount and mount again) instead of a re-render. For example:
 
   ```tsx showLineNumbers
   import React from 'react'
@@ -197,8 +219,9 @@ Since local variable gets redefined during re-render, we need to be careful when
 
   export const Example = () => {
     // Beware!
-    // This function gets redefined every time this component re-renders, which means
-    // all unmemoized elements returned by this function will be recreated during re-render as well!
+    // The following function gets redefined whenever Example re-renders.
+    // This means all unmemoized values in this function will be recreated
+    // during re-render!
     // highlight-start
     const renderChild = () => (
       <div>
@@ -210,13 +233,14 @@ Since local variable gets redefined during re-render, we need to be careful when
 
     return (
       <div>
+        {/* highlight-next-line */}
         {renderChild()}
       </div>
     )
   }
   ```
 
-  In the above example, whenever `Example` re-renders, `<Child />` will do a full reload instead of a re-render because `renderChild()` is being redefined in each render. On the contrary, the `<Child />` in the example below will do a re-render instead of full reload when `Example` re-renders:
+  In the above example, whenever `Example` re-renders, `Child` will do a full reload instead of a re-render because `renderChild()` is being redefined in each render. To solve this problem, the easiest way is to put `Child` directly in the return section of `Example`:
 
   ```tsx showLineNumbers
   import React from 'react'
@@ -225,16 +249,18 @@ Since local variable gets redefined during re-render, we need to be careful when
   export const Example = () => {
     return (
       <div>
+        {/* highlight-start */}
         <div>
           <span>Hello</span>
-          {/* highlight-next-line */}
           <Child />
         </div>
+        {/* highlight-end */}
       </div>
     )
   }
   ```
-2. If the local variable is a non-[primitive](https://developer.mozilla.org/en-US/docs/Glossary/Primitive) value, and it's being used as a prop of a child, it'll cause memoization to lose its effect because the value being pass to the child is a different object in each render. For example:
+
+2. If a normal value is non-[primitive](https://developer.mozilla.org/en-US/docs/Glossary/Primitive), and it's being used as a prop of a child, the memoization ([`React.memo()`](./optimization-functions#reactmemo)) on the child will lose its effect because the value being pass to the child is a different object in each render. For example:
 
 ```tsx showLineNumbers
 import React from 'react'
@@ -242,14 +268,14 @@ import { Child } from './Child'
 
 export const Example = () => {
   // Beware!
-  // This object gets redefined every time this component re-renders.
+  // This object gets redefined whenever Example re-renders.
   // highlight-next-line
   const user = {
     age: 5,
   }
 
   // Beware!
-  // This function gets redefined every time this component re-renders, too!
+  // This function gets redefined whenever Example re-renders, too!
   // highlight-next-line
   const sayHi = () => {
     console.log('Hi')
@@ -263,23 +289,152 @@ export const Example = () => {
   )
 }
 ```
+
 :::
 
-### The Re-Rendering of Children
+### Rendering Is Recursive
 
-TODO: `props.children` wont' re-render!
+**Rendering is recursive**. For example:
+
+```tsx showLineNumbers
+import React from 'react'
+import { Child } from './Child'
+
+export const Parent = () => (
+  <div>
+    {/* highlight-next-line */}
+    <Child />
+  </div>
+)
+```
+
+In this example, whenever `Parent` re-renders, `Child` will also re-render; then, the children of `Child` will also re-render, and so forth and so on, all the way to the very last component in the DOM tree. Sometimes this makes sense because a child may use a state declared in the parent as a prop, but sometimes it does not. Consider the following example:
+
+```tsx showLineNumbers
+import React, { useState } from 'react'
+import { Child } from './Child'
+
+export const Parent = () => {
+  const [count, setCount] = useState(0)
+
+  const increment = () => {
+    setCount(count + 1)
+  }
+
+  return (
+    <div>
+      <h1>Count: {count}</h1>
+      <button onClick={increment}>
+        Increment
+      </button>
+      {/* highlight-next-line */}
+      <Child />
+    </div>
+  )
+}
+```
+
+<Video src="/video/react/reactivity_rendering-is-recursive.mov" />
+
+In the above example, `Child` is not using any state declared in `Parent`; however, whenever `Parent` re-renders, `Child` will also re-render. In most cases this is fine, because `Child` may not be a computationally espensive component; but if it is, it would be not ideal to re-render `Child` whenever `Parent` re-renders. So, is there a way to change this behavior, so that we don't re-render `Child` when `Parent` re-renders?
+
+One way is to use memoization functions to memoize the rendered output of `Child`, we'll talk about this in [Optimization Functions](./optimization-functions). Another way is to make use of the **`children`** prop of a React component.
+
+### `children` Prop
+
+So what can `children` prop do? In native HTML, we can put as many DOM nodes as we want under another DOM node. For example:
+
+```html showLineNumbers
+<div>
+  <!-- highlight-start -->
+  <label>...</label>
+  <span>...</span>
+  <!-- highlight-end -->
+</div>
+```
+
+The same rule applies to React components as well; we can put as many DOM nodes and components under another DOM node or component. For example:
+
+```tsx showLineNumbers
+import React from 'react'
+import { Parent } from './Parent'
+import { Child } from './Child'
+
+export const Example = () => {
+  return (
+    <div>
+      <Parent>
+        {/* highlight-next-line */}
+        <Child />
+      </Parent>
+    </div>
+  )
+}
+```
+
+In the above example, although `<Child />` is wrapped inside `<Parent></Parent>`, since `<Child />` is written in the return section of `Example`, it is `Example` that will be responsible for rendering `<Child />`, not `Parent`. Therefore, `Child` will only re-render when `Example` re-renders, and the re-rendering of `Parent` will not affect `Child` at all.
+
+However, this solution won't work without proper setup. In React, contents wrapped between a component will not automatically show up; instead, they will be pass to the component as a prop named `children`. If we don't explicitly use this `children` prop in the component, React will do nothing about it, just like all other props.
+
+:::info
+
+If you're using TypeScript, you may get an error that says `Type '{ children: Element; }' has no properties in common with type 'IntrinsicAttributes'` when putting anything between a component. To solve this problem, we can either add a prop called `children` with the type we need, or use the built-in type `PropsWithChildren` to fulfill our requirement:
+
+```tsx showLineNumbers
+// highlight-next-line
+import React, { PropsWithChildren } from 'react'
+
+type IParentProps = PropsWithChildren<{
+  // Add any other prop you need here.
+}>
+
+// highlight-next-line
+export const Parent = ({ children }: IParentProps) => {
+  // ...
+}
+```
+
+So all we have to do now is to take `children` out from the props of `Parent` and put it where we want it to be. This way when `Parent` re-renders, `Child` will not re-render because it's now rendered by another component:
+
+```tsx showLineNumbers
+import React, { useState, PropsWithChildren } from 'react'
+
+// highlight-next-line
+export const Parent = ({ children }: PropsWithChildren) => {
+  const [count, setCount] = useState(0)
+
+  const increment = () => {
+    setCount(count + 1)
+  }
+
+  return (
+    <div>
+      <h1>Count: {count}</h1>
+      <button onClick={increment}>
+        Increment
+      </button>
+      {/* highlight-next-line */}
+      {children}
+    </div>
+  )
+}
+```
+
+<Video src="/video/react/reactivity_children-prop.mov" />
+
+:::
 
 ### When Will Reactive Values Be Updated?
 
-You may have heard people said "`setState()` is not synchronous". Well, the description is partly true because because the changes made by `setState()` are not applied immediately; in other words, states won't be updated immediately after `setState()` is called. However, `setState()` itself is actually a synchronous function; it's not an `async` function.
+You may have heard people said "`setState()` is not synchronous". Well, the description is partly true because the changes made by `setState()` will not be applied immediately; in other words, states won't be updated immediately after `setState()` is called. However, `setState()` itself is actually synchronous; it's not an `async` function.
 
 So here comes the question — if states are not updated right after `setState()` is called, when exactly will they be updated?
 
 ### Update Requests
 
-First, we need to know that when we call functions like `setState()` or `dispatch()`, we're actually **making an update request** instead of doing an actual, instant update. React will update the states at some point based on the update requests we sent. For this reason, we'll refer to those functions as "**update requests**" in this documentation.
+First, we must understand that the purpose of functions like `setState()` and `dispatch()` is actually **making an update request** instead of doing an actual, instant update. React will update the states at some point based on the update requests we sent. For this reason, we'll refer to those functions as "**update requests**" in this documentation.
 
-So, when exactly will React process the update requests we sent? A simple rule of thumb would be:
+So, when exactly will React process these update requests? A simple rule of thumb would be:
 
 1. When the call stack is empty.
 2. When the caller of async function resumes execution.
@@ -290,15 +445,15 @@ So, when exactly will React process the update requests we sent? A simple rule o
 
 If you don't know what call stack is, don't panic just yet!
 
-Call stack is a part of the [event loop](https://developer.mozilla.org/en-US/docs/Web/JavaScript/EventLoop) in JavaScript. To be honest, it's not really necessary to know it due to the fact that most of the update requests are triggered by user-initiated events (for example, clicking a button or submitting a form), which for most the time will be the first function call in the call stack. That means the call stack will usually be empty when the execution of the event handler is done.
+Call stack is a part of the [event loop](https://developer.mozilla.org/en-US/docs/Web/JavaScript/EventLoop) in JavaScript. To be honest, it's not really necessary to know it due to the fact that most of the update requests are triggered by user-initiated events (for example, clicking a button or submitting a form), which will be the first function call in the call stack most the time. That means the call stack will usually be empty when the execution of the event handler is done.
 
-That being said, if you still want to know what call stack or event loop is, we recommend you watch this awesome talk by **Philip Roberts**. [*What the heck is the event loop anyway?*](https://youtu.be/8aGhZQkoFbQ)
+It may sound scary, but it's actually not something ver y difficult to understand. If you still want to know what call stack or event loop is, we recommend you watch this awesome talk by Philip Roberts. [*What the heck is the event loop anyway?*](https://youtu.be/8aGhZQkoFbQ)
 
-If you have no idea what we're talking about, don't worry! Just skip this blue box and keep reading!
+If you have no idea what we're talking about at all, it's okay. Just ignore it and keep reading, you'll be fine!
 
 :::
 
-Update requests will be processed when the call stack is empty. In other words, in most cases, states will be updated when the execution of the event handler (function) that sends the update requests is done. Consider the following example:
+Update requests will be processed when the call stack is empty. In other words, states will be updated when the event handler that sends the update requests is done executed, assuming the event handler is the first function call in the call stack. For example:
 
 ```tsx showLineNumbers
 import { useState } from 'react'
@@ -306,6 +461,7 @@ import { useState } from 'react'
 export const Example = () => {
   const [count, setCount] = useState(0)
   
+  // highlight-next-line
   const click = () => {
     setCount(1)
     console.log('Done')
@@ -314,6 +470,7 @@ export const Example = () => {
   return (
     <div>
       <h1>Count: {count}</h1>
+      {/* highlight-next-line */}
       <button onClick={click}>
         Click Me
       </button>
@@ -322,7 +479,7 @@ export const Example = () => {
 }
 ```
 
-In this example, `click()` is the `onClick` event handler of the button, which means `click()` will be put into the call stack when the button is clicked. Here, `console.log('Done')` is the last action to be done in `click()`, so the execution of `click()` will be considered as done after `console.log('Done')` is completed, and `click()` will be removed from the call stack after that. Thus, React will immediately update the states according to our update requests (in this example it's `setCount(1)`) once the execution of `click()` is done.
+In this example, `click()` is the `onClick` event handler of the button, which means `click()` will be the only function call in the call stack when the button is clicked. Since `console.log('Done')` is the last action to be done in `click()`, the execution of `click()` will be considered as done after `console.log('Done')` is completed. Thus, React will immediately update the states according to our update request, which is `setCount(1)` once the execution of `click()` is done.
 
 #### When the Caller of Async Function Resumes Execution
 
@@ -354,7 +511,7 @@ In the above example, `count` is going to be updated twice:
 1. Right after the first `await doSomethingAsync()` is done (updated from `0` to `1`).
 2. Right after the second `await doSomethingAsync()` is done (updated from `1` to `2`).
   
-We can verify if this is true with the help of `useEffect()`:
+We can verify this with the help of `useEffect()`:
 
 ```ts showLineNumbers
 import { useEffect } from 'react'
@@ -372,6 +529,8 @@ useEffect(() => {
   <summary>What's the theory behind this? (advanced knowledge, feel free to skip this!)</summary>
 
   From the description above, you may have guessed it already — those "update requests" are actually [**microtasks**](https://developer.mozilla.org/en-US/docs/Web/API/HTML_DOM_API/Microtask_guide). If you find it very confusing, feel free to skip it! You'll do just fine without knowing anything about it!
+  
+  Besides, `await` can actually be used on anything, whether it's a promise or not. Check out [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await#control_flow_effects_of_await) for more information if you're interested in it!
 </details>
 
 :::info Tiny Exercise
@@ -417,4 +576,6 @@ const doSomethingAsync = () => {
 
 :::
 
-Congratulations! You've done learning the most difficult part of React! If you can understand all of the content in this chapter, you should be able to improve the quality of your component considerably.
+Congratulations! You have learned the most difficult part of React! This is indeed a huge step forward!
+
+However, this is not the end! We recommend reading [`useState()` In Depth](./use-state-in-depth) to get the full picture of how `useState()` works.
