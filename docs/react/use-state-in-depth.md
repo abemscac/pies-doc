@@ -1,7 +1,7 @@
 ---
 sidebar_position: 7
-description: Introduce the advanced usage and mechanism of useState() in React.
-keywords: [piesdoc, react, react useState]
+description: Introduce the advanced mechanism of useState() in React.
+keywords: [piesdoc, react, react useState()]
 ---
 
 # `useState() In Depth`

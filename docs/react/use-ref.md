@@ -2,7 +2,7 @@
 title: useRef()
 sidebar_position: 8
 description: Introduce the usage and commonly seen issues of useRef() in React.
-keywords: [piesdoc, react, react useRef]
+keywords: [piesdoc, react, react useRef()]
 ---
 
 import Video from '@site/src/widgets/Video'
@@ -18,7 +18,7 @@ For class components, use [`createRef()`](https://reactjs.org/docs/refs-and-the-
 
 ## What Is `useRef()`?
 
-`useRef()` (`Ref` means "Reference") is a built-in [**hook**](./the-basics-of-hooks.md) that takes an argument of any type, and returns an object of type `MutableRefObject<T>` with that argument as the initial value. But what is this `MutableRefObject<T>`?
+`useRef()` (`Ref` means "Reference") is a built-in [**hook**](./the-basics-of-hooks) that takes an argument of any type, and returns an object of type `MutableRefObject<T>` with that argument as the initial value. But what is this `MutableRefObject<T>`?
 
 `MutableRefObject<T>` is the **return type** of `useRef()`. A simple interface for `MutableRefObject<T>` would look like this:
 
@@ -279,7 +279,7 @@ Same as creating references of DOM nodes, you should **only do this when standar
 
 ### Uncontrolled Components
 
-For most of the time, developers use `useState()` for everything related to form (for example, `<input>`, `<textarea>`, rich text editor, etc.). However, depending on how states are being used, sometimes `useRef()` could be a better choice. For example:
+For most of the time, developers use `useState()` for everything related to form (i.e. `<input>`, `<textarea>`, rich text editor, etc.). However, depending on how states are being used, sometimes `useRef()` could be a better choice. For example:
 
 ```tsx showLineNumbers
 import React, { useState, FormEvent, ChangeEvent } from 'react'
