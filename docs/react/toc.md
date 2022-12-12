@@ -11,7 +11,7 @@ description: TOC
   - Advanced Example
 - [ ] `useState()`
 - [ ] `useEffect()`
-- [x] Reactivity
+- [x] Component Rendering
   - How Reactive Value Works in a Component
     ...it "binds" all reactive values to all methods declared in the component. 
   - When Will a Reactive Value Be Updated
