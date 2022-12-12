@@ -2,7 +2,7 @@
 title: UnwrapNestedRef<T>
 sidebar_position: 8
 description: 介紹 Vue 3 reactive() 函式中的解包機制
-keywords: [派氏文件, vue3, vue unwrapnestedref, vue reactive, vue解包]
+keywords: [派氏文件, vue3, vue unwrapnestedref, vue reactive(), vue解包]
 ---
 
 # `UnwrapNestedRef<T>`

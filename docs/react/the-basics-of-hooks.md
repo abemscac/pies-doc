@@ -1,7 +1,7 @@
 ---
 sidebar_position: 3
 description: Introduce the basics of hooks in React.
-keywords: [piesdoc, react, react hoc]
+keywords: [piesdoc, react, react hooks]
 ---
 
 # The Basics of Hooks
@@ -14,7 +14,7 @@ Hooks are **functions** that can be called within any component in React. In a h
 
 :::info
 
-- You might be wondering what's the difference between a (util) function and a hook, because the statement "functions that can be called within any component in React" sounds just like a utility function. Generally speaking, if any React-specific feature is used within the function (for example, `useState()` and `useEffect()`), we would call it a **hook** instead of a normal function.
+- You might be wondering what's the difference between a (util) function and a hook, because the statement "functions that can be called within any component in React" sounds just like a utility function. Generally speaking, if any React-specific feature is used within the function (i.e. `useState()` and `useEffect()`), we would call it a **hook** instead of a normal function.
 - A component and a hook are actually not that different from TODO perspective; if you returns a JSX element in a hook, that'll actually make it a component!
 
 :::

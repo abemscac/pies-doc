@@ -1,7 +1,7 @@
 ---
 sidebar_position: 4
 description: 說明 Vue 3 reactive() 函式的功用
-keywords: [派氏文件, vue3, vue reactive, vue響應性, vue響應式代理]
+keywords: [派氏文件, vue3, vue reactive(), vue響應性, vue響應式代理]
 ---
 
 import Video from '@site/src/widgets/Video'

@@ -260,7 +260,7 @@ Since normal values are redefined during re-render, we need to be careful when d
   }
   ```
 
-2. If a normal value is non-[primitive](https://developer.mozilla.org/en-US/docs/Glossary/Primitive), and it's being used as a prop of a child, the memoization ([`React.memo()`](./optimization-functions#reactmemo)) on the child will lose its effect because the value being pass to the child is a different object in each render. For example:
+2. If a normal value is non-[primitive](https://developer.mozilla.org/en-US/docs/Glossary/Primitive), and it's being used as a prop of a child, the memoization ([`memo()`](./optimization-functions#reactmemo)) on the child will lose its effect because the value being pass to the child is a different object in each render. For example:
 
 ```tsx showLineNumbers
 import React from 'react'
@@ -445,7 +445,7 @@ In general, React will process update requests when any of the following conditi
 
 If you don't know what call stack is, don't panic just yet!
 
-Call stack is a part of the [event loop](https://developer.mozilla.org/en-US/docs/Web/JavaScript/EventLoop) in JavaScript. To be honest, it's not really necessary to know it due to the fact that most of the update requests are triggered by user-initiated events (for example, clicking a button or submitting a form), which will be the first function call in the call stack most the time. That means the call stack will usually be empty when the execution of the event handler is done.
+Call stack is a part of the [event loop](https://developer.mozilla.org/en-US/docs/Web/JavaScript/EventLoop) in JavaScript. To be honest, it's not really necessary to know it due to the fact that most of the update requests are triggered by user-initiated events (i.e. clicking a button or submitting a form), which will be the first function call in the call stack most the time. That means the call stack will usually be empty when the execution of the event handler is done.
 
 It may sound scary, but it's actually not something ver y difficult to understand. If you still want to know what call stack or event loop is, we recommend you watch this awesome talk by Philip Roberts. [*What the heck is the event loop anyway?*](https://youtu.be/8aGhZQkoFbQ)
 
