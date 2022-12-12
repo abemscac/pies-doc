@@ -52,7 +52,7 @@ In this example, everytime the "Increment" button is clicked, the value of `coun
 
 <Video src="/video/react/reactive-values_reactive.mov" />
 
-However, you may have noticed that the value on the screen is always different from the value we see in the console. Good news is, this is not a bug, but it does confuse everyone! We'll explain this when we get to [Reactivity](./reactivity), just don't worry about it now.
+However, you may have noticed that the value on the screen is always different from the value we see in the console. Good news is, this is not a bug, but it does confuse everyone! We'll explain this when we get to [Component Rendering](./component-rendering), just don't worry about it now.
 
 Also, it's okay if you have no idea what does [`useState()`](./use-state) do. Just keep in mind that updating reactive values will cause the component to re-render and you're good to go!
 

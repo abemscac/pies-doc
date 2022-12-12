@@ -6,7 +6,7 @@ keywords: [piesdoc, react, react reactivity, react component rendering]
 
 import Video from '@site/src/widgets/Video'
 
-# Reactivity
+# Component Rendering
 
 :::caution Prerequisites
 
@@ -20,7 +20,7 @@ You must learn the following chapters before getting into this chapter:
 
 This chapter is crucial for understanding how reactive value works in a React component. If you're not having a good time dealing with states, this chapter might be able to save you.
 
-In this chapter, we'll talk about **re-rendering**. However, we don't talk about virtual DOM, nor do we talk about any complicated algorithm; instead, we talk about the most relevant things for users (you and me, the developers) — what exactly will re-render do to a component.
+In this chapter, we'll talk about **re-rendering**. However, we don't talk about virtual DOM, nor do we talk about any complicated algorithm; instead, we talk about the most relevant things for users (you and me, the developers) — how exactly will re-render affect the variables declared in a component.
 
 This is going to be a long chapter! Take your time reading it, be patient, it's worth it!
 
@@ -64,7 +64,7 @@ In this example, we use three `console.log()` successively to print out the valu
 2. Right after `setCount()` is called.
 3. 5 seconds after `setCount()` is called.
 
-<Video src="/video/react/reactivity_state-with-timeout.mov" />
+<Video src="/video/react/component-rendering_state-with-timeout.mov" />
 
 From one of the example in [Reactive Values](./reactive-values#reactive-values-1), we already know that changes made by functions like `setState()` will not be applied immediately, so currently it's acceptable to see the second `console.log()` showing `0` (we'll talk about the real cause [below](#when-will-reactive-values-be-updated)!) But why is it that in the video, when we clearly see the number on the screen has changed from `0` to `5`, the last `console.log()` still shows `0`?
 
@@ -176,7 +176,7 @@ First, let's review the members of this component:
 
 The only state in this component is `count`, and we can update `count` by clicking the "Increment" button.
 
-<Video src="/video/react/reactivity_counter-app.mov" height="200px" />
+<Video src="/video/react/component-rendering_counter-app.mov" height="200px" />
 
 ### The First Render (Initialization)
 
@@ -334,7 +334,7 @@ export const Parent = () => {
 }
 ```
 
-<Video src="/video/react/reactivity_rendering-is-recursive.mov" />
+<Video src="/video/react/component-rendering_rendering-is-recursive.mov" />
 
 In the above example, `Child` is not using any state declared in `Parent`; however, whenever `Parent` re-renders, `Child` will also re-render. In most cases this is fine, because `Child` may not be a computationally espensive component; but if it is, it would be not ideal to re-render `Child` whenever `Parent` re-renders. So, is there a way to change this behavior, so that we don't re-render `Child` when `Parent` re-renders?
 
@@ -420,11 +420,11 @@ export const Parent = ({ children }: PropsWithChildren) => {
 }
 ```
 
-<Video src="/video/react/reactivity_children-prop.mov" />
+<Video src="/video/react/component-rendering_children-prop.mov" />
 
 :::
 
-### When Will Reactive Values Be Updated?
+## When Will Reactive Values Be Updated?
 
 You may have heard people said "`setState()` is not synchronous". Well, the description is partly true because the changes made by `setState()` will not be applied immediately; in other words, states won't be updated immediately after `setState()` is called. However, `setState()` itself is actually synchronous; it's not an `async` function.
 
@@ -434,7 +434,7 @@ So here comes the question — if states are not updated right after `setState()
 
 First, we must understand that the purpose of functions like `setState()` and `dispatch()` is actually **making an update request** instead of doing an actual, instant update. React will update the states at some point based on the update requests we sent. For this reason, we'll refer to those functions as "**update requests**" in this documentation.
 
-So, when exactly will React process these update requests? A simple rule of thumb would be:
+In general, React will process update requests when any of the following conditions are met:
 
 1. When the call stack is empty.
 2. When the caller of async function resumes execution.
@@ -483,7 +483,7 @@ In this example, `click()` is the `onClick` event handler of the button, which m
 
 #### When the Caller of Async Function Resumes Execution
 
-Update requests will also be processed when the caller of async function resumes execution. In short, states will be updated right after `await` has done "awaited". For example:
+Update requests will also be processed when the caller of async function resumes execution. Simply put, states will be updated right after `await` has done "awaited". For example:
 
 ```ts showLineNumbers
 import { useState } from 'react'
@@ -523,7 +523,13 @@ useEffect(() => {
 // highlight-end
 ```
 
-<Video src="/video/react/reactivity_await-triggers-states-update.mov" />
+<Video src="/video/react/component-rendering_await-triggers-states-update.mov" />
+
+:::caution
+
+Although states will be updated right after an `await` is done, it does not mean we can get updated values right after that. Don't forget that updated values are only available in the next render thanks to [how reactive value works in a compoent](#how-reactive-value-works-in-a-component)!
+
+:::
 
 <details>
   <summary>What's the theory behind this? (advanced knowledge, feel free to skip this!)</summary>
@@ -570,7 +576,7 @@ const doSomethingAsync = () => {
   2. Right after the second `await doSomethingAsync()` is done (updated from `1` to `2`).
   3. When the execution of `click()` is done (updated from `2` to `3`).
 
-  <Video src="/video/react/reactivity_update-request-exercise.mov" />
+  <Video src="/video/react/component-rendering_update-request-exercise.mov" />
   
 </details>
 
