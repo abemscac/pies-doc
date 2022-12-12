@@ -1,7 +1,7 @@
 ---
 sidebar_position: 9
 description: Introduce the usage and commonly seen issues of forwardRef() in React.
-keywords: [piesdoc, react, react forwardRef]
+keywords: [piesdoc, react, react forwardRef()]
 ---
 
 import Video from '@site/src/widgets/Video'

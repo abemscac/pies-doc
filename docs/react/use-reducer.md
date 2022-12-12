@@ -1,7 +1,7 @@
 ---
-sidebar_position: 12
+sidebar_position: 13
 description: Introduce the usage and commonly seen issues of useReducer() in React.
-keywords: [piesdoc, react, react useReducer]
+keywords: [piesdoc, react, react useReducer()]
 ---
 
 # `useReducer()`

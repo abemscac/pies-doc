@@ -2,7 +2,7 @@
 title: ref() or reactive()
 sidebar_position: 5
 description: Compare the differences between ref and reactive in Vue 3.
-keywords: [piesdoc, vue3, vue ref, vue reactive, vue ref or reactive]
+keywords: [piesdoc, vue3, vue ref(), vue reactive(), vue ref() or reactive()]
 ---
 
 # `ref()` or `reactive()`
@@ -94,7 +94,7 @@ We can finally dive into the most important part — explain why we choose `ref(
 
 If the argument is a primitive value, then `ref()` would be the best choice because `reactive()` only works with non-primitive values.
 
-Of course we can wrap the primitive value into an object to make it work (for example, `const age = reactive({ value: 5 })`), but...why? Just use `ref()` and you'll get the same result!
+Of course we can wrap the primitive value into an object to make it work (i.e. `const age = reactive({ value: 5 })`), but...why? Just use `ref()` and you'll get the same result!
 
 ### Functions
 

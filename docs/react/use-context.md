@@ -1,7 +1,7 @@
 ---
-sidebar_position: 11
+sidebar_position: 12
 description: Introduce the usage and commonly seen issues of useContext() in React.
-keywords: [piesdoc, react, react useContext]
+keywords: [piesdoc, react, react useContext()]
 ---
 
 # `useContext()`

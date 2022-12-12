@@ -1,6 +1,6 @@
 ---
-sidebar_position: 13
-description: Introduce what higher order components (HOC) are in React.
+sidebar_position: 10
+description: Introduce what higher order components (HOCs) are in React.
 keywords: [piesdoc, react, react hoc]
 ---
 

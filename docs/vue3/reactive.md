@@ -1,7 +1,7 @@
 ---
 sidebar_position: 4
 description: What does reactive function do in Vue 3.
-keywords: [piesdoc, vue3, vue reactive, vue reactivity, vue reactive proxy]
+keywords: [piesdoc, vue3, vue reactive(), vue reactivity, vue reactive proxy]
 ---
 
 import Video from '@site/src/widgets/Video'

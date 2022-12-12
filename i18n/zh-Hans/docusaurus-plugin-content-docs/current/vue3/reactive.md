@@ -1,7 +1,7 @@
 ---
 sidebar_position: 4
 description: 说明 Vue 3 reactive() 函数的功用
-keywords: [派氏文件, vue3, vue reactive, vue响应性, vue响应式代理]
+keywords: [派氏文件, vue3, vue reactive(), vue响应性, vue响应式代理]
 ---
 
 import Video from '@site/src/widgets/Video'

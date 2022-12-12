@@ -20,12 +20,12 @@ description: TOC
   - Batching
 - [x] `useRef()`
 - [x] `forwardRef()`
+- [ ] Higher Order Components (HOCs)
+  - What Are HOCs?
+  - Example
 - [ ] Optimization Functions
-  - `React.memo()`
+  - `memo()`
   - `useMemo()`
   - `useCallback()`
 - [ ] `useContext()`
 - [ ] `useReducer()`
-- [ ] Higher Order Components (HOCs)
-  - What Are HOCs?
-  - Example
