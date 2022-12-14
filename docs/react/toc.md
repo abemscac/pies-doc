@@ -23,7 +23,7 @@ description: TOC
 - [ ] Higher Order Components (HOCs)
   - What Are HOCs?
   - Example
-- [ ] Optimization Functions
+- [x] Optimization Functions
   - `memo()`
   - `useMemo()`
   - `useCallback()`
