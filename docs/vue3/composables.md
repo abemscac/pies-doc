@@ -14,7 +14,7 @@ Composables are **functions** that can be called within any component in Vue. In
 
 :::info
 
-You might be wondering what's the difference between a (util) function and a composable, because the statement "functions that can be called within any component in Vue" sounds just like a utility function. Generally speaking, if any Vue-specific feature is used within the function (i.e. `ref()` and `onMounted()`), we would call it a **composable** instead of a normal function.
+You might be wondering what's the difference between a (util) function and a composable, because the statement "functions that can be called within any component in Vue" sounds just like an utility function. Generally speaking, if any Vue-specific feature is used within the function (i.e. `ref()` and `onMounted()`), we would call it a **composable** instead of a normal function.
 
 :::
 
@@ -152,4 +152,4 @@ However, there are a few important things to keep in mind:
 - Reusability is not the only thing to be taken into consideration before making composables; if the logic of a component is somewhat complicated, it's totally fine to "slice" (modularize) that huge feature into several small features (composables), even if only one component within the whole app is using it. This way our codebase would be more readable, maintainable, and testable, comparing with putting everything in a single component.
 - Component is not the only place you can use composables; you can also use composables in another composable!
 - Things like `defineProps()` and `defineEmits()` are not allowed in composables; they only work when directly used in `<script setup>`.
-- **More reusability does NOT equal to better code!** A lot of developers would try to modify an existing composable instead of creating a new one in order to reuse it in even more components. It is very common to see composables go out of control in this kind of situation — in order to handle all kinds of (edge) cases, more and more arguments/methods are added, making things way more complicated than it should be; and the cost of refactoring/replacement would only get higher as time goes on. Don't be afraid to create new composables if the old one starts to get too complicated.
+- **More reusability does NOT equal to better code!** A lot of developers would try to modify an existing composable instead of creating a new one in order to reuse it in even more components. It is very common to see composables go out of control in this kind of situation — in order to handle all kinds of (edge) cases, more and more parameters/methods are added, making things way more complicated than it should be; and the cost of refactoring/replacement would only get higher as time goes on. Don't be afraid to create new composables if the old one starts to get too complicated.

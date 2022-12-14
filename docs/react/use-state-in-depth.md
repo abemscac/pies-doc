@@ -12,10 +12,10 @@ TODO
 
 TODO
 
-## Updater Function Or Fixed Value?
+## Updater Function
 
 TODO
 
-## How Does Updater Function Work?
+## Updater Function Or Fixed Value?
 
 TODO

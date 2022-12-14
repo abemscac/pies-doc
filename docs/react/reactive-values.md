@@ -27,7 +27,7 @@ In React, "render" means to **run the code in your component from top to bottom,
 ### Reactive Values
 
 ```tsx showLineNumbers
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 export const Example = () => {
   // highlight-next-line
@@ -59,7 +59,7 @@ Also, it's okay if you have no idea what does [`useState()`](./use-state) do. Ju
 ### Non-Reactive Values
 
 ```tsx showLineNumbers
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 // highlight-next-line
 let count = 0
@@ -89,7 +89,7 @@ In this example, everytime the "Increment" button is clicked, the value of `coun
 But be careful, this does not mean the changes of a non-reactive value will never be reflected on the screen! Let's take a look at the following example:
 
 ```tsx showLineNumbers
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 // highlight-next-line
 let age = 0

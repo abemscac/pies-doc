@@ -106,7 +106,7 @@ Please beware that since mutating `MutableRefObject<T>` will not cause the compo
   const name = useRef('hello')
 
   useEffect(() => {
-    // This effect will not be executed after name.current changes.
+    // This effect will not be executed after `name.current` changes.
   // highlight-next-line
   }, [name.current])
   ```
@@ -118,8 +118,8 @@ Please beware that since mutating `MutableRefObject<T>` will not cause the compo
   const [age, setAge] = useState(0)
 
   useEffect(() => {
-    // This effect will not be executed after name.current changes,
-    // but it will after age changes!
+    // This effect will not be executed after `name.current` changes,
+    // but it will after `age` changes!
   // highlight-next-line
   }, [name.current. age])
   ```
@@ -157,7 +157,7 @@ Below here we'll list some commonly seen cases where we think `useRef()` may com
 You can get the instance of any DOM node by binding it to a `MutableRefObject<T>`. For example:
 
 ```tsx
-import React, { useRef } from 'react'
+import { useRef } from 'react'
 
 export const Example = () => {
   // highlight-next-line
@@ -199,7 +199,7 @@ By default this only works with class-child components. If you wish to achieve t
 Similar to DOM nodes, you can get the instance of any child-class component by binding it to a `MutableRefObject<T>`. For example:
 
 ```tsx title="Parent.tsx" showLineNumbers
-import React, { useRef } from 'react'
+import { useRef } from 'react'
   // highlight-next-line
 import { Child } from './Child'
 
@@ -223,7 +223,7 @@ export const Parent = () => {
 ```
 
 ```tsx title="Child.tsx" showLineNumbers
-import React, { Component } from 'react'
+import { Component } from 'react'
 
 interface IChildProps {}
 
@@ -282,7 +282,7 @@ Same as creating references of DOM nodes, you should **only do this when standar
 For most of the time, developers use `useState()` for everything related to form (i.e. `<input>`, `<textarea>`, rich text editor, etc.). However, depending on how states are being used, sometimes `useRef()` could be a better choice. For example:
 
 ```tsx showLineNumbers
-import React, { useState, FormEvent, ChangeEvent } from 'react'
+import { useState, FormEvent, ChangeEvent } from 'react'
 
 export const Example = () => {
     // highlight-next-line
@@ -290,7 +290,7 @@ export const Example = () => {
 
   const submit = async (e: FormEvent) => {
     e.preventDefault()
-    // Use name to do anything you want.
+    // Use `name` to do anything you want.
     // highlight-next-line
     console.log(name)
   }
@@ -320,7 +320,7 @@ In this example, we use `useState()` to declare `name`, and use `setName()` to m
 For these reasons, we can say it's safe to replace `useState()` with `useRef()` in this case for better performance while keeping the same functionality:
 
 ```tsx showLineNumbers
-import React, { useRef, FormEvent, ChangeEvent } from 'react'
+import { useRef, FormEvent, ChangeEvent } from 'react'
 
 export const Example = () => {
     // highlight-next-line
@@ -328,7 +328,7 @@ export const Example = () => {
 
   const submit = async (e: FormEvent) => {
     e.preventDefault()
-    // Use name.current to do anything you want.
+    // Use `name.current` to do anything you want.
     // highlight-next-line
     console.log(name)
   }
@@ -355,7 +355,7 @@ export const Example = () => {
 Sometimes we would want to share a value between two different life-cycles, usually a function that comes from 3rd party libraries, or an id returned by `setTimeout()` or `setInterval()`. For example:
 
 ```tsx showLineNumbers
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import SomeRandomLibrary from 'some-random-library'
 
 interface IExampleProps {
@@ -371,7 +371,7 @@ export const Example = ({ something }: IExampleProps) => {
   }, [])
   
   const doSomething = () => {
-    // This won't work because thatFunction does not exist here.
+    // This won't work because `thatFunction` does not exist here.
     // highlight-next-line
     thatFunction()
   }
@@ -395,7 +395,7 @@ Here, we call `SomeRandomLibrary.init()` after the component is mounted, which i
 We want to make sure each component instance has its own `thatFunction()`, but we also don't want the component to re-render when this function is assigned to another variable. `useRef()` would be a better option than `useState()` here because mutating a `MutableRefObject<T>` doesn't cause the component to re-render, but they both works:
 
 ```tsx showLineNumbers
-import React, { useRef, useEffect } from 'react'
+import { useRef, useEffect } from 'react'
 import SomeRandomLibrary from 'some-random-library'
 
 interface IExampleProps {
@@ -427,7 +427,7 @@ export const Example = ({ something }: IExampleProps) => {
 Declaring a variable outside the component seems like a solution, but that'll actually make all instances of this component share the same value, which is not something we would like to see:
 
 ```tsx showLineNumbers
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import SomeRandomLibrary from 'some-random-library'
 
 interface IExampleProps {
