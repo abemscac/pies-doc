@@ -29,7 +29,7 @@ This is going to be a long chapter! Take your time reading it, be patient, it's 
 We've all been confused by how states work in React. Let's start this chapter with following example:
 
 ```tsx showLineNumbers
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 export const Example = () => {
   // highlight-next-line
@@ -134,7 +134,7 @@ From these example, we've learned a very important lesson — in a React compone
 As we've mentioned in [Reactive Values](./reactive-values#what-does-render-mean), re-render means any subsequent render after the very first render. But what actually happens when a component re-renders? Let's walk through a render-by-render analysis of a counter app to see what actually happens when a component re-renders:
 
 ```tsx showLineNumbers
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 export const Example = () => {
   // highlight-next-line
@@ -209,73 +209,21 @@ As you can see, render and re-render are actually not that different from each o
 
 :::caution
 
-Since normal values are redefined during re-render, we need to be careful when dealing with them.
-
-- When a component re-renders, if a normal value contains any JSX element or component, it will do a full reload (unmount and mount again) instead of a re-render. For example:
-
-  ```tsx showLineNumbers
-  import React from 'react'
-  import { Child } from './Child'
-
-  export const Example = () => {
-    // Beware!
-    // The following function gets redefined whenever Example re-renders.
-    // This means all unmemoized values in this function will be recreated
-    // during re-render!
-    // highlight-start
-    const renderChild = () => (
-      <div>
-        <span>Hello</span>
-        <Child />
-      </div>
-    )
-    // highlight-end
-
-    return (
-      <div>
-        {/* highlight-next-line */}
-        {renderChild()}
-      </div>
-    )
-  }
-  ```
-
-  In the above example, whenever `Example` re-renders, `Child` will do a full reload instead of a re-render because `renderChild()` is being redefined in each render. To solve this problem, the easiest way is to put `Child` directly in the return section of `Example`:
-
-  ```tsx showLineNumbers
-  import React from 'react'
-  import { Child } from './Child'
-
-  export const Example = () => {
-    return (
-      <div>
-        {/* highlight-start */}
-        <div>
-          <span>Hello</span>
-          <Child />
-        </div>
-        {/* highlight-end */}
-      </div>
-    )
-  }
-  ```
-
-2. If a normal value is non-[primitive](https://developer.mozilla.org/en-US/docs/Glossary/Primitive), and it's being used as a prop of a child, the memoization ([`memo()`](./optimization-functions#reactmemo)) on the child will lose its effect because the value being pass to the child is a different object in each render. For example:
+Since unmemoized values are redefined during re-render, we must pay attention to the referencial equality of variables. If a normal value is non-[primitive](https://developer.mozilla.org/en-US/docs/Glossary/Primitive), and it's being used as a prop of a child, the [`memo()`](./optimization-functions#reactmemo) on the child will lose its effect because the value being pass to the child points to a different object in each render. For example:
 
 ```tsx showLineNumbers
-import React from 'react'
 import { Child } from './Child'
 
 export const Example = () => {
   // Beware!
-  // This object gets redefined whenever Example re-renders.
+  // This object gets redefined whenever `Example` re-renders.
   // highlight-next-line
   const user = {
     age: 5,
   }
 
   // Beware!
-  // This function gets redefined whenever Example re-renders, too!
+  // This function gets redefined whenever `Example` re-renders, too!
   // highlight-next-line
   const sayHi = () => {
     console.log('Hi')
@@ -297,7 +245,6 @@ export const Example = () => {
 **Rendering is recursive**. For example:
 
 ```tsx showLineNumbers
-import React from 'react'
 import { Child } from './Child'
 
 export const Parent = () => (
@@ -311,7 +258,7 @@ export const Parent = () => (
 In this example, whenever `Parent` re-renders, `Child` will also re-render; then, the children of `Child` will also re-render, and so forth and so on, all the way to the very last component in the DOM tree. Sometimes this makes sense because a child may use a state declared in the parent as a prop, but sometimes it does not. Consider the following example:
 
 ```tsx showLineNumbers
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Child } from './Child'
 
 export const Parent = () => {
@@ -336,7 +283,7 @@ export const Parent = () => {
 
 <Video src="/video/react/component-rendering_rendering-is-recursive.mov" />
 
-In the above example, `Child` is not using any state declared in `Parent`; however, whenever `Parent` re-renders, `Child` will also re-render. In most cases this is fine, because `Child` may not be a computationally espensive component; but if it is, it would be not ideal to re-render `Child` whenever `Parent` re-renders. So, is there a way to change this behavior, so that we don't re-render `Child` when `Parent` re-renders?
+In the above example, `Child` is not using any state declared in `Parent` as props; however, whenever `Parent` re-renders, `Child` will also re-render. In most cases this is fine, because `Child` may not be a computationally espensive component; but if it is, it would be not ideal to re-render `Child` whenever `Parent` re-renders. So, is there a way to change this behavior, so that we don't re-render `Child` when `Parent` re-renders?
 
 One way is to use memoization functions to memoize the rendered output of `Child`, we'll talk about this in [Optimization Functions](./optimization-functions). Another way is to make use of the **`children`** prop of a React component.
 
@@ -356,7 +303,6 @@ So what can `children` prop do? In native HTML, we can put as many DOM nodes as 
 The same rule applies to React components as well; we can put as many DOM nodes and components under another DOM node or component. For example:
 
 ```tsx showLineNumbers
-import React from 'react'
 import { Parent } from './Parent'
 import { Child } from './Child'
 
@@ -382,7 +328,7 @@ If you're using TypeScript, you may get an error that says `Type '{ children: El
 
 ```tsx showLineNumbers
 // highlight-next-line
-import React, { PropsWithChildren } from 'react'
+import { PropsWithChildren } from 'react'
 
 type IParentProps = PropsWithChildren<{
   // Add any other prop you need here.
@@ -397,7 +343,7 @@ export const Parent = ({ children }: IParentProps) => {
 So all we have to do now is to take `children` out from the props of `Parent` and put it where we want it to be. This way when `Parent` re-renders, `Child` will not re-render because it's now rendered by another component:
 
 ```tsx showLineNumbers
-import React, { useState, PropsWithChildren } from 'react'
+import { useState, PropsWithChildren } from 'react'
 
 // highlight-next-line
 export const Parent = ({ children }: PropsWithChildren) => {

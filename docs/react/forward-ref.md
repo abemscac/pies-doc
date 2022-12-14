@@ -33,7 +33,7 @@ There are two generic types in `forwardRef<T, P>()`; `T` is the type of value be
 For example, if we have a component like this:
 
 ```tsx title="InputGroup.tsx" showLineNumbers
-import React, { useRef } from 'react'
+import { useRef } from 'react'
 
 interface IInputGroupProps {
   label: string
@@ -52,7 +52,6 @@ export const InputGroup = ({ label }: IInputGroupProps) => {
 In the parent component, we may use it like this:
 
 ```tsx title="Parent.tsx" showLineNumbers
-import React from 'react'
 import { InputGroup } from './InputGroup'
 
 export const Parent = () => {
@@ -74,7 +73,7 @@ Everything works well at first, however, we're now required to add a new feature
 This is where `forwardRef()` could be useful. We could use it to make `ref` attribute available on function components, and forward the reference to the `<input>` inside `InputGroup`. For example:
 
 ```tsx title="InputGroup.tsx" showLineNumbers
-import React, { forwardRef } from 'react'
+import { forwardRef } from 'react'
 
 interface IInputGroupProps {
   label: string
@@ -98,7 +97,7 @@ export const InputGroup = forwardRef<HTMLInputElement, IInputGroupProps>(
 As you can see, `ref` is not a member of props; instead, `forwardRef()` puts it in the second parameter for us to use. After binding the `ref` to the `<input>` tag, we can finally use `useRef()` to get the instance of `<input>` from `Parent`:
 
 ```tsx title="Parent.tsx" showLineNumbers
-import React, { useRef } from 'react'
+import { useRef } from 'react'
 import { InputGroup } from './InputGroup'
 
 export const Parent = () => {
@@ -130,7 +129,7 @@ export const Parent = () => {
   Yes, but we don't recommend this because we had to do some weird tricks to make it work with class components. For example:
 
   ```tsx title="InputGroup.tsx" showLineNumbers
-  import React, { Component, forwardRef } from 'react'
+  import { Component, forwardRef } from 'react'
 
   interface IInputGroupProps {
     label: string
@@ -170,7 +169,7 @@ export const Parent = () => {
   To solve this problem, the easiest solution would be to memoize the definition of `MyComponent` before the very first render and only use it since then. For example:
 
   ```tsx title="InputGroup.tsx" showLineNumbers
-  import React, { Component, forwardRef } from 'react'
+  import { Component, forwardRef } from 'react'
 
   // highlight-next-line
   let MemoizedComponent: Component
@@ -200,7 +199,7 @@ export const Parent = () => {
 
 Although the name makes it sound like it's something related to event handling or drag and drop, it actually has nothing to do with them. `useImperativeHandle()` is a **hook** that is used to change the value being exposed to parent when `ref` attribute is used on child components; this hook must be used together with `forwardRef()` (because that's the only way to get the `ref` being passed down from parent).
 
-- `useImperativeHandle()` takes three arguments, these arguments are:
+- There are three parameters in `useImperativeHandle()`:
   1. The `ref` being passed down from parent; that is, the second parameter of `forwardRef()`.
   2. A function that returns the value to be exposed to parent (the result).
   3. An optional dependency array that determines when should the result be re-computed; by default it's `undefined`, which means it re-computes within every render (same as [`useEffect()`](./use-effect)).
@@ -215,7 +214,7 @@ With the help of `useImperativeHandle()`, we can now call the methods defined in
 We cannot stress this enought; **only use this when standard props/state cannot fulfill your requirements**. The example below is the function component version of [this example](./use-ref#component-instances) we've mentioned in `useRef()`.
 
 ```tsx title="Parent.tsx" showLineNumbers
-import React, { useRef } from 'react'
+import { useRef } from 'react'
   // highlight-next-line
 import { Child, IChild } from './Child'
 
@@ -239,7 +238,7 @@ export const Parent = () => {
 ```
 
 ```tsx title="Child.tsx" showLineNumbers
-import React, { forwardRef, useImperativeHandle, useState } from 'react'
+import { forwardRef, useImperativeHandle, useState } from 'react'
 
 export interface IChild {
   getOld: () => void

@@ -35,7 +35,7 @@ In class components:
 ### Example
 
 ```tsx showLineNumbers
-import React, { Component } from 'react'
+import { Component } from 'react'
 
 interface IAppProps {}
 
@@ -97,7 +97,7 @@ In function components:
 ### Example
 
 ```tsx showLineNumbers
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 
 export const App = (props) => {
   const [age, setAge] = useState(5)
