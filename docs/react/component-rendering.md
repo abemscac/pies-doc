@@ -20,7 +20,7 @@ You must learn the following chapters before getting into this chapter:
 
 This chapter is crucial for understanding how reactive value works in a React component. If you're not having a good time dealing with states, this chapter might be able to save you.
 
-In this chapter, we'll talk about **re-rendering**. However, we don't talk about virtual DOM, nor do we talk about any complicated algorithm; instead, we talk about the most relevant things for users (you and me, the developers) — how exactly will re-render affect the variables declared in a component.
+In this chapter, we'll talk about **re-rendering**. However, we don't talk about virtual DOM, nor do we talk about any complicated algorithms; instead, we talk about the most relevant things for users (you and me, the developers) — how exactly will re-render affect the variables declared in a component.
 
 This is going to be a long chapter! Take your time reading it, be patient, it's worth it!
 
@@ -131,7 +131,7 @@ From these example, we've learned a very important lesson — in a React compone
 
 ## What Happens When A Component Re-Renders?
 
-As we've mentioned in [Reactive Values](./reactive-values#what-does-render-mean), re-render means any subsequent render after the very first render. But what actually happens when a component re-renders? Let's walk through a render-by-render analysis of a counter app to see what actually happens when a component re-renders:
+As we've mentioned in [Reactive Values](./reactive-values#what-does-render-mean), re-render means any subsequent renders after the very first render. But what actually happens when a component re-renders? Let's walk through a render-by-render analysis of a counter app to see what actually happens when a component re-renders:
 
 ```tsx showLineNumbers
 import { useState } from 'react'
@@ -283,7 +283,7 @@ export const Parent = () => {
 
 <Video src="/video/react/component-rendering_rendering-is-recursive.mov" />
 
-In the above example, `Child` is not using any state declared in `Parent` as props; however, whenever `Parent` re-renders, `Child` will also re-render. In most cases this is fine, because `Child` may not be a computationally espensive component; but if it is, it would be not ideal to re-render `Child` whenever `Parent` re-renders. So, is there a way to change this behavior, so that we don't re-render `Child` when `Parent` re-renders?
+In the above example, `Child` is not using any states declared in `Parent` as props; however, whenever `Parent` re-renders, `Child` will also re-render. In most cases this is fine, because `Child` may not be a computationally espensive component; but if it is, it would be not ideal to re-render `Child` whenever `Parent` re-renders. So, is there a way to change this behavior, so that we don't re-render `Child` when `Parent` re-renders?
 
 One way is to use memoization functions to memoize the rendered output of `Child`, we'll talk about this in [Optimization Functions](./optimization-functions). Another way is to make use of the **`children`** prop of a React component.
 
@@ -331,7 +331,7 @@ If you're using TypeScript, you may get an error that says `Type '{ children: El
 import { PropsWithChildren } from 'react'
 
 type IParentProps = PropsWithChildren<{
-  // Add any other prop you need here.
+  // Add any other props you need here.
 }>
 
 // highlight-next-line
