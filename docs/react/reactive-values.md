@@ -56,7 +56,7 @@ However, you may have noticed that the value on the screen is always different f
 
 Also, it's okay if you have no idea what does [`useState()`](./use-state) do. Just keep in mind that updating reactive values will cause the component to re-render and you're good to go!
 
-### Non-Reactive Values
+### Non-reactive Values
 
 ```tsx showLineNumbers
 import { useState } from 'react'

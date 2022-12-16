@@ -94,7 +94,7 @@ export const InputGroup = forwardRef<HTMLInputElement, IInputGroupProps>(
 )
 ```
 
-As you can see, `ref` is not a member of props; instead, `forwardRef()` puts it in the second parameter for us to use. After binding the `ref` to the `<input>` tag, we can finally use `useRef()` to get the instance of `<input>` from `Parent`:
+As you can see, `ref` is not a member of props; instead, `forwardRef()` puts it in the second argument for us to use. After binding the `ref` to the `<input>` tag, we can finally use `useRef()` to get the instance of `<input>` from `Parent`:
 
 ```tsx title="Parent.tsx" showLineNumbers
 import { useRef } from 'react'
@@ -199,8 +199,8 @@ export const Parent = () => {
 
 Although the name makes it sound like it's something related to event handling or drag and drop, it actually has nothing to do with them. `useImperativeHandle()` is a **hook** that is used to change the value being exposed to parent when `ref` attribute is used on child components; this hook must be used together with `forwardRef()` (because that's the only way to get the `ref` being passed down from parent).
 
-- There are three parameters in `useImperativeHandle()`:
-  1. The `ref` being passed down from parent; that is, the second parameter of `forwardRef()`.
+- There are three arguments in `useImperativeHandle()`:
+  1. The `ref` being passed down from parent; that is, the second argument of `forwardRef()`.
   2. A function that returns the value to be exposed to parent (the result).
   3. An optional dependency array that determines when should the result be re-computed; by default it's `undefined`, which means it re-computes within every render (same as [`useEffect()`](./use-effect)).
 - There are two optional generic types in `useImperativeHandle<T, R extends T>()`; `T` is the type of reference (the `T` in `useRef<T>()` from parent), and `R` is the type of value to be exposed to parent which must extends `T`.

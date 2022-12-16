@@ -12,7 +12,7 @@ import Video from '@site/src/widgets/Video'
 
 The features introduced in this chapter are meant to improve the performance of your app. Using these features where you don't need them will not only reduce the readability of the code, but also increase the difficulty of maintenance.
 
-Generally speaking, if there's no performance issue in your app, don't bother using any these features! (except for [`useMemo()`](#usememo), because sometimes it serves different purposes)
+Generally speaking, if there's no performance issue in your app, don't bother using any of these features! (except for [`useMemo()`](#usememo), because sometimes it serves different purposes)
 
 :::
 
@@ -34,10 +34,10 @@ type CompareFunction<T> = (currentProps: T, nextProps: T) => boolean
 `memo()` works in the following way:
 
 - When the component is rendered for the first time, React memoizes its rendered output.
-- When the component is about to do a re-render **triggered by parent component**, React will use [`Object.is()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is) to compare every property in the props between two renders to see if it's the same.
-  - If all props are the same, React will return the memoized value without running any code in the component.
+- When the component is about to do a re-render **triggered by parent component**, React will use [`Object.is()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is) to check if every property in props is the same as the previous render.
+  - If nothing has changed, React will return the memoized value without running any code in the component.
   - Otherwise the component will re-render as usual, and the previously memoized value will be replaced by the new rendered output.
-- If the component should only re-render when certain props change, you can pass a function to the second parameter `arePropsEqual()` to customize the checking logic of props equality.
+- If the component should only re-render when certain props change, you can pass a function to the second argument `arePropsEqual()` to customize the checking logic of props equality.
 
 Therefore, **the effect of `memo()` is only to be be seen when the memoized component is being used as a child**.
 
