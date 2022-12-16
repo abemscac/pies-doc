@@ -97,7 +97,7 @@ However, the mutation of `MutableRefObject<T>` will **not** cause the component 
 
 :::caution
 
-Please beware that since mutating `MutableRefObject<T>` will not cause the component to re-render, any effect (`useEffect()`, `useMemo()`, or `useCallback()`) depends on this value will **not** get computed after mutation, unless any other **state** in the same depedency array is being changed at the same time. For example:
+Please beware that since mutating `MutableRefObject<T>` will not cause the component to re-render, any effect (`useEffect()`, `useMemo()`, or `useCallback()`) depends on this value will **not** get computed after mutation, unless any other value in the same depedency array is being changed at the same time. For example:
 
 - No side effect will be executed, no matter how many times `name.current` changes.
   ```ts showLineNumbers
@@ -460,8 +460,4 @@ export const Example = ({ something }: IExampleProps) => {
 
 ## When to `useRef()`?
 
-In short, use `useRef()` when all of the following conditions are met:
-
-- Users don't need to be informed of the changes being made to the value on the screen.
-- Value is not in the dependency array of any effect (`useEffect()`, `useMemo()`, or `useCallback()`).
-- Each component instance must have its own value. In other words, value should not be shared between all component instances.
+In short, use `useRef()` when the value will change, and this change do not have to be reflected on the screen. In other words, the change of the value will not affect what users see on the screen; functions always fall in this category.
