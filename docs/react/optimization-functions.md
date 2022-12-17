@@ -1,5 +1,5 @@
 ---
-sidebar_position: 11
+sidebar_position: 9
 description: Introduce the optimization functions in React, including memo(), useMemo(), and useCallback().
 keywords: [piesdoc, react, react optimization, memo(), useMemo(), useCallback()]
 ---
@@ -18,7 +18,7 @@ Generally speaking, if there's no performance issue in your app, don't bother us
 
 ## `memo()`
 
-`memo()` is a built-in HOC that is used to create a memoized version of component based on props. A simple interface for `memo()` would look like this:
+`memo()` is a built-in [HOC](./higher-order-component) that is used to create a memoized version of component based on props. A simple interface for `memo()` would look like this:
 
 ```ts showLineNumbers
 const memo = (
@@ -397,7 +397,7 @@ export const Example = () => {
 }
 ```
 
-Notice how we pass an [updater function](./use-state-in-depth#updater-function) to `setCount()` so that we don't need to put `count` in the dependency array of `useCallback()`. This way the `increment()` being passed to `MemoizedChild` is guaranteed to be consistent in each render, allowing `memo()` to work properly.
+Notice how we pass an [updater function](./use-state-in-depth#updater-functions) to `setCount()` so that we don't need to put `count` in the dependency array of `useCallback()`. This way the `increment()` being passed to `MemoizedChild` is guaranteed to be consistent in each render, allowing `memo()` to work properly.
 
 <Video src="/video/react/optimization-functions_use-callback-after.mov" />
 
@@ -422,7 +422,7 @@ const increment = useMemo(() => {
 }, [])
 ```
 
-Although you can make it prettier by doing an explicit return (which is actually not bad!), that'll just do the same thing as `useCallback()`. In short, just think of `useCallback()` as `useMemo()` that **returns the callback function itself instead of the result of callback function**:
+While you can make it prettier by doing an explicit return (which is actually not bad!), that'll just do the same thing as `useCallback()`. In short, just think of `useCallback()` as `useMemo()` that **returns the callback function itself instead of the result of callback function**:
 
 ```ts showLineNumbers
 import { useMemo } from 'react'

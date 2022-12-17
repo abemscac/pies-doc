@@ -209,7 +209,7 @@ As you can see, render and re-render are actually not that different from each o
 
 :::caution
 
-Since unmemoized values are redefined during re-render, we must pay attention to the referencial equality of variables. If a normal value is non-[primitive](https://developer.mozilla.org/en-US/docs/Glossary/Primitive), and it's being used as a prop of a child, the [`memo()`](./optimization-functions#reactmemo) on the child will lose its effect because the value being pass to the child points to a different object in each render. For example:
+Since unmemoized values are redefined during re-render, we must pay attention to the referential equality of variables. If a normal value is non-[primitive](https://developer.mozilla.org/en-US/docs/Glossary/Primitive), and it's being used as a prop of a child, the [`memo()`](./optimization-functions#reactmemo) on the child will lose its effect because the value being pass to the child points to a different object in each render. For example:
 
 ```tsx showLineNumbers
 import { Child } from './Child'
@@ -378,7 +378,7 @@ So here comes the question — if states are not updated right after `setState()
 
 ### Update Requests
 
-First, we must understand that the purpose of functions like `setState()` and `dispatch()` is actually **making an update request** instead of doing an actual, instant update. React will update the states at some point based on the update requests we sent. For this reason, we'll refer to those functions as "**update requests**" in this documentation.
+First, we must understand that the purpose of functions like [`setState()`](./use-state#setstate) and [`dispatch()`](https://beta.reactjs.org/apis/react/useReducer#dispatch) is actually **making an update request** instead of doing an actual, instant update. React will update the states at some point based on the update requests we sent. For this reason, we'll refer to those functions as "**update requests**" in this documentation.
 
 In general, React will process update requests when any of the following conditions are met:
 
@@ -393,7 +393,7 @@ If you don't know what call stack is, don't panic just yet!
 
 Call stack is a part of the [event loop](https://developer.mozilla.org/en-US/docs/Web/JavaScript/EventLoop) in JavaScript. To be honest, it's not really necessary to know it due to the fact that most of the update requests are triggered by user-initiated events (i.e. clicking a button or submitting a form), which will be the first function call in the call stack most the time. That means the call stack will usually be empty when the execution of the event handler is done.
 
-It may sound scary, but it's actually not something ver y difficult to understand. If you still want to know what call stack or event loop is, we recommend you watch this awesome talk by Philip Roberts. [*What the heck is the event loop anyway?*](https://youtu.be/8aGhZQkoFbQ)
+It may sound scary, but it's actually not something ver y difficult to understand. If you still want to know what call stack or event loop is, we recommend you watch this awesome talk by [Philip Roberts](https://github.com/latentflip). [*What the heck is the event loop anyway?*](https://youtu.be/8aGhZQkoFbQ)
 
 If you have no idea what we're talking about at all, it's okay. Just ignore it and keep reading, you'll be fine!
 

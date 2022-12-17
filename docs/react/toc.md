@@ -5,10 +5,9 @@ description: TOC
 
 - [x] Define A Component
 - [x] Reactive Values
-- [ ] The Basics of Hooks
+- [x] The Basics of Hooks
   - What Are Hooks?
   - Example (**no built-in hook used**)
-  - Advanced Example
 - [ ] `useState()`
 - [x] `useEffect()`
 - [x] Component Rendering
@@ -19,14 +18,9 @@ description: TOC
   - Batching
   - Update Function
   - Updater Function or Fixed Value?
-- [x] `useRef()`
-- [x] `forwardRef()`
-- [ ] Higher Order Components (HOCs)
-  - What Are HOCs?
-  - Example
 - [x] Optimization Functions
   - `memo()`
   - `useMemo()`
   - `useCallback()`
-- [ ] `useContext()`
-- [ ] `useReducer()`
+- [x] `useRef()`
+- [x] `forwardRef()`

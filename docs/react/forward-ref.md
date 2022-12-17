@@ -1,5 +1,5 @@
 ---
-sidebar_position: 9
+sidebar_position: 11
 description: Introduce the usage and commonly seen issues of forwardRef() in React.
 keywords: [piesdoc, react, react forwardRef()]
 ---
@@ -197,7 +197,7 @@ export const Parent = () => {
 
 ## `useImperativeHandle()`
 
-Although the name makes it sound like it's something related to event handling or drag and drop, it actually has nothing to do with them. `useImperativeHandle()` is a **hook** that is used to change the value being exposed to parent when `ref` attribute is used on child components; this hook must be used together with `forwardRef()` (because that's the only way to get the `ref` being passed down from parent).
+Even though the name makes it sound like it's something related to event handling or drag and drop, it actually has nothing to do with them. `useImperativeHandle()` is a **hook** that is used to change the value being exposed to parent when `ref` attribute is used on child components; this hook must be used together with `forwardRef()` (because that's the only way to get the `ref` being passed down from parent).
 
 - There are three arguments in `useImperativeHandle()`:
   1. The `ref` being passed down from parent; that is, the second argument of `forwardRef()`.
