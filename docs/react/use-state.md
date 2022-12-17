@@ -6,9 +6,156 @@ keywords: [piesdoc, react, react useState()]
 
 # `useState()`
 
-TODO
-
 ## What Is `useState()`?
 
-TODO
+`useState()` is a built-in [hook](./the-basics-of-hooks) that is used to declare a [reactive value](./reactive-values) in a component. `useState()` takes an argument of any type as the initial value of the state, and returns an array with two elements: **the current value of the state** and **a function to update the state**. For example:
 
+```ts showLineNumbers
+import { useState } from 'react'
+
+// highlight-next-line
+const [count, setCount] = useState(0)
+```
+
+In this example: 
+
+- `count` is the state, and `setCount()` is the function to update `count`.
+- We wrote `useState(0)`, which means the value of `count` will be `0` in the very beginning.
+
+:::note
+
+This kind of syntax is called [destructing assignment](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment), which is used to get values out from objects and arrays. If you're having problem understanding this concept, maybe the following pseudocode would help (please mind that this is not the full code of `useState()`):
+
+```ts showLineNumbers
+const useState = <T>(initialValue: T) => {
+  let currentValue = initialValue
+
+  const updateState = (value: T) => {
+    currentValue = value
+  }
+
+  return [currentValue, updateState]
+}
+```
+
+:::
+
+Due to the fact that you can name the elements returned by `useState()` in whatever way you want, conventionally we use **state** to refer to the first element (value), and use **`setState()`** to refer to the second element (function).
+
+## `setState()`
+
+`setState()` is a function that is used to update the value of a state. Currently there are two ways of using `setState()`:
+
+- Passing in a value. For example, `setState(1)` or `setState(count + 1)`.
+- Passing in a function. For example, `setState((prev) => prev + 1)`.
+  - We'll talk about this [as we get deeper into React](./use-state-in-depth#updater-functions). For now passing in a value is good enough!
+
+Let's use a simple counter app as an example:
+
+```tsx showLineNumbers
+import { useState } from 'react'
+
+export const Example = () => {
+  // highlight-next-line
+  const [count, setCount] = useState(0)
+
+  const increment = () => {
+    // highlight-next-line
+    setCount(count + 1)
+  }
+
+  return (
+    <div>
+      <h1>Count: {count}</h1>
+      <button onClick={increment}>
+        Increment
+      </button>
+    </div>
+  )
+}
+```
+
+<Video src="/video/react/use-state_counter.mov" />
+
+In the above example, the initial value of `count` will be `0`. Every time the "Increment" button is clicked, `increment()` will be called, thus updating the value of `count` to `count + 1`.
+
+In React, all states should only be updated via the corresponding `setState()` function; **updating a state without using `setState()` is a big no**!
+
+## State Initializer
+
+Sometimes we might want to initialize a state with a function when the logic is somewhat complicated. For example:
+
+```ts showLineNumbers
+import { useState } from 'react'
+
+// highlight-start
+const getSomething = () => {
+  // Some complicated computations here.
+  return something
+}
+// highlight-end
+
+export const Example = () => {
+  // highlight-next-line
+  const [state, setState] = useState(getSomething())
+  
+  return (
+    // ...
+  )
+}
+```
+
+While the above example works fine, `getSomething()` will actually be executed every time `Example` re-renders, thanks to how JSX works. Luckily, we can prevent this from happening by **passing in a function** instead of a value. For example:
+
+```ts showLineNumbers
+import { useState } from 'react'
+
+const getSomething = () => {
+  // Some complicated computations here.
+  return something
+}
+
+export const Example = () => {
+  // highlight-next-line
+  const [state, setState] = useState(getSomething)
+  
+  return (
+    // ...
+  )
+}
+```
+
+Notice that we didn't call `getSomething()` when using `useState()` this time; we passed the whole function to `useState()` and let it call it for us. But what if we also want to pass a parameter to `getSomething()`? In that case, we can just make an extra function wrapper for it. For example:
+
+```ts showLineNumbers
+import { useState } from 'react'
+
+// highlight-next-line
+const getSomething = (value: number) => {
+  // Some complicated computations here.
+  return something
+}
+
+export const Example = () => {
+  const [state, setState] = useState(
+    // highlight-next-line
+    () => getSomething(1)
+  )
+  
+  return (
+    // ...
+  )
+}
+```
+
+## What Kind of Value Is Suitable to Be a State?
+
+Despite the fact that `useState()` can be used to declare a state of any type, it doesn't mean that everything is suitable to be declared as a state. For example, we can use `useState()` 
+
+TODO:
+
+- Tell readers that they can use as many `useState()` as they want in a component.
+- Tell readers that the value of a state can be any type.
+  - However, that doesn't mean we can just declare everything with `useState()`. Because a state, which is a reactive value, will cause the component to re-render after it gets updated.
+  - Furthermore, reactive value should only refers to things that can be seen by an user (things that will be displayd on the UI).
+  - Does "DOM node as a state" or "component as a state" make sense?
