@@ -20,9 +20,9 @@ You must learn the following chapters before getting into this chapter:
 
 This chapter is crucial for understanding how reactive value works in a React component. If you're not having a good time dealing with states, this chapter might be able to save you.
 
-In this chapter, we'll talk about **re-rendering**. However, we don't talk about virtual DOM, nor do we talk about any complicated algorithms; instead, we talk about the most relevant things for users (you and me, the developers) — how exactly will re-render affect the variables declared in a component.
+In this chapter, we'll talk about **re-rendering**. However, we don't talk about virtual DOM, nor do we talk about any complicated algorithms; instead, we talk about the most relevant things for users (you and me, the developers) — how exactly will re-render impact the variables declared in a component.
 
-This is going to be a long chapter! Take your time reading it, be patient, it's worth it!
+This is going to be a long chapter! Be sure to set aside some time to read it, be patient, it's worth it!
 
 ## How Reactive Value Works in a Component
 
@@ -487,7 +487,7 @@ Although states will be updated right after an `await` is done, it does not mean
 
 :::info Tiny Exercise
 
-Tiny exercise! Consider the following snippet:
+Tiny exercise! Consider the following code:
 
 - How many times do you think `count` will be updated?
 - When will `count` be updated?

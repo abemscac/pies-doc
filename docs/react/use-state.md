@@ -148,14 +148,45 @@ export const Example = () => {
 }
 ```
 
+## Pay Attention to Referential Equality
+
+When updating a non-[primitive](https://developer.mozilla.org/en-US/docs/Glossary/Primitive) state with `setState()`, we need to pay attention to the referential equality of variables. Consider the following example:
+
+```tsx showLineNumbers
+import { useState } from 'react'
+
+export const Example = () => {
+  // highlight-start
+  const [user, setUser] = useState({
+    name: 'hello',
+  })
+  // highlight-end
+
+  const updateUser = () => {
+    // highlight-start
+    setUser({
+      name: 'hello',
+    })
+    // highlight-end
+  }
+
+  return (
+    <div>
+      <h1>User: {JSON.stringify(user)}</h1>
+      <button onClick={updateUser}>Update User</button>
+    </div>
+  )
+}
+```
+
+In the above example, the component will still re-render even though we're updating `user` with the same value. This is because the object we pass to `setUser()` is not the same as the one we used in the initial `useState()` call.
+
+<Video src="/video/react/use-state_referential-equality.mov" />
+
+This issue occurs with all non-primitive values, such as objects, arrays, maps, etc.
+
 ## What Kind of Value Is Suitable to Be a State?
 
-Despite the fact that `useState()` can be used to declare a state of any type, it doesn't mean that everything is suitable to be declared as a state. For example, we can use `useState()` 
+Despite the fact that `useState()` can be used to declare a state of any type, it doesn't mean that everything is suitable to be declared as a state. For example, we can use `useState()` to declare a state of type function like `useState(() => () => { ... })`; the extra function wrapper is there due to how [state initializer](#state-initializer) works in `useState()`. Although this works fine, it just doesn't feel right, is it?
 
-TODO:
-
-- Tell readers that they can use as many `useState()` as they want in a component.
-- Tell readers that the value of a state can be any type.
-  - However, that doesn't mean we can just declare everything with `useState()`. Because a state, which is a reactive value, will cause the component to re-render after it gets updated.
-  - Furthermore, reactive value should only refers to things that can be seen by an user (things that will be displayd on the UI).
-  - Does "DOM node as a state" or "component as a state" make sense?
+As we've mentioned in [Reactive Values](./reactive-values#when-to-make-a-variable-reactive), functions like `useState()` should only be used to declare variables that **will change**, and **users must be informed of this change on the screen**. Even though the value of a function state may change, users will not be able to see the function itself on the screen. Therefore, declaring a state of type function is inefficient. In these types of scenarios, it is recommended to use [references](./use-ref) instead.
