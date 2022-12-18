@@ -262,6 +262,8 @@ Yes, we can! Similar to [`memo()`](#memo), the memoized component will still re-
 
 :::
 
+TODO: tell users not to update any variable in `useMemo()` because...
+
 ## `useCallback()`
 
 `useCallback()` is a built-in hook that is used to **memoize a function**. Similar to `useEffect()`, `useCallback()` takes a **callback function** and a **dependency array** as arguments. A simple interface for `useCallback()` would look like this:
