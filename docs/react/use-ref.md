@@ -20,7 +20,7 @@ For class components, use [`createRef()`](https://reactjs.org/docs/refs-and-the-
 
 `useRef()` is a built-in [hook](./the-basics-of-hooks) that takes an argument of any type and returns a **reference** of that value. In React, a "reference" is **a non-reactive JavaScript object whose value can persist across render cycles**.
 
-For example, consider the following snippet:
+For example, consider the following code:
 
 ```tsx showLineNumbers
 export const Example = () => {
@@ -55,7 +55,7 @@ export const Example = () => {
 
 In the above example, the value of `count` will **not** be reset back to `0` whenever `Example` re-renders.
 
-However, since a reference is non-reactive, updating it will **not** cause the component to re-render. Besides, unlike state, the update of a reference is immediate — we don't have to wait until the next render to get the updated value. This make `useRef()` very suitable for situations where you want to keep the value between renders, but you also don't want the component to re-render when it gets updated.
+However, since a reference is non-reactive, updating it will **not** cause the component to re-render. Besides, unlike state, the update of a reference is immediate — we don't have to wait until the next render to get the updated value. This makes `useRef()` a good choice for situations where you want to preserve a value between renders, but you also don't want the component to re-render when the value changes.
 
 More importantly, **a reference will always give you the latest value, even in a memoized function**. Take [`useCallback()`](./optimization-functions#usecallback) as an example:
 
@@ -340,9 +340,9 @@ export const Example = () => {
 
 In this example, we use `useState()` to declare `name`, and use `setName()` to update the value of `name`. This works fine, but we would actually recommend using `useRef()` instead of `useState()`, because:
 
-- `name` is not something that needs to be rendered on the screen, so it would be great if the component doesn't re-render after it's updated.
-- `name` is not not in the dependency array of any effect.
-- We didn't make `<input>` into a controlled component. In other words, the value of `<input>` is not effected (controlled) by `name`.
+- `name` is not being displayed on the screen.
+- `name` is not in the dependency array of any effect.
+- We didn't make `<input>` into a controlled component. In other words, the value of `<input>` is not affected (controlled) by `name`.
 - Since `name` is a state, updating it will cause the component to re-render. This means every time a character is entered, all unmemoized children (child component) will be re-rendered, leading to poor performance. Sometimes even `onBlur` won't save you.
 
 For these reasons, we can say it's safe to replace `useState()` with `useRef()` in this case for better performance while keeping the same functionality:

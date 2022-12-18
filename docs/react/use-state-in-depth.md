@@ -14,43 +14,6 @@ You must learn [Component Rendering](./component-rendering) before getting into 
 
 :::
 
-## Pay Attention to Referential Equality
-
-When updating a non-[primitive](https://developer.mozilla.org/en-US/docs/Glossary/Primitive) state with `setState()`, we need to pay attention to the referential equality of variables. Consider the following example:
-
-```tsx showLineNumbers
-import { useState } from 'react'
-
-export const Example = () => {
-  // highlight-start
-  const [user, setUser] = useState({
-    name: 'hello',
-  })
-  // highlight-end
-
-  const updateUser = () => {
-    // highlight-start
-    setUser({
-      name: 'hello',
-    })
-    // highlight-end
-  }
-
-  return (
-    <div>
-      <h1>User: {JSON.stringify(user)}</h1>
-      <button onClick={updateUser}>Update User</button>
-    </div>
-  )
-}
-```
-
-In the above example, the component will still re-render even though we're updating `user` with the same value. This is because the object we pass to `setUser()` is not the same as the one we used in the initial `useState()` call.
-
-<Video src="/video/react/use-state_referential-equality.mov" />
-
-We can prevent this from happening by using [updater function](#updater-functions).
-
 ## Batching
 
 :::info
@@ -133,17 +96,11 @@ const updateData = () => {
 
   setName('C')
   setCount(3)
-
-  setName('D')
-  setCount(4)
-
-  setName('E')
-  setCount(5)
   // highlight-end
 }
 ```
 
-In the above example, the component is also going to re-render **once** — not twice, not five times, not ten times, but once.
+In the above example, even though so many `setCount()` are called, the component is also going to re-render **once** — not twice, not three times, not six times, but once.
 
 <Video src="/video/react/use-state-in-depth_batching-2.mov" />
 
@@ -151,7 +108,7 @@ Why?
 
 It actually makes sense if we think about it. In the above example, we don't want users to see flickers when `count` is being updated from `0` all the way to `5`. Since we know that the last value being passed to `setCount()` is 5, we can simply skip over all previous values and directly set `count` to `5`. The same approach can be applied to `name` as well.
 
-To improve the user experience and performance of the component, we can update both `name` and `count` at the same time rather than updating them individually. This will minimize the number of times the component has to re-render, avoiding a flicker that users might notice.
+Additionally, after all update requests have been processed, React knows that the states to be updated are `name` and `count`. To minimize the number of re-renders and avoid any flicker that users might notice, React updates them both at the same time instead of individually.
 
 The following video illustrates how states are updated in the example above. While the implementation may not be the same as React, it should give you a general understanding of how the render cycle works within a component.
 
@@ -169,8 +126,97 @@ Great, now you know the main idea of batching in React! Let's now learn what upd
 
 ## Updater Functions
 
-In React, an updater function is **a function that is being passed to [`setState()`](./use-state#setstate)**.
+In React, an updater function is **a function that is passed to [`setState()`](./use-state#setstate)** as an argument. It is useful when we need to update the state based on its previous value, or when the state is a non-primitive value like an object or an array.
 
-## Updater Function Or Fixed Value?
+For example, consider the following code:
 
-TODO
+```ts showLineNumbers
+import { useState } from 'react'
+
+const [count, setCount] = useState(0)
+
+const updateCount = () => {
+  setCount(1)
+  // highlight-next-line
+  setCount((prevCount) => prevCount + 2)
+}
+```
+
+In the above example, we first call `setCount(1)`, which will update the value of `count` to `1` in the next render. Then, we call `setCount((prevCount) => prevCount + 2)`, which means "give me the last value being passed to `setCount()`, and update the value of `count` to `(that value + 2)`". Thus, in this example, `count` will be updated to `3` after `updateCount()` is executed.
+
+<Video src="/video/react/use-state-in-depth_updater-function-1.mov" />
+
+Great, now let's take a look at another example:
+
+```ts showLineNumbers
+import { useState } from 'react'
+
+const [count, setCount] = useState(0)
+
+const updateCount = () => {
+  // highlight-start
+  setCount((prevCount) => prevCount + 2)
+  setCount((prevCount) => prevCount + 4)
+  setCount((prevCount) => prevCount + 6)
+  setCount((prevCount) => prevCount + 8)
+  // highlight-end
+}
+```
+
+- In each render, if an updater function is used without a preceding value, React will use the current value of the state as the previous value. So in the example above, the `prevCount` in `setCount((prevCount) => prevCount + 2)` will be `0`, causing the value of `count` to be updated to `0 + 2`, which is `2`.
+- Then, since the previously resolved value of `count` is `2`, `setCount((prevCount) => prevCount + 4)` will update the value of `count` to `2 + 4`, which is `6`.
+- Then, since the previously resolved value of `count` is `6`, `setCount((prevCount) => prevCount + 6)` will update the value of `count` to `6 + 6`, which is `12`.
+- Finally, since the previously resolved value of `count` is `12`, `setCount((prevCount) => prevCount + 8)` will update the value of `count` to `8 + 12`, which is `20`.
+
+Therefore, in this example, `count` will be updated to `20` after `updateCount()` is executed.
+
+<Video src="/video/react/use-state-in-depth_updater-function-2.mov" />
+
+## How Is Updater Function Implemented
+
+TODO:
+
+- Since the queue is stored inside `useState()`, an updater function also works in a memoized function.
+- Video
+
+## Fixed Value or Updater Function?
+
+**In most cases, it makes no difference**. Many developers use updater functions frequently because updater function is a convenient and reliable way to update a state based on its current value, helping to ensure that the state update is applied correctly without having to worry about anything else. After learning how [rendering](./component-rendering) works in React, we've realized that updater functions are not always necessary. That being said, it's still okay to use updater functions everywhere; it won't break anything.
+
+Consider the following example:
+
+```ts showLineNumbers
+import { useState } from 'react'
+
+const [count, setCount] = useState(0)
+const [stringifiedCount, setStringifiedCount] = useState('')
+
+const updateData = () => {
+  setCount((prevCount) => prevCount + 5)
+  
+  // This is incorrect! The value of `count` will still be `0` before the component re-renders!
+  // highlight-next-line
+  setStringifiedCount(count.toString())
+}
+```
+
+In the above example, given that `count` and `stringifiedCount` must be separate states for some reason, an updater function might seem to be the only way to ensure that `stringifiedCount` is always a string version of `count`. However, we can still achieve the same result without using an updater function in this scenario, and it's actually easier than you think! For example:
+
+```ts showLineNumbers
+import { useState } from 'react'
+
+const [count, setCount] = useState(0)
+const [stringifiedCount, setStringifiedCount] = useState('')
+
+const updateData = () => {
+  // highlight-start
+  const nextCount = count + 5
+  setCount(nextCount)
+  setStringifiedCount(nextCount.toString())
+  // highlight-end
+}
+```
+
+By calculating the next value of `count` based on its current value, we can replicate the functionality of an updater function. Since `count` is a state, the component will re-render after `updateData()` is executed, which ensures that the changes will have already been applied to `count` the next time `updateData()` is called.
+
+TODO: mention the `useCallback()` + `setState(prev)` combo.

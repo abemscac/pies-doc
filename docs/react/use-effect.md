@@ -79,7 +79,7 @@ useEffect(() => {
 
 ### Empty Array as `dependencies`
 
-Consider the following snippet:
+Consider the following code:
 
 ```ts showLineNumbers
 import { useEffect } from 'react'
@@ -118,7 +118,7 @@ Due to the fact that `dependencies` is an empty array, which means no subsequent
 
 ### Non-empty Array as `dependencies`
 
-Consider the following snippet:
+Consider the following code:
 
 ```tsx showLineNumbers
 import { useState, useEffect } from 'react'
@@ -164,7 +164,7 @@ We'll see `World` in the console when:
 
 ### `undefined` as `dependencies`
 
-Consider the following snippet:
+Consider the following code:
 
 ```tsx showLineNumbers
 import { useEffect } from 'react'
@@ -316,4 +316,4 @@ export const Example = () => {
 }
 ```
 
-To sum up, before using `useEffect()`, we recommend you think about whether there are other solutions, especially when `useEffect()` is used with `setState()`, or when multiple effects are chained together. Most of the time those effects can be avoided by moving `setState()` to an earlier point of time in the event, or by removing the variable from the states, just like how we handle `hasProhibitedChars` in this example.
+To sum up, before using `useEffect()`, it is recommend to think whether there are other solutions, especially when `useEffect()` is used with `setState()`, or when multiple effects are chained together. Most of the time those effects can be avoided by moving `setState()` to an earlier point of time in the event, or by removing the variable from the states, just like how we handle `hasProhibitedChars` in this example.
