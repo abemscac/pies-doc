@@ -10,12 +10,12 @@ The most powerful tool in Hooks API!
 
 ## What Are Hooks?
 
-Hooks are **functions that can be called within the root level of any function component** in React. In a hook, you can do anything you could do in a component, and return anything (or nothing) to fulfill your requirements.
+In React, hooks are **functions that can be called within the root level of any function component**. In a hook, you can do anything you could do in a component, and return anything (or nothing) to fulfill your requirements.
 
 :::info
 
-- You might be wondering what's the difference between a (util) function and a hook, because the statement "functions that can be called within any components in React" sounds just like an utility function. Generally speaking, if any React-specific features is used within the function (i.e. `useState()` and `useEffect()`), we would call it a **hook** instead of a normal function.
-- A component and a hook are actually not that different from another perspective; if you return a JSX element in a hook, that'll actually make it a component instead of a "hook"!
+- You might be wondering what's the difference between a (util) function and a hook, because the statement "functions that can be called within (the root level of) any function component" sounds just like an utility function. Generally speaking, if any React-specific features is used within the function (i.e. `useState()` and `useEffect()`), we would call it a **hook** instead of a normal function.
+- A component and a hook are actually not that different from each other's perspective; if you return a JSX element in a hook, that'll actually make it a component instead of a "hook"!
 
 :::
 
@@ -40,7 +40,7 @@ const useLogger = () => {
 }
 ```
 
-In the above snippet, we declare a function `useLogger()` which returns an object with two functions `log()` and `warn()`. While this function is not doing anything special, it can already be used as a hook in a component! For example:
+In the above snippet, we declare a function `useLogger()` which returns an object with two functions `log()` and `warn()`. Traditionally, the names of hooks start with `use`. While this function is not doing anything special, it can already be used as a hook in a component! For example:
 
 ```tsx showLineNumbers
 import { useLogger } from './UseLogger'
@@ -55,7 +55,7 @@ export const Example = () => {
 }
 ```
 
-Like this, you can design your own system in a hook and reuse it in any component in your app. You can declare as many variables/functions in a hook as you want, update them as you wish, and only export (return) certain values. The return value does not have to be an object; you can return a number, an array, a function, or even nothing, it all depends on your design.
+Like this, you can design your own system in a hook and reuse it in any component in your app. In a hook, you can declare as many variables and functions as you want, update them as needed, and choose which values to export (return). The return value does not have to be an object; you can return a number, an array, a function, or even nothing, depending on your design.
 
 In React, there are many built-in hooks for us to use. You can either use them directly in your component, or use them to build your own hook.
 

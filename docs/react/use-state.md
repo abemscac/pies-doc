@@ -8,7 +8,7 @@ keywords: [piesdoc, react, react useState()]
 
 ## What Is `useState()`?
 
-`useState()` is a built-in [hook](./the-basics-of-hooks) that is used to declare a [reactive value](./reactive-values) in a component. `useState()` takes an argument of any type as the initial value of the state, and returns an array with two elements: **the current value of the state** and **a function to update the state**. For example:
+`useState()` is a built-in hook that is used to declare a [reactive value](./reactive-values) in a component. `useState()` takes an argument of any type as the initial value of the state, and returns an array with two elements: **the current value of the state** and **a function to update the state**. For example:
 
 ```ts showLineNumbers
 import { useState } from 'react'
@@ -24,11 +24,11 @@ In this example:
 
 :::note
 
-This kind of syntax is called [destructing assignment](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment), which is used to get values out from objects and arrays. If you're having problem understanding this concept, maybe the following pseudocode would help (please mind that this is not the full code of `useState()`):
+This kind of syntax is called [destructing assignment](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment), which is used to get values out from objects and arrays. If you're having problem understanding this concept, the following pseudocode might help (please mind that this is not the full code of `useState()`):
 
 ```ts showLineNumbers
 const useState = <T>(initialValue: T) => {
-  let currentValue = initialValue
+  let currentValue: T = initialValue
 
   const updateState = (value: T) => {
     currentValue = value
@@ -77,9 +77,9 @@ export const Example = () => {
 
 <Video src="/video/react/use-state_counter.mov" />
 
-In the above example, the initial value of `count` will be `0`. Every time the "Increment" button is clicked, `increment()` will be called, thus updating the value of `count` to `count + 1`.
+In the above example, `0` is being used as the initial value of `count`. Every time the "Increment" button is clicked, `increment()` will be called, thus updating the value of `count` to `count + 1`.
 
-In React, all states should only be updated via the corresponding `setState()` function; **updating a state without using `setState()` is a big no**!
+In React, all states should only be updated via the corresponding `setState()` function; **updating a state without using `setState()` is a big no**! This is because `setState()` is designed to trigger a re-render of the component, which ensures that the component's state is reflected on the UI. If we directly update a state without using `setState()`, the component's UI may not be updated as expected.
 
 ## State Initializer
 
@@ -105,27 +105,13 @@ export const Example = () => {
 }
 ```
 
-While the above example works fine, `getSomething()` will actually be executed every time `Example` re-renders, thanks to how JSX works. Luckily, we can prevent this from happening by **passing in a function** instead of a value. For example:
+While the above example works fine, `getSomething()` will actually be executed every time `Example` re-renders, thanks to how JSX works. Luckily, we can prevent this from happening by **passing in a function** to `useState()` instead of a value. For example:
 
 ```ts showLineNumbers
-import { useState } from 'react'
-
-const getSomething = () => {
-  // Some complicated computations here.
-  return something
-}
-
-export const Example = () => {
-  // highlight-next-line
-  const [state, setState] = useState(getSomething)
-  
-  return (
-    // ...
-  )
-}
+const [state, setState] = useState(getSomething)
 ```
 
-Notice that we didn't call `getSomething()` when using `useState()` this time; we passed the whole function to `useState()` and let it call it for us. But what if we also want to pass a parameter to `getSomething()`? In that case, we can just make an extra function wrapper for it. For example:
+Notice that we didn't call `getSomething()` this time; we just passed the whole function to `useState()` and let it call it for us. But what if we also want to pass a parameter to `getSomething()`? In that case, we can just make an extra function wrapper for it. For example:
 
 ```ts showLineNumbers
 import { useState } from 'react'
@@ -187,6 +173,6 @@ This issue occurs with all non-primitive values, such as objects, arrays, maps, 
 
 ## What Kind of Value Is Suitable to Be a State?
 
-Despite the fact that `useState()` can be used to declare a state of any type, it doesn't mean that everything is suitable to be declared as a state. For example, we can use `useState()` to declare a state of type function like `useState(() => () => { ... })`; the extra function wrapper is there due to how [state initializer](#state-initializer) works in `useState()`. Although this works fine, it just doesn't feel right, is it?
+Despite the fact that `useState()` can be used to declare a state of any type, it doesn't mean that everything is suitable to be a state. For example, we can use `useState()` to declare a state of type function like `useState(() => () => { ... })`; the extra function wrapper is there due to how [state initializer](#state-initializer) works in `useState()`. Although this works fine, it just doesn't feel right, is it?
 
-As we've mentioned in [Reactive Values](./reactive-values#when-to-make-a-variable-reactive), functions like `useState()` should only be used to declare variables that **will change**, and **users must be informed of this change on the screen**. Even though the value of a function state may change, users will not be able to see the function itself on the screen. Therefore, declaring a state of type function is inefficient. In these types of scenarios, it is recommended to use [references](./use-ref) instead.
+As we've mentioned in [Reactive Values](./reactive-values#when-to-make-a-variable-reactive), variables should only be declared as reactive if it **will change**, and **users must be informed of this change on the screen**. Since users will not be able to see the function itself on the screen, making it a state is then not recommended. In these types of scenarios, using [reference](./use-ref) is usually a better choice.
