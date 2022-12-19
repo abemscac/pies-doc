@@ -18,9 +18,9 @@ Generally speaking, if there's no performance issue in your app, don't bother us
 
 ## `memo()`
 
-`memo()` is a built-in [HOC](./higher-order-component) that is used to create a memoized version of component based on props. A simple interface for `memo()` would look like this:
+`memo()` is a built-in [HOC](https://reactjs.org/docs/higher-order-components.html) that is used to create a memoized version of component based on props. A simple interface for `memo()` would look like this:
 
-```ts showLineNumbers
+```tsx showLineNumbers
 const memo = (
   component: FunctionOrClass,
   arePropsEqual?: CompareFunction
@@ -29,6 +29,17 @@ const memo = (
 }
 
 type CompareFunction<T> = (currentProps: T, nextProps: T) => boolean
+
+// Using `memo()`
+const Component = () => {
+  return (
+    // ...
+  )
+}
+
+const MemoizedComponent = memo(Component, () => {
+  // ...
+})
 ```
 
 `memo()` works in the following way:
@@ -87,7 +98,7 @@ This way `Child` will never re-render when `Parent` re-renders, because the `are
 
 If a component is memoized by `memo()`, is it correct to say that as long as the result of `arePropsEqual()` is truthy, the component will never re-render?
 
-**No, that's not true!** We know that a component re-renders when [reactive value](./reactive-values) changes, but props is not the only reactive value in a component. `memo()` only functions when the re-render is triggered by parent component, that is, when parent component re-renders. If the re-render is triggered by a non-prop reactive value, the component will still re-render.
+**No, that's not true!** We know that a component re-renders when any [reactive value](./reactive-values) changes, but props is not the only reactive value in a component. `memo()` only functions when the re-render is triggered by parent component, that is, when parent component re-renders. If the re-render is triggered by a non-prop reactive value, the component will still re-render.
 
 Think of it this way: `memo()` memoizes neither the output HTML nor the snapshot of a component; instead, it acts like a pointer to a rendered component. When the result of `arePropsEqual()` is falsy, a new instance of the component will be created, and the pointer will change from the old instance to new the new one.
 
@@ -108,6 +119,11 @@ type useMemo<T> = (
   callback: () => T,
   dependencies: any[],
 ) => void
+
+// Using `useMemo()`
+const something = useMemo(() => {
+  return ...
+}, [])
 ```
 
 `useMemo()` works in the following way:
@@ -122,7 +138,7 @@ type useMemo<T> = (
 Usually `useMemo()` is used when:
 
 1. Skipping expensive calculations during re-render.
-2. Preventing variables from being redefined during re-render.
+2. Preventing variables from being redeclared during re-render.
 3. When `useEffect()` is used with `setState()`.
 
 #### Skipping Expensive Calculations During Re-Render
@@ -162,20 +178,20 @@ export const Example = () => {
 
 #### Preventing Variables From Being Redefined During Re-Render
 
-Sometimes we would want to use a non-primitive value (i.e. function) as the prop of a child component. Due to the fact that unmemoized values are redefined during re-render, they'll actually point to different objects in each render, causing the `memo()` on the children to lose its effect. To solve this problem, we can use `useMemo()` to memoize the value so that we always get the same object between renders. For example:
+Sometimes we would want to use a non-primitive value (i.e. function) as the prop of a child component. Due to the fact that unmemoized values are redeclared during re-render, they'll actually point to different objects in each render, causing the `memo()` on the children to lose its effect. To solve this problem, we can use `useMemo()` to memoize the value so that we always get the same object between renders. For example:
 
 ```tsx showLineNumbers
 import { useMemo } from 'react'
 
 export const Example = () => {
   // Beware!
-  // This object gets redefined whenever `Example` re-renders.
+  // This object gets redeclared whenever `Example` re-renders.
   // highlight-next-line
   const user = {
     age: 5,
   }
 
-  // This object will not be redefined when `Example` re-renders.
+  // This object will not be redeclared when `Example` re-renders.
   // highlight-start
   const user = useMemo(() => ({
     age: 5,
@@ -262,7 +278,7 @@ Yes, we can! Similar to [`memo()`](#memo), the memoized component will still re-
 
 :::
 
-TODO: tell users not to update any variable in `useMemo()` because...
+It's important to note that **the function passed to `useMemo()` should not have side effects**, such as mutating variables or sending API requests. The function should be pure, meaning that it should return the same result for the same set of inputs without impacting any other variables.
 
 ## `useCallback()`
 
@@ -273,6 +289,11 @@ type useCallback<T extends Function> = (
   callback: T,
   dependencies: any[],
 ) => void
+
+// Using `useCallback()`
+const myFunction = useCallback(() => {
+  // ...
+}, [])
 ```
 
 `useCallback()` works in the following way:
@@ -365,9 +386,9 @@ In this example, even if `MemoizedChild` is already wrapped in `memo()`, it'll s
 
 <Video src="/video/react/optimization-functions_use-callback-before.mov" />
 
-This is because every time `Example` re-renders, `increment()` will be redefined; since `increment()` is a function, which is a non-primitive value, it'll actually point to a different object after being redefined, causing `memo()` to think that `increment()` has changed between renders.
+This is because every time `Example` re-renders, `increment()` will be redeclared; since `increment()` is a function, which is a non-primitive value, it'll actually point to a different object after being redeclared, causing `memo()` to think that `increment()` has changed between renders.
 
-To solve this problem, we can wrap `increment()` in `useCallback()` so that it don't get redefined when `Example` re-renders:
+To solve this problem, we can wrap `increment()` inside `useCallback()` so that it can point to the same value when `Example` re-renders:
 
 ```tsx showLineNumbers
 // highlight-next-line

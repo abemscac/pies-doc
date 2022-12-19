@@ -10,7 +10,7 @@ import Video from '@site/src/widgets/Video'
 
 ## What Is `useEffect()`?
 
-`useEffect()` is a built-in [hook](./the-basics-of-hooks.md) with multiple purposes. The "effect" in `useEffect()` refers to **side effect**, which may have different meanings depending on the context. In React, if no 3rd party libraries or frameworks are invloved, "effects" usually means things that are performed indirectly. We'll further explain this idea at the end of this chapter.
+`useEffect()` is a built-in hook with multiple purposes. The "effect" in `useEffect()` refers to **side effect**, which may have different meanings depending on the context. In React, if no 3rd party libraries or frameworks are invloved, "effects" usually means things that are performed indirectly. We'll further explain this idea at the end of this chapter.
 
 ## What Can `useEffect()` Do?
 
@@ -34,6 +34,11 @@ const useEffect = (
 }
 
 type CleanUpFunction = () => void
+
+// Using `useEffect()`
+useEffect(() => {
+  // ...
+}, [])
 ```
 
 `callback` is the function to be called in `useEffect()`, and `dependencies` is used to control when should `callback` be called.
@@ -157,7 +162,7 @@ useEffect(() => {
 
 We'll see `World` in the console when:
 
-- Whenever `count` changes (so we will not see it in the first render). For subsequent effects, React will run the clean up function first, then the main effect.
+- Whenever `count` changes (so we will not see it in the first render). Also, for subsequent effects, React runs the clean up function first, then the main effect.
 - When the component is about to unmount.
 
 <Video src="/video/react/use-effect_non-empty-array_with-clean-up.mov" />
@@ -199,7 +204,7 @@ useEffect(() => {
 
 We'll see `World` in the console when:
 
-- Whenever the component re-renders. For subsequent effects, React will run the clean up function first, then the main effect.
+- Whenever the component re-renders. Also, for subsequent effects, React runs the clean up function first, then the main effect.
 - When the component is about to unmount.
 
 <Video src="/video/react/use-effect_non-empty-array_with-clean-up.mov" />
@@ -267,7 +272,7 @@ export const Example = () => {
 
 In the above example, in addition to the `value` state, we also declare a `hasProhibitedChars` state, which is used to represent if there's any prohibited characters in `value`. Then, we use `useEffect()` with `value` as an dependency so that we can update `hasProhibitedChars` whenever `value` changes.
 
-While this works fine, if we think about it, we'll find that we don't need an effect at all. Since `hasProhibitedChars` is a variable that completely relies on `value`, and we know exactly when `setValue()` is going to be called, why don't we just call `setHasProhibitedChars()` at the same time? For examle:
+While this works fine, if we think about it, we'll find that we don't need an effect at all. Since we know exactly when `setValue()` is going to be called, meaning we know what value is going to be passed to `setValue()`, then why don't we just call `setHasProhibitedChars()` at the same time? For examle:
 
 ```tsx showLineNumbers
 import { useState, ChangeEvent } from 'react'

@@ -20,7 +20,7 @@ Anything not listed here is non-reactive, so updating it will not cause the comp
 
 ## What Does Render Mean?
 
-In React, "render" means to **run the code in your component from top to bottom, and transform the output JSX elements into a DOM node**. Any subsequent render after the very first render is called **re-render**.
+In React, "render" means to **run the code in your component from top to bottom, and transform JSX elements into DOM nodes**. Any subsequent render after the very first render is called **re-render**.
 
 ## Examples
 
@@ -52,9 +52,9 @@ In this example, everytime the "Increment" button is clicked, the value of `coun
 
 <Video src="/video/react/reactive-values_reactive.mov" />
 
-However, you may have noticed that the value on the screen is always different from the value we see in the console. Good news is, this is not a bug, but it does confuse everyone! We'll explain this when we get to [Component Rendering](./component-rendering), just don't worry about it now.
+However, you may have noticed that the value displayed in the console is always different from the value displayed on the screen. Good news is, this is not a bug, but it does confuse everyone! We'll explain this when we get to [Component Rendering](./component-rendering), just don't worry about it now.
 
-Also, it's okay if you have no idea what does [`useState()`](./use-state) do. Just keep in mind that updating reactive values will cause the component to re-render and you're good to go!
+Also, it's okay if you have no idea what does [`useState()`](./use-state) do. Just keep in mind that changing reactive values will cause the component to re-render and you're good to go!
 
 ### Non-reactive Values
 
@@ -84,7 +84,7 @@ export const Example = () => {
 
 <Video src="/video/react/reactive-values_non-reactive.mov" />
 
-In this example, everytime the "Increment" button is clicked, the value of `count` will be incremented by 1. However, since `count` is **not** a reactive value, updating it will **not** cause the component to re-render, no matter how many times `count` changes.
+In this example, everytime the "Increment" button is clicked, the value of `count` will be incremented by 1. However, since `count` is a **not-reactive** value, updating it will **not** cause the component to re-render, no matter how many times `count` changes.
 
 But be careful, this does not mean the changes of a non-reactive value will never be reflected on the screen! Let's take a look at the following example:
 
@@ -130,7 +130,7 @@ In this example, `count` is a reactive value, while `age` is a non-reactive valu
 - Clicking "Increment Count" will update the value of `count`, and the component will re-render.
 - Clicking "Increment Age" will update the value of `age`, but the component will **not** re-render.
 
-This is why in the above video, nothing happened when we clicked "Increment Age" for three times, but the screen suddenly went from `Age: 0` to `Age: 3` after "Increment Count" is clicked, which is confusing.
+This is why in the above video, nothing seemed to happen when we clicked "Increment Age" for three times, but the screen suddenly went from `Age: 0` to `Age: 3` after "Increment Count" is clicked, which is confusing.
 
 ## When to Make a Variable Reactive
 

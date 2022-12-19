@@ -191,12 +191,12 @@ In the first render, React initializes the component according to the following 
 
 After the "Increment" button is clicked once, the value of `count` will be updated from `0` to `1`. Since `count` is a reactive value, this change will cause the component to re-render. Thus, React re-renders the component by re-running every single piece of code in the component from top to bottom:
 
-1. Runs `const [count, setCount] = useState(0)`. However, thanks to how `useState()` works internally, `count` and `setCount()` will **not** be redefined; they will still point to the same variables as in the previous render.
+1. Runs `const [count, setCount] = useState(0)`. However, thanks to how `useState()` works internally, `count` and `setCount()` will **not** be redeclared; they will still point to the same variables as in the previous render.
 2. Runs `const countPlusFive = count + 5`.
-    - Since `countPlusFive` is a normal value, React will redefine it during re-render.
+    - Since `countPlusFive` is an unmemoized value, React will redeclare it during re-render.
     - The value of `count` has been updated from `0` to `1`, so `count + 5` will evaluate to `1 + 5` in this render.
 3. Runs `const increment = () => { ... }`.
-    - Since `increment()` is a normal value, React will redefine it during re-render.
+    - Since `increment()` is an unmemoized value, React will redeclare it during re-render.
     - The value of `count` has been updated from `0` to `1`, so `setCount(count + 1)` will evaluate to `setCount(1 + 1)`. This means when `increment()` is called, the value of `count` will be updated to `1 + 1`, which is `2`.
 4. Binds all necessary values to the JSX elements in the return section while re-rendering all children, and do the return.
 
@@ -205,25 +205,25 @@ Any subsequent render will just follow the same rule as the the first re-render,
 As you can see, render and re-render are actually not that different from each other; they both follow the same rule — runs the code in a component from top to bottom. Therefore, in each render, **the definitions of everything are still the same as in the previous render; the only difference is the value of reactive variables**. Please keep in mind that:
 
 - Reactive values will never change within the same render. In other words, **reactive values can actually be seen as constants in each render**; they only change in the next render.
-- **By default, all normal values get redefined during re-render**. You can prevent this from happening by using memoization functions like [`useMemo()`](./optimization-functions#usememo) and [`useCallback()`](./optimization-functions#usecallback).
+- **By default, all unmemoized values get redeclared during re-render**. You can prevent this from happening by using memoization functions like [`useMemo()`](./optimization-functions#usememo) and [`useCallback()`](./optimization-functions#usecallback).
 
 :::caution
 
-Since unmemoized values are redefined during re-render, we must pay attention to the referential equality of variables. If a normal value is non-[primitive](https://developer.mozilla.org/en-US/docs/Glossary/Primitive), and it's being used as a prop of a child, the [`memo()`](./optimization-functions#reactmemo) on the child will lose its effect because the value being pass to the child points to a different object in each render. For example:
+Since unmemoized values are redeclared during re-render, we must pay attention to the referential equality of variables. If the value is non-[primitive](https://developer.mozilla.org/en-US/docs/Glossary/Primitive), and it's being used as a prop of a child, the [`memo()`](./optimization-functions#reactmemo) on the child will lose its effect because the value being pass to the child points to a different object in each render. For example:
 
 ```tsx showLineNumbers
 import { Child } from './Child'
 
 export const Example = () => {
   // Beware!
-  // This object gets redefined whenever `Example` re-renders.
+  // This object gets redeclared whenever `Example` re-renders.
   // highlight-next-line
   const user = {
     age: 5,
   }
 
   // Beware!
-  // This function gets redefined whenever `Example` re-renders, too!
+  // This function gets redeclared whenever `Example` re-renders, too!
   // highlight-next-line
   const sayHi = () => {
     console.log('Hi')
@@ -478,7 +478,7 @@ Although states will be updated right after an `await` is done, it does not mean
 :::
 
 <details>
-  <summary>What's the theory behind this? (advanced knowledge, feel free to skip this!)</summary>
+  <summary>What's the theory behind this? (feel free to skip this!)</summary>
 
   From the description above, you may have guessed it already — those "update requests" are actually [**microtasks**](https://developer.mozilla.org/en-US/docs/Web/API/HTML_DOM_API/Microtask_guide). If you find it very confusing, feel free to skip it! You'll do just fine without knowing anything about it!
   
