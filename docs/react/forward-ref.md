@@ -16,13 +16,7 @@ You must learn [`useRef()`](./use-ref#component-instances) before getting into t
 
 ## What Is `forwardRef()`?
 
-`forwardRef()` is a [**HOC**](./higher-order-component) that is used to forward the reference of a component to a specific target. To be more specific, it is used to change the default target of reference when `ref` attribute is used on child components.
-
-:::note
-
-If you don't know what HOCs are, don't worry about it; just think of it as extra wrappers for components for now!
-
-:::
+`forwardRef()` is a [HOC](https://reactjs.org/docs/higher-order-components.html) that is used to forward the reference of a component to a specific target. To be more specific, it is used to change the default target of reference when `ref` attribute is used on child components.
 
 There are two generic types in `forwardRef<T, P>()`; `T` is the type of value being exposed to parent, and `P` is the type of component props.
 
@@ -111,8 +105,11 @@ export const Parent = () => {
   return (
     <div>
       <InputGroup label="First Name" />
-      {/* highlight-next-line */}
-      <InputGroup label="Last Name" ref={lastNameInput} />
+      <InputGroup
+        {/* highlight-next-line */}
+        ref={lastNameInput}
+        label="Last Name"
+      />
       <button onClick={focusLastNameInput}>
         Focus Last Name Input
       </button>
@@ -126,7 +123,7 @@ export const Parent = () => {
 <details>
   <summary>Does <code>forwardRef()</code> work with class components?</summary>
 
-  Yes, but we don't recommend this because we had to do some weird tricks to make it work with class components. For example:
+  Yes, but we don't recommend this because some weird tricks are inevitable in order to make it work. For example:
 
   ```tsx title="InputGroup.tsx" showLineNumbers
   import { Component, forwardRef } from 'react'
@@ -160,9 +157,7 @@ export const Parent = () => {
 
   In order to use the `ref` from `forwardRef()` in a class component, we have to wrap the definition of class component inside `forwardRef()` (or do something similar).
   
-  After all it's the same — we're still using function component, aren't we? It's just that the contents are coming from a class component that's defined inside a function component!
-  
-  Furthermore, since `MyComponent` is defined inside `InputGroup`, every time `InputGroup` re-renders, `MyComponent` is going to be redefined again. Thus, the "old" `<MyComponent {...props} />` will unmount, and the "new" `<MyComponent {...props} />` will mount within every render, causing you to lose everything in the old `MyComponent`.
+  Furthermore, since `MyComponent` is defined inside `InputGroup`, every time `InputGroup` re-renders, `MyComponent` is going to be redeclared again. Thus, the "old" `<MyComponent {...props} />` will unmount, and the "new" `<MyComponent {...props} />` will mount within every render, causing you to lose everything in the old `MyComponent`.
 
   <Video src="/video/react/forward-ref_with-class-component.mov" />
 
@@ -192,7 +187,7 @@ export const Parent = () => {
   )
   ```
 
-  All in all, forget about using `forwardRef()` with class components — just use the built-in `ref` from `React.Component`!
+  All in all, to to make things easier, just use the built-in `ref` from `React.Component`!
 </details>
 
 ## `useImperativeHandle()`

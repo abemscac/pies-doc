@@ -18,7 +18,7 @@ For class components, use [`createRef()`](https://reactjs.org/docs/refs-and-the-
 
 ## What Is `useRef()`?
 
-`useRef()` is a built-in [hook](./the-basics-of-hooks) that takes an argument of any type and returns a **reference** of that value. In React, a "reference" is **a non-reactive JavaScript object whose value can persist across render cycles**.
+`useRef()` is a built-in hook that takes an argument of any type and returns a **reference** of that value. In React, a "reference" is **a non-reactive JavaScript object whose value can persist across render cycles**.
 
 For example, consider the following code:
 
@@ -38,7 +38,7 @@ export const Example = () => {
 }
 ```
 
-In the above example, as we've exlpained in [Component Rendering](./component-rendering#what-happens-when-a-component-re-renders), `count` will be reset back to `0` whenever `Example` re-renders because `count` is redefined within every render. With the help of `useRef()`, we now have a way to persist a non-reactive value across render cycles:
+In the above example, as we've exlpained in [Component Rendering](./component-rendering#what-happens-when-a-component-re-renders), `count` will be reset back to `0` whenever `Example` re-renders because `count` is redeclared within every render. With the help of `useRef()`, we now have a way to persist a non-reactive value across render cycles:
 
 ```tsx showLineNumbers
 import { useRef } from 'react'
