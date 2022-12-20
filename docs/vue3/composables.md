@@ -45,11 +45,14 @@ const loading = ref(true)
 const users = ref([])
 // highlight-end
 
+// Fetch data on mount
+// highlight-start
 onMounted(async () => {
   const response = await fetch('/users')
   users.value = await response.json()
   loading.value = false
 })
+// highlight-end
 </script>
 ```
 
@@ -111,11 +114,15 @@ The code in this composable is pretty much the same as the original code in the 
 </template>
 
 <script lang="ts" setup>
+// highlight-next-line
 import { useFetchOnMount } from '../somewhere-else/UseFetchOnMount'
 
+// highlight-next-line
 const [loading, users] = useFetchOnMount('/users', [])
 </script>
 ```
+
+Like this, you can design your own system in a composable and reuse it in any component in your app. In a composable, you can declare as many variables and functions as you want, update them as needed, and choose which values to export (return). Ultimately, the component will be a combination of multiple composables, making it a "composition".
 
 Even if you call it multiple times (whether in the same file or not), the value returned by `useFetchOnMount()` will still be independent due to how it's implemented.
 
@@ -140,8 +147,10 @@ Even if you call it multiple times (whether in the same file or not), the value 
 <script lang="ts" setup>
 import { useFetchOnMount } from '../somewhere-else/UseFetchOnMount'
 
+// highlight-start
 const [loadingUsers, users] = useFetchOnMount('/users', [])
 const [loadingProducts, products] = useFetchOnMount('/products', [])
+// highlight-end
 </script>
 ```
 

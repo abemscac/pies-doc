@@ -40,14 +40,19 @@ keywords: [派氏文件, vue3, vue组合式函数, 组合式函数]
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
 
+// highlight-start
 const loading = ref(true)
 const users = ref([])
+// highlight-end
 
+// 在组件挂载后加载资料
+// highlight-start
 onMounted(async () => {
   const response = await fetch('/users')
   users.value = await response.json()
   loading.value = false
 })
+// highlight-end
 </script>
 ```
 
@@ -109,11 +114,15 @@ export const useFetchOnMount = <T>(url: string, initialValue: T) => {
 </template>
 
 <script lang="ts" setup>
+// highlight-next-line
 import { useFetchOnMount } from '../somewhere-else/UseFetchOnMount'
 
+// highlight-next-line
 const [loading, users] = useFetchOnMount('/users', [])
 </script>
 ```
+
+就像这样，您可以在一个组合式函数中设计自己的系统，并在任何组件中重复使用。在组合式函数中，您可以任意声明变量和函数，按需求更新他们，并自行选择要导出 (返回) 哪些数值。最终，一个组件将会是多个组合式函数的结合，使其成为一个「组合」(composition)。
 
 即便您调用它多次 (无论是否在同一个组件中)，`useFetchOnMount()` 的返回值仍然是独立的。
 
@@ -138,8 +147,10 @@ const [loading, users] = useFetchOnMount('/users', [])
 <script lang="ts" setup>
 import { useFetchOnMount } from '../somewhere-else/UseFetchOnMount'
 
+// highlight-start
 const [loadingUsers, users] = useFetchOnMount('/users', [])
 const [loadingProducts, products] = useFetchOnMount('/products', [])
+// highlight-end
 </script>
 ```
 
