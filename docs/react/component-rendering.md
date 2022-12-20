@@ -125,7 +125,7 @@ const click = () => {
 
 In this example, after `click()` is executed, the value of `count` will be `1` instead of `3`. How come?
 
-In the very beginning, the value of `count` is `0`, which means `setCount(count + 1)` will all evaluate to `setCount(0 + 1)`. So in the first render, the component will define `click()` as a function that runs `setCount(0 + 1)` for three times, which does nothing but update the value of `count` to `1`.
+Since initial value of `count` is `0`, all `setCount(count + 1)` in `click()` will evaluate to `setCount(0 + 1)`. So in the first render, the component will define `click()` as a function that runs `setCount(0 + 1)` for three times, which updates the value of `count` to `1` instead of `3`.
 
 From these example, we've learned a very important lesson — in a React component, **everything works by rendering**, not by time. **Reactive values can only represent the status of a component in a specific render, even in a halfway through function call**. That's why a component needs to **re-render**. But what exactly does re-render do?
 

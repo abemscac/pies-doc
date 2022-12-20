@@ -18,7 +18,7 @@ You must learn [Component Rendering](./component-rendering) before getting into 
 
 :::info
 
-Be sure to check out [this awesome post](https://github.com/reactwg/react-18/discussions/21) by [Dan Abromov](https://github.com/gaearon) about batching! Most of the information in this section is simply a rephrasing of the ideas presented in the post.
+Be sure to check out [this awesome post](https://github.com/reactwg/react-18/discussions/21) by [Dan Abramov](https://github.com/gaearon) about batching! Most of the information in this section is simply a rephrasing of the ideas presented in the post.
 
 :::
 
