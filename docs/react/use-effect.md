@@ -10,7 +10,7 @@ import Video from '@site/src/widgets/Video'
 
 ## What Is `useEffect()`?
 
-`useEffect()` is a built-in hook with multiple purposes. The "effect" in `useEffect()` refers to **side effect**, which may have different meanings depending on the context. In React, if no 3rd party libraries or frameworks are invloved, "effects" usually means things that are performed indirectly. We'll further explain this idea at the end of this chapter.
+`useEffect()` is a built-in hook with multiple purposes. The "effect" in `useEffect()` refers to **side effect**, which may have different meanings depending on the context. In React, if no 3rd party libraries or frameworks are invloved, "effects" usually means things (states) that are performed (changed) indirectly. We'll further explain this idea at the end of this chapter.
 
 ## What Can `useEffect()` Do?
 
@@ -43,11 +43,11 @@ useEffect(() => {
 
 `callback` is the function to be called in `useEffect()`, and `dependencies` is used to control when should `callback` be called.
 
-`useEffect()` works in the following way (if the description is too complicated, just see the [examples](#examples) below!):
+`useEffect()` works in the following way (if you find the description too complicated, just see the [examples](#examples) below!):
 
 1. React calls `callback` right after the component is mounted.
 2. Depending on the value of `dependencies`:
-  - If `dependencies` is `undefined` (which it is `undefined` by default), React will call `callback` every time the component re-renders.
+  - If `dependencies` is `undefined` (which it is by default), React will call `callback` every time the component re-renders.
   - Otherwise, in each re-render, React uses [`Object.is()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is) to check if every element in `dependencies` is the same as the previous render.
     - If nothing has changed, nothing will happen.
     - Otherwise React will call `callback`.
@@ -211,19 +211,20 @@ We'll see `World` in the console when:
 
 ## Async Callback
 
-Currently, React does not support async callback in `useEffect()`. However, we can still do something asynchronous in an effect by declaring an `async` function and call it on our own. For example:
+Currently, React does not support async callback in `useEffect()`. However, we can still perform asynchronous actions in an effect by declaring an `async` function and calling it ourselves. For example:
 
 ```ts showLineNumbers
 import { useEffect } from 'react'
 
 useEffect(() => {
-  // Declare an async function
+  // highlight-start
   const fetchData = async () => {
     // We can now use `await` here.
-    const data = await MyAPI.getSomething()
   }
+  // highlight-end
 
   // Call the async function
+  // highlight-next-line
   fetchData()
 }, [])
 ```
@@ -234,7 +235,7 @@ As we mentioned at the beginning of this article, "side effects" may have differ
 
 Sometimes an effect is indeed the only option, such as calling an API on mount, or doing something right before the component unmounts; but sometimes there are other better choices than using an effect, **especially when `useEffect()` is used with `setState()`**.
 
-For example, consider the following scenario:
+Consider the following scenario:
 
 - There's an input box on the screen, and we must record the value entered by the user.
 - If there's any prohibited characters (i.e. `a`) in the value, show `Prohobited characters found` on the screen.
@@ -272,7 +273,7 @@ export const Example = () => {
 
 In the above example, in addition to the `value` state, we also declare a `hasProhibitedChars` state, which is used to represent if there's any prohibited characters in `value`. Then, we use `useEffect()` with `value` as an dependency so that we can update `hasProhibitedChars` whenever `value` changes.
 
-While this works fine, if we think about it, we'll find that we don't need an effect at all. Since we know exactly when `setValue()` is going to be called, meaning we know what value is going to be passed to `setValue()`, then why don't we just call `setHasProhibitedChars()` at the same time? For examle:
+While this works fine, if we think about it, we'll find that we don't need an effect at all. Since we know exactly when `setValue()` is going to be called, which means we know what value is going to be passed to `setValue()`, then why don't we just call `setHasProhibitedChars()` at the same time? For example:
 
 ```tsx showLineNumbers
 import { useState, ChangeEvent } from 'react'

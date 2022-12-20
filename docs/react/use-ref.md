@@ -214,7 +214,7 @@ By putting a `MutableRefObject<T>` in the `ref` attribute of a DOM node, you'll 
 
 <Video src="/video/react/use-ref_html-element.mov" />
 
-However, you should **only use this when standard props/states cannot fulfill your requirements**. For example, calculating the width/height of a DOM node, or focusing on a specific `<input>`.
+However, you should **only use this when standard props/states cannot fulfill your requirements, or when using standard props/states is inconvenient**. Two good cases for using `useRef()` are calculating the width/height of a DOM node and focusing on a specific `<input>`.
 
 ### Component Instances
 
@@ -301,13 +301,13 @@ If you tried to `console.log(child.current)` in `Parent`, you'll see the instanc
 
 <img src="/img/react/use-ref_component-instance.png" alt="Value of the instance of class component" />
 
-Since everything is now exposed to parent component, you should be very careful when dealing with this instance; even calling `setState()` for children (from parent component) is now doable (but that's a terrible idea!).
+Since everything is now exposed to parent component, you should be very careful when dealing with this instance; even calling `setState()` for children (from parent component) is now doable!
 
-Same as creating references of DOM nodes, you should **only do this when standard props/states cannot fulfill your requirements**, which usually happens when you try to integrate 3rd party components into your app.
+Same as creating references of DOM nodes, you should **only do this when standard props/states cannot fulfill your requirements, or when using standard props/states is inconvenient**. Sometimes this happens when you try to integrate a 3rd party component into your app.
 
 ### Uncontrolled Components
 
-For most of the time, developers use `useState()` for everything related to form (i.e. `<input>`, `<textarea>`, rich text editor, etc.). However, depending on how states are being used, sometimes `useRef()` could be a better choice. For example:
+For most of the time, developers use `useState()` for everything related to form (i.e. `<input>`, `<textarea>`, rich text editor, etc.). However, depending on how states are being used, `useRef()` could be a better choice in some cases. For example:
 
 ```tsx showLineNumbers
 import { useState, FormEvent, ChangeEvent } from 'react'
@@ -338,14 +338,14 @@ export const Example = () => {
 }
 ```
 
-In this example, we use `useState()` to declare `name`, and use `setName()` to update the value of `name`. This works fine, but we would actually recommend using `useRef()` instead of `useState()`, because:
+In this example, `name` is being declared as a state, but it might be more efficient to use a reference instead, because:
 
 - `name` is not being displayed on the screen.
-- `name` is not in the dependency array of any effect.
+- `name` is not a dependency of any effect.
 - We didn't make `<input>` into a controlled component. In other words, the value of `<input>` is not affected (controlled) by `name`.
-- Since `name` is a state, updating it will cause the component to re-render. This means every time a character is entered, all unmemoized children (child component) will be re-rendered, leading to poor performance. Sometimes even `onBlur` won't save you.
+- Since `name` is a state, updating it will cause the component to re-render. This means every time a character is entered, all unmemoized children will be re-rendered, leading to poor performance. Sometimes even `onBlur` won't save you.
 
-For these reasons, we can say it's safe to replace `useState()` with `useRef()` in this case for better performance while keeping the same functionality:
+For these reasons, in this example, declaring `name` with `useRef()` would be more efficient than using `useState()`:
 
 ```tsx showLineNumbers
 import { useRef, FormEvent, ChangeEvent } from 'react'
@@ -380,7 +380,7 @@ export const Example = () => {
 
 ### Keeping Value for Later Use
 
-Sometimes we would want to share a value between two different life-cycles, usually a function that comes from 3rd party libraries, or an id returned by `setTimeout()` or `setInterval()`. For example:
+Sometimes we may want to share a value between two different life-cycles, usually a function that comes from a 3rd party library, or an id returned by `setTimeout()` or `setInterval()`. For example:
 
 ```tsx showLineNumbers
 import { useEffect } from 'react'
@@ -420,7 +420,7 @@ In this example:
 
 Here, we call `SomeRandomLibrary.init()` after the component is mounted, which is the most reasonable timing for initialization. The most obvious solution would be to move `SomeRandomLibrary.init()` in `doSomething()` so that we can access `thatFunction()` right after the initialization is done. However, since `SomeRandomLibrary.init()` is used to initialize the library, calling it multiple times may lead to unwanted results like waste of resources or errors. Therefore, the most appropriate way would be to store `thatFunction()` in a variable so that we can access it later. But how can we do this?
 
-We want to make sure each component instance has its own `thatFunction()`, but we also don't want the component to re-render just because `thatFunction()` is stored in a variable. Thus, `useRef()` would be a better option than `useState()` because updating a `MutableRefObject<T>` will not cause the component to re-render, but they both works:
+We want to make sure each component instance has its own `thatFunction()`, but we also don't want the component to re-render just because `thatFunction()` is stored in a variable. Thus, `useRef()` would be the best choice here because updating a reference will not cause the component to re-render. For example:
 
 ```tsx showLineNumbers
 import { useRef, useEffect } from 'react'
@@ -452,7 +452,9 @@ export const Example = ({ something }: IExampleProps) => {
 }
 ```
 
-Declaring a variable outside the component seems like a solution, but that'll actually make all instances of this component share the same value, which is not something we would like to see:
+:::caution
+
+While declaring a variable outside the component seems like a solution, that'll actually make all instances of this component share the same value, which is not something we would like to see:
 
 ```tsx showLineNumbers
 import { useEffect } from 'react'
@@ -463,7 +465,7 @@ interface IExampleProps {
 }
 
 // Be careful!
-// All instances of this component will share the same value in this way!
+// All instances of this component will access the same value in this way!
 // highlight-next-line
 let thatFunction: (() => void) | undefined = undefined
 
@@ -486,6 +488,8 @@ export const Example = ({ something }: IExampleProps) => {
 }
 ```
 
+:::
+
 ## When to `useRef()`?
 
-In short, use `useRef()` when the value will change, and this change do not have to be reflected on the screen. In other words, the change of the value will not affect what users see on the screen; functions always fall in this category.
+In summary, `useRef()` is useful when you need to preserve a value between renders without causing the component to re-render. Functions are a common example of this.

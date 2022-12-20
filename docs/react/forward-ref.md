@@ -206,7 +206,7 @@ The way `useImperativeHandle()` works is like "intercepting" the `ref` and retur
 
 With the help of `useImperativeHandle()`, we can now call the methods defined in children from parent, just like what `ref` attribute could do on class components.
 
-We cannot stress this enough; **only use this when standard props/state cannot fulfill your requirements**. The example below is the function component version of [this example](./use-ref#component-instances) we've mentioned in `useRef()`.
+We cannot stress this enough; **only use this when standard props/states cannot fulfill your requirements, or when using standard props/states is inconvenient**. The example below is the function component version of [one of the example](./use-ref#component-instances) we've mentioned in `useRef()`.
 
 ```tsx title="Parent.tsx" showLineNumbers
 import { useRef } from 'react'

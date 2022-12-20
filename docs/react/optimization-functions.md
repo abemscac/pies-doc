@@ -143,7 +143,7 @@ Usually `useMemo()` is used when:
 
 #### Skipping Expensive Calculations During Re-Render
 
-Sometimes we would want to do some expensive calculations in a component. If those calculations are run within every render, we may experience noticeable lag during re-render. With the help of `useMemo()`, those calculations can be run only when certian values change. For example:
+Sometimes we may want to perform expensive calculations within a component. If these calculations are run during every render, it would then cause noticeable lag during re-render. However, with the help of `useMemo()`, we can ensure that these calculations are only run when certain values change. For example:
 
 ```tsx showLineNumbers
 import { useState, useMemo } from 'react'
@@ -155,14 +155,14 @@ export const Example = () => {
     { id: 3, name: 'User C' },
   ])
 
-  // This will run `users.filter()` on every render.
+  // This runs on every render.
   // highlight-start
   const matchedUsers = users.filter(
     (user) => user.name.includes('A')
   )
   // highlight-end
 
-  // This will only run `users.filter()` when `users` changes.
+  // This only runs when `users` changes.
   // highlight-start
   const matchedUsers = useMemo(
     () => users.filter((user) => user.name.includes('A')),
@@ -178,7 +178,9 @@ export const Example = () => {
 
 #### Preventing Variables From Being Redefined During Re-Render
 
-Sometimes we would want to use a non-primitive value (i.e. function) as the prop of a child component. Due to the fact that unmemoized values are redeclared during re-render, they'll actually point to different objects in each render, causing the `memo()` on the children to lose its effect. To solve this problem, we can use `useMemo()` to memoize the value so that we always get the same object between renders. For example:
+Sometimes we may want to use a non-primitive value (e.g. a function) as a prop for a child component. However, because unmemoized values are redeclared during re-render, they will actually point to different objects in each render, which can cause the `memo()` on the children to lose its effectiveness.
+
+To solve this problem, we can use `useMemo()` to memoize the value so that we always get the same object between renders. For example:
 
 ```tsx showLineNumbers
 import { useMemo } from 'react'
@@ -206,7 +208,7 @@ export const Example = () => {
 
 #### When `useEffect()` Is Used With `setState()`
 
-Sometimes we would want to update a state when certain props/states change. In some cases, `useMemo()` would be a better choice than `useEffect()` + `setState()`.
+Sometimes we may want to update a state when certain props/states change. In some cases, `useMemo()` would be a better choice than `useEffect()` + `setState()`.
 
 To get straight to the point, this:
 
@@ -343,9 +345,7 @@ export const Example = () => {
 
 <Video src="/video/react/optimization-functions_use-callback-show-count.mov" />
 
-In this example, in the beginning, "Show Count" and "Show Count (Memoized)" are both showing `0` in the console after click.
-
-After "Increment" is clicked three times, "Show Count" now shows `3`, but "Show Count (Memoized)" still shows `0`. How come?
+In this example, at the start, "Show Count" and "Show Count (Memoized)" both display `0` in the console after click. After "Increment" is clicked three times, "Show Count" now shows `3`, but "Show Count (Memoized)" still shows `0`.
 
 This happens because in the first render, the value of `count` is `0`, so all `count` in `memoizedShowCount()` are replaced by `0`. Since we didn't put anything in the dependency array of `useCallback()`, the `count` in `memoizedShowCount()` will never be updated, thus shows `0` when called.
 
@@ -386,7 +386,7 @@ In this example, even if `MemoizedChild` is already wrapped in `memo()`, it'll s
 
 <Video src="/video/react/optimization-functions_use-callback-before.mov" />
 
-This is because every time `Example` re-renders, `increment()` will be redeclared; since `increment()` is a function, which is a non-primitive value, it'll actually point to a different object after being redeclared, causing `memo()` to think that `increment()` has changed between renders.
+This is because every time `Example` re-renders, `increment()` will be redeclared; since `increment()` is a non-primitive value, it'll actually point to a different value after being redeclared, causing `memo()` to think that `increment()` has changed between renders.
 
 To solve this problem, we can wrap `increment()` inside `useCallback()` so that it can point to the same value when `Example` re-renders:
 
