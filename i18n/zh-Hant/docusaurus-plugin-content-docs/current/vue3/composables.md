@@ -40,14 +40,19 @@ keywords: [派氏文件, vue3, vue組合式函式, 組合式函式]
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
 
+// highlight-start
 const loading = ref(true)
 const users = ref([])
+// highlight-end
 
+// 在元件掛載後讀取資料
+// highlight-start
 onMounted(async () => {
   const response = await fetch('/users')
   users.value = await response.json()
   loading.value = false
 })
+// highlight-end
 </script>
 ```
 
@@ -109,11 +114,15 @@ export const useFetchOnMount = <T>(url: string, initialValue: T) => {
 </template>
 
 <script lang="ts" setup>
+// highlight-next-line
 import { useFetchOnMount } from '../somewhere-else/UseFetchOnMount'
 
+// highlight-next-line
 const [loading, users] = useFetchOnMount('/users', [])
 </script>
 ```
+
+就像這樣，您可以在一個組合式函式中設計自己的系統，並在任何元件中重複使用。在組合式函式中，您可以任意宣告變數和函式，按需求更新他們，並自行選擇要輸出(回傳) 哪些數值。最終，一個元件將會是多個組合式函式的結合，使其成為一個「組合」(composition)。
 
 即便您呼叫它多次 (無論是否在同一個元件中)，`useFetchOnMount()` 的回傳值仍然是獨立的。
 
@@ -138,8 +147,10 @@ const [loading, users] = useFetchOnMount('/users', [])
 <script lang="ts" setup>
 import { useFetchOnMount } from '../somewhere-else/UseFetchOnMount'
 
+// highlight-start
 const [loadingUsers, users] = useFetchOnMount('/users', [])
 const [loadingProducts, products] = useFetchOnMount('/products', [])
+// highlight-end
 </script>
 ```
 
