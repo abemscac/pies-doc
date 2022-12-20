@@ -42,7 +42,9 @@ const [state, setState] = useState({
 // highlight-end
 ```
 
-**In most cases, it doesn't matter**. We're saying this because, in most cases, React batches state updates by default. **"Batching"** refers to the process of grouping multiple state updates into a single update. Before React 17, only the updates in **React event handlers** will be automatically batched. Starting from React 18, all updates are batched by default.
+**In most cases, it doesn't matter**. We're saying this because React batches state updates by default.
+
+**"Batching"** refers to the process of grouping multiple state updates into a single update. Before React 17, only the updates in **React event handlers** are automatically batched. Starting from React 18, all updates are batched by default.
 
 <details>
   <summary>What are React event handlers?</summary>
@@ -106,7 +108,7 @@ In the above example, even though so many `setState()` are called, the component
 
 Why?
 
-It actually makes sense if we think about it. In the above example, we don't want users to see flickers when `count` is being updated from `0` all the way to `5`. Since we know that the last value being passed to `setCount()` is 5, we can simply skip over all previous values and directly set `count` to `5`. The same approach can be applied to `name` as well.
+It actually makes sense if we think about it. In the above example, we don't want users to see flickers when `count` is being updated from `0` all the way to `3`. Since we know that the last value being passed to `setCount()` is `3`, we can simply skip over all previous values and directly set `count` to `3`. The same approach can be applied to `name` as well.
 
 Additionally, after all update requests have been processed, React knows that the states to be updated are `name` and `count`. To minimize the number of re-renders and avoid any flicker that users might notice, React updates them both at the same time instead of individually.
 
@@ -124,7 +126,7 @@ If you're interested in how state updates are processed in React, please refer t
   - All states in a component are stored in an imaginary object called `states`.
   - An object called `updateRequests` is created to hold all of the unprocessed [update requests](./component-rendering#update-requests).
   - An object called `patches` is created to hold the values of `states` for the next render.
-- Every time `setState()` is called, the parameter is pushed to the corresponding update request (array) in the `updateRequests` object.
+- Every time `setState()` is called, the parameter is pushed to the corresponding array in the `updateRequests` object.
 - For each state, React evaluates the output based on the update requests and put it in the `patches` object. Once all update requests have been processed, React copies all the properties from `patches` to `states` and clears `updateRequests` and `patches`.
 
 After that, React updates the DOM nodes based on the values in `states`, and then waits for [the next opportunity](./component-rendering#when-will-reactive-values-be-updated) to process update requests.
@@ -150,7 +152,7 @@ const updateCount = () => {
 
 In the above example, we first call `setCount(1)`, which will update the value of `count` to `1` in the next render. Then, we call `setCount((prevCount) => prevCount + 2)`, which means "give me the last value being passed to `setCount()`, and update the value of `count` to `(that value + 2)`". Thus, in this example, `count` will be updated to `3` after `updateCount()` is executed.
 
-<Video src="/video/react/use-state-in-depth_updater-function-1.mov" />
+<Video src="/video/react/use-state-in-depth_updater-function-1.mov" height="300px" />
 
 Great, now let's take a look at another example:
 

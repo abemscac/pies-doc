@@ -81,6 +81,12 @@ In the above example, `0` is being used as the initial value of `count`. Every t
 
 In React, all states should only be updated via the corresponding `setState()` function; **updating a state without using `setState()` is a big no**! This is because `setState()` is designed to trigger a re-render of the component, which ensures that the component's state is reflected on the UI. If we directly update a state without using `setState()`, the component's UI may not be updated as expected.
 
+## Is `setState()` Asynchronous?
+
+You may have heard people say "`setState()` is asynchronous". While this statement is partly true, as the changes made by `setState()` will not be immediately applied, `setState()` itself is actually synchronous; it does not return a promise. Therefore, it is not necessary to use await on it.
+
+But why is it that in one of the example in [Reactive Values](./reactive-values#reactive-values-1), we can't immediately retrieve the updated value of a state right after `setState()` is called? This is a somewhat complex concept that we'll discuss in more detail as we [delve deeper into React](./use-state-in-depth#updater-functions), so don't worry about it for now!
+
 ## State Initializer
 
 Sometimes we might want to initialize a state with a function when the logic is somewhat complicated. For example:
@@ -175,4 +181,4 @@ This issue occurs with all non-primitive values, such as objects, arrays, maps, 
 
 Despite the fact that `useState()` can be used to declare a state of any type, it doesn't mean that everything is suitable to be a state. For example, we can use `useState()` to declare a state of type function like `useState(() => () => { ... })`; the extra function wrapper is there due to how [state initializer](#state-initializer) works in `useState()`. Although this works fine, it just doesn't feel right, does it?
 
-As we've mentioned in [Reactive Values](./reactive-values#when-to-make-a-variable-reactive), variables should only be declared as reactive if it **will change**, and **users must be informed of this change on the screen**. Since users will not be able to see the function itself on the screen, making it a state is then not recommended. In these types of scenarios, using [reference](./use-ref) is usually a better choice.
+As we've mentioned in [Reactive Values](./reactive-values#when-to-make-a-variable-reactive), a variable should only be declared as reactive if it **will change**, and **users must be informed of this change on the screen**. Since users will not be able to see the function itself on the screen, making it a state is then not recommended. In these types of scenarios, using [reference](./use-ref) is usually a better choice.

@@ -26,7 +26,7 @@ This is going to be a long chapter! Be sure to set aside some time to read it, b
 
 ## How Reactive Value Works in a Component
 
-We've all been confused by how states work in React. Let's start this chapter with following example:
+We've all been confused by how states work in React. Let's start this chapter with the following example:
 
 ```tsx showLineNumbers
 import { useState } from 'react'
@@ -68,9 +68,9 @@ In this example, we use three `console.log()` successively to print out the valu
 
 From one of the example in [Reactive Values](./reactive-values#reactive-values-1), we already know that changes made by functions like `setState()` will not be applied immediately, so currently it's acceptable to see the second `console.log()` showing `0` (we'll talk about the real cause [below](#when-will-reactive-values-be-updated)!) But why is it that in the video, when we clearly see the number on the screen has changed from `0` to `5`, the last `console.log()` still shows `0`?
 
-In React, a component does not wait until you need to use the reactive value to read it; instead, in each render, **it reads reactive values and use them to define everything first**, then it shows stuff on the screen.
+In React, a component does not wait until you need to use a reactive value to read it; instead, in each render, **it reads reactive values and use them to define everything first**, then it shows stuff on the screen.
 
-To explain this idea in a much simpler way, just think of it as **find and replace**. Let's take a look at the `click()` function in this component:
+To explain this idea in a much simpler way, just think of it as **find and replace** in each render. Let's take a look at the `click()` function in this component:
 
 ```ts showLineNumbers
 const click = () => {
@@ -85,9 +85,7 @@ const click = () => {
 }
 ```
 
-In the first render, the value of `count` is `0`. Thus, React will define `click()` by replacing all occurrences of `count` with its value in this render, which is `0`.
-
-Simply put, this is what the component did while defining `click()`:
+In the first render, the value of `count` is `0`. Thus, React will define `click()` by replacing all occurrences of `count` with its value in this render, which is `0`. Therefore, the following code is what the component did while defining `click()` in the first render:
 
 ```ts showLineNumbers
 const click = () => {
@@ -125,9 +123,9 @@ const click = () => {
 
 In this example, after `click()` is executed, the value of `count` will be `1` instead of `3`. How come?
 
-Since initial value of `count` is `0`, all `setCount(count + 1)` in `click()` will evaluate to `setCount(0 + 1)`. So in the first render, the component will define `click()` as a function that runs `setCount(0 + 1)` for three times, which updates the value of `count` to `1` instead of `3`.
+Since the initial value of `count` is `0`, all `setCount(count + 1)` in `click()` will evaluate to `setCount(0 + 1)`. So in the first render, the component will define `click()` as a function that runs `setCount(0 + 1)` three times, which updates the value of `count` to `1` instead of `3`.
 
-From these example, we've learned a very important lesson — in a React component, **everything works by rendering**, not by time. **Reactive values can only represent the status of a component in a specific render, even in a halfway through function call**. That's why a component needs to **re-render**. But what exactly does re-render do?
+From these examples, we've learned a very important lesson — in a React component, **everything works by rendering**, not by time. **Reactive values can only represent the status of a component in a specific render, even in a halfway through function call**. That's why a component needs to **re-render**. But what exactly does re-render do?
 
 ## What Happens When A Component Re-Renders?
 
@@ -183,8 +181,8 @@ The only state in this component is `count`, and we can update `count` by clicki
 In the first render, React initializes the component according to the following steps:
 
 1. Runs `const [count, setCount] = useState(0)` to make `count` and `setCount()` available.
-2. Runs `const countPlusFive = count + 5`; since the initial value of `count` is `0`, all of the occurrences of `count` will be replaced by `0`, so `countPlusFive` will evaluate to `0 + 5`.
-3. Runs `const increment = () => { ... }`; since the initial value of `count` is `0`, all of the occurrences of `count` will be replaced by `0`, so `setCount(count + 1)` will evaluate to `setCount(0 + 1)`. This means when `increment()` is called, the value of `count` will be updated to `0 + 1`, which is `1`.
+2. Runs `const countPlusFive = count + 5`; since the initial value of `count` is `0`, all occurrences of `count` will be replaced by `0`, so `countPlusFive` will evaluate to `0 + 5`.
+3. Runs `const increment = () => { ... }`; since the initial value of `count` is `0`, all occurrences of `count` will be replaced by `0`, so `setCount(count + 1)` will evaluate to `setCount(0 + 1)`.
 4. Binds all necessary values to the JSX elements in the return section while rendering all child components, and do the return.
 
 ### The Second Render (The First Re-Render)
@@ -194,10 +192,10 @@ After the "Increment" button is clicked once, the value of `count` will be updat
 1. Runs `const [count, setCount] = useState(0)`. However, thanks to how `useState()` works internally, `count` and `setCount()` will **not** be redeclared; they will still point to the same variables as in the previous render.
 2. Runs `const countPlusFive = count + 5`.
     - Since `countPlusFive` is an unmemoized value, React will redeclare it during re-render.
-    - The value of `count` has been updated from `0` to `1`, so `count + 5` will evaluate to `1 + 5` in this render.
+    - The value of `count` has been updated from `0` to `1`, so `count + 5` will evaluate to `1 + 5`, which is `6` in this render.
 3. Runs `const increment = () => { ... }`.
     - Since `increment()` is an unmemoized value, React will redeclare it during re-render.
-    - The value of `count` has been updated from `0` to `1`, so `setCount(count + 1)` will evaluate to `setCount(1 + 1)`. This means when `increment()` is called, the value of `count` will be updated to `1 + 1`, which is `2`.
+    - The value of `count` has been updated from `0` to `1`, so `setCount(count + 1)` will evaluate to `setCount(1 + 1)`.
 4. Binds all necessary values to the JSX elements in the return section while re-rendering all children, and do the return.
 
 Any subsequent render will just follow the same rule as the the first re-render, with no exception.
@@ -209,7 +207,7 @@ As you can see, render and re-render are actually not that different from each o
 
 :::caution
 
-Since unmemoized values are redeclared during re-render, we must pay attention to the referential equality of variables. If the value is non-[primitive](https://developer.mozilla.org/en-US/docs/Glossary/Primitive), and it's being used as a prop of a child, the [`memo()`](./optimization-functions#reactmemo) on the child will lose its effect because the value being pass to the child points to a different object in each render. For example:
+Since unmemoized values are redeclared during re-render, we must pay attention to the referential equality of variables. If the value is non-[primitive](https://developer.mozilla.org/en-US/docs/Glossary/Primitive), and it's being used as a prop of a child, the [`memo()`](./optimization-functions#reactmemo) on the child will then lose its effectiveness. For example:
 
 ```tsx showLineNumbers
 import { Child } from './Child'
@@ -255,7 +253,7 @@ export const Parent = () => (
 )
 ```
 
-In this example, whenever `Parent` re-renders, `Child` will also re-render; then, the children of `Child` will also re-render, and so forth and so on, all the way to the very last component in the DOM tree. Sometimes this makes sense because a child may use a state declared in the parent as a prop, but sometimes it does not. Consider the following example:
+In this example, whenever `Parent` re-renders, `Child` will also re-render; then, the children of `Child` will also re-render, and so forth and so on, all the way to the very last component in the DOM tree. Sometimes this makes sense because a child may use a state declared in parent as a prop, but sometimes it does not. Consider the following example:
 
 ```tsx showLineNumbers
 import { useState } from 'react'
@@ -285,7 +283,7 @@ export const Parent = () => {
 
 In the above example, `Child` is not using any states declared in `Parent` as props; however, whenever `Parent` re-renders, `Child` will also re-render. In most cases this is fine, because `Child` may not be a computationally espensive component; but if it is, it would be not ideal to re-render `Child` whenever `Parent` re-renders. So, is there a way to change this behavior, so that we don't re-render `Child` when `Parent` re-renders?
 
-One way is to use memoization functions to memoize the rendered output of `Child`, we'll talk about this in [Optimization Functions](./optimization-functions). Another way is to make use of the **`children`** prop of a React component.
+One way is to use memoization functions to memoize the rendered output of `Child`, we'll talk about this when we get to [Optimization Functions](./optimization-functions). Another way is to make use of the **`children`** prop of a React component.
 
 ### `children` Prop
 
@@ -300,7 +298,7 @@ So what can `children` prop do? In native HTML, we can put as many DOM nodes as 
 </div>
 ```
 
-The same rule applies to React components as well; we can put as many DOM nodes and components under another DOM node or component. For example:
+The same rule also applies to a React component; we can put as many DOM nodes and components under another DOM node or component. For example:
 
 ```tsx showLineNumbers
 import { Parent } from './Parent'
@@ -308,19 +306,17 @@ import { Child } from './Child'
 
 export const Example = () => {
   return (
-    <div>
-      <Parent>
-        {/* highlight-next-line */}
-        <Child />
-      </Parent>
-    </div>
+    <Parent>
+      {/* highlight-next-line */}
+      <Child />
+    </Parent>
   )
 }
 ```
 
-In the above example, although `<Child />` is wrapped inside `<Parent></Parent>`, since `<Child />` is written in the return section of `Example`, it is `Example` that will be responsible for rendering `<Child />`, not `Parent`. Therefore, `Child` will only re-render when `Example` re-renders, and the re-rendering of `Parent` will not affect `Child` at all.
+In the above example, despite the fact that `Child` is wrapped inside `<Parent></Parent>`, it is `Example` that is responsible for rendering `Child`, not `Parent`. This is because `Child` is written in the return section of `Example`. As a result, `Child` will only be re-rendered when `Example` re-renders, and the re-rendering of `Parent` will have no effect on `Child`.
 
-However, this solution won't work without proper setup. In React, contents wrapped between a component will not automatically show up; instead, they will be pass to the component as a prop named `children`. If we don't explicitly use this `children` prop in the component, React will do nothing about it, just like all other props.
+However, this solution will not work unless it is set up properly. In React, the content wrapped between a component will not be automatically displayed; rather, it will be passed to the component as a prop called `children`. If we don't explicitly use this `children` prop in the component, nothing is going to happen, just like any other unused prop.
 
 :::info
 
@@ -340,7 +336,7 @@ export const Parent = ({ children }: IParentProps) => {
 }
 ```
 
-So all we have to do now is to take `children` out from the props of `Parent` and put it where we want it to be. This way when `Parent` re-renders, `Child` will not re-render because it's now rendered by another component:
+So all we have to do now is to take `children` out from the props of `Parent` and put it where we want it to be displayed:
 
 ```tsx showLineNumbers
 import { useState, PropsWithChildren } from 'react'
@@ -366,15 +362,15 @@ export const Parent = ({ children }: PropsWithChildren) => {
 }
 ```
 
+This way the re-render of `Parent` will no longer impact `Child`.
+
 <Video src="/video/react/component-rendering_children-prop.mov" />
 
 :::
 
 ## When Will Reactive Values Be Updated?
 
-You may have heard people said "`setState()` is not synchronous". Well, the description is partly true because the changes made by `setState()` will not be applied immediately; in other words, states won't be updated immediately after `setState()` is called. However, `setState()` itself is actually synchronous; it's not an `async` function.
-
-So here comes the question — if states are not updated right after `setState()` is called, when exactly will they be updated?
+If states are not updated right after `setState()` is called, when exactly will they be updated?
 
 ### Update Requests
 
@@ -473,7 +469,7 @@ useEffect(() => {
 
 :::caution
 
-Although states will be updated right after an `await` is done, it does not mean we can get updated values right after that. Don't forget that updated values are only available in the next render thanks to [how reactive value works in a compoent](#how-reactive-value-works-in-a-component)!
+While states will be updated immediately after an `await` statement is executed, don't forget that the updated values will only be available in the next render due to [how reactive value works in a compoent](#how-reactive-value-works-in-a-component)!
 
 :::
 
