@@ -50,7 +50,7 @@ const MemoizedComponent = memo(Component, () => {
   - Otherwise the component will re-render as usual, and the previously memoized value will be replaced by the new rendered output.
 - If the component should only re-render when certain props change, you can pass a function to the second argument `arePropsEqual()` to customize the checking logic of props equality.
 
-Therefore, **the effect of `memo()` is only to be be seen when the memoized component is being used as a child**.
+Therefore, **the effect of `memo()` is only to be seen when the memoized component is being used as a child**.
 
 ### When to `memo()`?
 

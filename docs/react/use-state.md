@@ -173,6 +173,6 @@ This issue occurs with all non-primitive values, such as objects, arrays, maps, 
 
 ## What Kind of Value Is Suitable to Be a State?
 
-Despite the fact that `useState()` can be used to declare a state of any type, it doesn't mean that everything is suitable to be a state. For example, we can use `useState()` to declare a state of type function like `useState(() => () => { ... })`; the extra function wrapper is there due to how [state initializer](#state-initializer) works in `useState()`. Although this works fine, it just doesn't feel right, is it?
+Despite the fact that `useState()` can be used to declare a state of any type, it doesn't mean that everything is suitable to be a state. For example, we can use `useState()` to declare a state of type function like `useState(() => () => { ... })`; the extra function wrapper is there due to how [state initializer](#state-initializer) works in `useState()`. Although this works fine, it just doesn't feel right, does it?
 
 As we've mentioned in [Reactive Values](./reactive-values#when-to-make-a-variable-reactive), variables should only be declared as reactive if it **will change**, and **users must be informed of this change on the screen**. Since users will not be able to see the function itself on the screen, making it a state is then not recommended. In these types of scenarios, using [reference](./use-ref) is usually a better choice.
