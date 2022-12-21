@@ -492,4 +492,4 @@ export const Example = ({ something }: IExampleProps) => {
 
 ## When to `useRef()`?
 
-In summary, `useRef()` is useful when you need to preserve a value between renders without causing the component to re-render. Functions are a common example of this.
+In summary, `useRef()` is useful when you need to preserve a value between renders without causing the component to re-render. Functions and timers (the returned value of `setTimeout()` and `setInterval()`) are two common examples of this.
