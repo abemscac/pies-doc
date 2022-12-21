@@ -207,35 +207,71 @@ As you can see, render and re-render are actually not that different from each o
 
 :::caution
 
-Since unmemoized values are redeclared during re-render, we must pay attention to the referential equality of variables. If the value is non-[primitive](https://developer.mozilla.org/en-US/docs/Glossary/Primitive), and it's being used as a prop of a child, the [`memo()`](./optimization-functions#reactmemo) on the child will then lose its effectiveness. For example:
+Since unmemoized values are always redeclared during re-render, we must be careful when using them in a component.
 
-```tsx showLineNumbers
-import { Child } from './Child'
+- Pay attention to the referential equality of variables.
 
-export const Example = () => {
-  // Beware!
-  // This object gets redeclared whenever `Example` re-renders.
-  // highlight-next-line
-  const user = {
-    age: 5,
+  If the value is non-[primitive](https://developer.mozilla.org/en-US/docs/Glossary/Primitive), and it's being used as a prop of a child, the [`memo()`](./optimization-functions#reactmemo) on the child will then lose its effectiveness. For example:
+
+  ```tsx showLineNumbers
+  import { Child } from './Child'
+
+  export const Example = () => {
+    // Beware!
+    // This object gets redeclared whenever `Example` re-renders.
+    // highlight-next-line
+    const user = {
+      age: 5,
+    }
+
+    // Beware!
+    // This function gets redeclared whenever `Example` re-renders, too!
+    // highlight-next-line
+    const sayHi = () => {
+      console.log('Hi')
+    }
+
+    return (
+      <div>
+        {/* highlight-next-line */}
+        <Child user={user} sayHi={sayHi} />
+      </div>
+    )
   }
+  ```
 
-  // Beware!
-  // This function gets redeclared whenever `Example` re-renders, too!
-  // highlight-next-line
-  const sayHi = () => {
-    console.log('Hi')
+- Be careful when using an inner function that returns a JSX element. Consider the following example:
+
+  ```tsx showLineNumbers
+  import { Child } from './Child'
+
+  export const Example = () => {
+    // highlight-next-line
+    const View = () => <Child />
+
+    return (
+      <div>
+        {/* highlight-start */}
+        <View />
+        {View()}
+        {/* highlight-end */}
+      </div>
+    )
   }
+  ```
 
-  return (
-    <div>
-      {/* highlight-next-line */}
-      <Child user={user} sayHi={sayHi} />
-    </div>
-  )
-}
-```
+  In the above example, we declare a function called `View` that returns a JSX element `<Child />`, which is a common pattern. You may not have noticed, but we just defined a function component (`View`) inside another function component (`Example`)!
 
+  Although both `<View />` and `{View()}` will render `<Child />`, because `View` is redeclared every time `Example` re-renders, React will treat `<View />` as a new instance on each render, causing it to be unmounted and mounted again. This can have performance implications if what `View` returns is a complex component.
+
+  <Video src="/video/react/component-rendering_render-method-1.mov" />
+
+  On the other hand, `{View()}` will not be unmounted and mounted again because it is not an element; it is simply the result of calling the `View` function.
+
+  <Video src="/video/react/component-rendering_render-method-2.mov" />
+
+  Therefore, if a function declared in a component returns a JSX element, it is generally recommended to use it like `{View()}` instead of `<View />` to avoid unnecessary unmounting and mounting of the element.
+  
 :::
 
 ### Rendering Is Recursive
@@ -387,7 +423,7 @@ In general, React will process update requests when any of the following conditi
 
 If you don't know what call stack is, don't panic just yet!
 
-Call stack is a part of the [event loop](https://developer.mozilla.org/en-US/docs/Web/JavaScript/EventLoop) in JavaScript. To be honest, it's not really necessary to know it due to the fact that most of the update requests are triggered by user-initiated events (i.e. clicking a button or submitting a form), which will be the first function call in the call stack most the time. That means the call stack will usually be empty when the execution of the event handler is done.
+Call stack is a part of the [event loop](https://developer.mozilla.org/en-US/docs/Web/JavaScript/EventLoop) in JavaScript. To be honest, it's not really necessary to know it due to the fact that most of the update requests are triggered by user-initiated events (i.e. clicking a button or submitting a form), which will be the first function call in the call stack most of the time. That means the call stack will usually be empty when the execution of the event handler is done.
 
 It may sound scary, but it's actually not something very difficult to understand. If you still want to know what call stack or event loop is, we recommend you watch this awesome talk by [Philip Roberts](https://github.com/latentflip). [*What the heck is the event loop anyway?*](https://youtu.be/8aGhZQkoFbQ)
 
@@ -421,7 +457,7 @@ export const Example = () => {
 }
 ```
 
-In this example, `click()` is the `onClick` event handler of the button, which means `click()` will be the only function call in the call stack when the button is clicked. Since `console.log('Done')` is the last action to be done in `click()`, the execution of `click()` will be considered as done after `console.log('Done')` is completed. Thus, React will immediately update the states according to our update request, which is `setCount(1)` once the execution of `click()` is done.
+In this example, `click()` is the `onClick` event handler of the button, which means `click()` will be the only function call in the call stack when the button is clicked. Since `console.log('Done')` is the last action to be done in `click()`, the execution of `click()` will be considered as done after `console.log('Done')` is completed. Thus, React will immediately update the states according to our update request (which is `setCount(1)`) once the execution of `click()` is done.
 
 #### When the Caller of Async Function Resumes Execution
 
