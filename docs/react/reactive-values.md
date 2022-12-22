@@ -48,7 +48,7 @@ export const Example = () => {
 }
 ```
 
-In this example, everytime the "Increment" button is clicked, the value of `count` will be incremented by 1. Since `count` is a reactive value, the component will re-render after it changes, thus "refreshing" the screen with the latest values.
+In this example, everytime the "Increment" button is clicked, the value of `count` will be incremented by `1`. Since `count` is a reactive value, the component will re-render after it changes, thus "refreshing" the screen with the latest values.
 
 <Video src="/video/react/reactive-values_reactive.mov" />
 
@@ -137,4 +137,4 @@ This is why in the above video, nothing seemed to happen when we clicked "Increm
 To avoid the problem we see above, we have to be careful when declaring variables. A simple rule of thumb would be:
 
 - Make it a reactive when the value **will change**, and **users must be informed of this change on the screen**.
-- Otherwise just make it a non-reactive!
+- Otherwise just make it a non-reactive.

@@ -8,7 +8,7 @@ import Badge from '@site/src/widgets/Badge'
 
 # Define a Component
 
-In React, you could use either **classes** or **functions** to define components. They can do almost the same thing, however, we still recommend using **function components** not only because there's less boilerplate but because it's easier to begin with.
+In React, you could use either **classes** or **functions** to define components. Both options can accomplish similar tasks, but we generally recommend using **function components** because they have less boilerplate code and are easier to start with. Additionally, the Hooks API in React only supports function components.
 
 Due to the fact that class components do not appear as often as it did before, and Hooks API can only be used with function components, we will not go deep into class components in this documentation. In addition, we'll use function components instead of class components to explain things when giving examples.
 
@@ -24,7 +24,7 @@ Class components has existed for a long time. Before Hooks API came out, it was 
 
 In class components:
 
-- Component (class) must extend `React.Component<P, S>` to make it a React component; `P` and `S` are optional types for props and state respectively.
+- A class must extend `React.Component<P, S>` to make it a React component; `P` and `S` are optional types for props and state respectively.
 - Props, state, and methods must be accessed using `this` keyword.
 - Props would be the first argument of constructor; we can access props outside constructor using `this.props`.
 - States are stored in an object called `state` which is initiated in the constructor.
@@ -82,7 +82,7 @@ export class App extends Component<IAppProps, IAppState> {
   <Badge variant="success" text="Recommended" />
 </p>
 
-Function components did exist before Hooks API came out, but during that time declaring states in function components was not possible considering functions can't extend classes. Due to this reason, function components were all stateless components that render UI based on given props. Thus, function components were also called "pure components" in the past.
+Function components did exist before Hooks API came out, but during that time declaring states in function components was not possible considering functions can't extend classes. Due to this reason, function components were all stateless components that render UI based on given props.
 
 With the development of Hooks API, function components had gradually replaced class components and become the mainstream. Overall the code in function components is more readable, maintainable, and scalable compared to class components.
 

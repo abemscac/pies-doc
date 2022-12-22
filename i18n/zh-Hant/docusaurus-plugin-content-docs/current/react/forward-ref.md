@@ -1,6 +1,6 @@
 ---
 sidebar_position: 11
-description: Introduce the usage and commonly seen issues of forwardRef() in React.
+description: 介紹 React 中 forwardRef() 的使用方法及常見問題。
 keywords: [piesdoc, react, react forwardRef()]
 ---
 
@@ -8,23 +8,23 @@ import Video from '@site/src/widgets/Video'
 
 # `forwardRef()`
 
-:::caution Prerequisites
+:::caution 先修章節
 
-You must learn [`useRef()`](./use-ref#component-instances) before getting into this chapter.
+建議您在學習完 [`useRef()`](./use-ref#component-instances) 之後再閱讀此章節。
 
 :::
 
-## What Is `forwardRef()`?
+## 什麼是 `forwardRef()`?
 
-`forwardRef()` is a built-in [HOC](https://reactjs.org/docs/higher-order-components.html) that is used to forward the reference of a component to a specific target. To be more specific, it is used to change the default target of reference when `ref` attribute is used on child components.
+`forwardRef()` 是一個內建的 [HOC](https://reactjs.org/docs/higher-order-components.html)，用於「轉發」組件的參考到指定目標上。更明確的說，他是用來改變 `ref` 屬性套用在子元件時的預設目標。
 
-There are two generic types in `forwardRef<T, P>()`; `T` is the type of value being exposed to parent, and `P` is the type of component props.
+`forwardRef<T, P>()` 中有兩個泛型類別；`T` 是要暴露給父元件的值的型別，`P` 是元件屬性的型別。
 
-## Example
+## 範例
 
-`forwardRef()` is essential for us to use `ref` attribute on function-child components. However, unlike how `ref` works on class components, we still can't get the instance of a function component with `forwardRef()` alone. We can only get the instance of a DOM node, or passing the reference down to a deeper component at most.
+`forwardRef()` 對於在子函式元件上使用 `ref` 屬性是不可或缺的。與 `ref` 屬性被應用在在類別元件時不同的是，我們無法光憑 `forwardRef()` 來獲取函式元件的實體。我們最多只能取得某個 DOM 節點的實體，或是將參考傳遞給更深層的組件。
 
-For example, if we have a component like this:
+舉例來說，如果我們有這樣一個元件：
 
 ```tsx title="InputGroup.tsx" showLineNumbers
 import { useRef } from 'react'

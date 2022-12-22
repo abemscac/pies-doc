@@ -6,8 +6,6 @@ keywords: [piesdoc, react, react hooks]
 
 # The Basics of Hooks
 
-The most powerful tool in Hooks API!
-
 ## What Are Hooks?
 
 In React, hooks are **functions that can be called within the root level of any function component**. In a hook, you can do anything you could do in a component, and return anything (or nothing) to fulfill your requirements.
@@ -15,7 +13,7 @@ In React, hooks are **functions that can be called within the root level of any 
 :::info
 
 - You might be wondering what's the difference between a (util) function and a hook, because the statement "functions that can be called within (the root level of) any function component" sounds just like an utility function. Generally speaking, if any React-specific features is used within the function (i.e. `useState()` and `useEffect()`), we would call it a **hook** instead of a normal function.
-- A component and a hook are actually not that different from each other's perspective; if you return a JSX element in a hook, that'll actually make it a component instead of a "hook"!
+- From a syntax perspective, a component and a hook are not really that different. In fact, if you return a JSX element in a hook, it becomes a component rather than a hook!
 
 :::
 

@@ -6,15 +6,15 @@ keywords: [piesdoc, vue3, vue composables, vue tutorial]
 
 # Composables
 
-The most powerful tool in Composition API!
+Composables play a crucial role in Vue 3. With the help of composables, we can combine as many stateful logic as we want within a single component, resulting in a "composition."
 
 ## What Are Composables?
 
-Composables are **functions** that can be called within any component in Vue. In a composable, you can do most of the things you could do in `<script setup>`, and return anything (or nothing) to fulfill your requirements.
+In Vue, composables are **functions** that can be called within the root level of any component. In a composable, you can do most of the things you could do in `<script setup>`, and return anything (or nothing) to fulfill your requirements.
 
 :::info
 
-You might be wondering what's the difference between a (util) function and a composable, because the statement "functions that can be called within any component in Vue" sounds just like an utility function. Generally speaking, if any Vue-specific feature is used within the function (i.e. `ref()` and `onMounted()`), we would call it a **composable** instead of a normal function.
+You might be wondering what's the difference between a (util) function and a composable, because the statement "functions that can be called within the root level of any component in Vue" sounds just like an utility function. Generally speaking, if any Vue-specific feature is used within the function (i.e. `ref()` and `onMounted()`), we would call it a **composable** instead of a normal function.
 
 :::
 
