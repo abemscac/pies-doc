@@ -18,7 +18,7 @@ Generally speaking, if there's no performance issue in your app, don't bother us
 
 ## `memo()`
 
-`memo()` is a built-in [HOC](https://reactjs.org/docs/higher-order-components.html) that is used to create a memoized version of component based on props. A simple interface for `memo()` would look like this:
+`memo()` is a built-in [HOC](https://reactjs.org/docs/higher-order-components.html) that is used to **create a memoized version of component based on props**. A simple interface for `memo()` would look like this:
 
 ```tsx showLineNumbers
 const memo = (
@@ -98,9 +98,9 @@ This way `Child` will never re-render when `Parent` re-renders, because the `are
 
 If a component is memoized by `memo()`, is it correct to say that as long as the result of `arePropsEqual()` is truthy, the component will never re-render?
 
-**No, that's not true!** We know that a component re-renders when any [reactive value](./reactive-values) changes, but props is not the only reactive value in a component. `memo()` only functions when the re-render is triggered by parent component, that is, when parent component re-renders. If the re-render is triggered by a non-prop reactive value, the component will still re-render.
+**No, that's not true!** We know that a component re-renders when any [reactive value](./reactive-values) changes, but props is not the only reactive value in a component. `memo()` only functions when the re-render is triggered by parent component, that is, when parent component re-renders. If the re-render is triggered by a non-prop reactive value (i.e. a state), the component will still re-render.
 
-Think of it this way: `memo()` memoizes neither the output HTML nor the snapshot of a component; instead, it acts like a pointer to a rendered component. When the result of `arePropsEqual()` is falsy, a new instance of the component will be created, and the pointer will change from the old instance to new the new one.
+Think of it this way: `memo()` memoizes neither the output HTML nor the snapshot of a component; instead, it acts like a pointer to a specific instance of a component. When the result of `arePropsEqual()` is falsy, a new instance of the component will be created, and the pointer will change from the old instance to new the new one.
 
 :::
 
@@ -131,7 +131,7 @@ const something = useMemo(() => {
 - React calls `callback` and memoizes the result in the first render.
 - When the component re-renders, React will use [`Object.is()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is) to check if every element in `dependencies` is the same between two renders.
   - If all elements are the same, `useMemo()` will return the memoized value.
-  - Otherwise `useMemo()` will call `callback` again, and replace the previously memoized value with the new one.
+  - Otherwise `callback` will be called, and and the previously memoized value will be replaced by the new one.
 
 ### When to `useMemo()`?
 
@@ -280,7 +280,7 @@ Yes, we can! Similar to [`memo()`](#memo), the memoized component will still re-
 
 :::
 
-It's important to note that **the function passed to `useMemo()` should not have side effects**, such as mutating variables or sending API requests. The function should be pure, meaning that it should return the same result for the same set of inputs without impacting any other variables.
+It's important to note that **the `callback` being passed to `useMemo()` should not have side effects**, such as mutating variables or sending API requests. The function should be pure, meaning that it should return the same result for the same set of inputs without impacting any other variables.
 
 ## `useCallback()`
 
@@ -303,7 +303,7 @@ const myFunction = useCallback(() => {
 - React memoizes `callback` in the first render.
 - When the component re-renders, React will use [`Object.is()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is) to check if every element in `dependencies` is the same between two renders.
   - If all elements are the same, `useCallback()` will return the memoized value.
-  - Otherwise `useCallback()` will replaced the previously memoized value with `callback`.
+  - Otherwise the previously memoized value will be replaced by the new `callback`.
 
 For example:
 
@@ -347,7 +347,25 @@ export const Example = () => {
 
 In this example, at the start, "Show Count" and "Show Count (Memoized)" both display `0` in the console after click. After "Increment" is clicked three times, "Show Count" now shows `3`, but "Show Count (Memoized)" still shows `0`.
 
-This happens because in the first render, the value of `count` is `0`, so all `count` in `memoizedShowCount()` are replaced by `0`. Since we didn't put anything in the dependency array of `useCallback()`, the `count` in `memoizedShowCount()` will never be updated, thus shows `0` when called.
+This happens because in the first render, the value of `count` is `0`, so all `count` in the component are replaced by `0`. Since we didn't put anything in the dependency array of `useCallback()`, the `count` in `memoizedShowCount()` will never be updated, thus shows `0` when called.
+
+:::info
+
+It's worth noting that `useCallback()` does not stop `callback` from being declared again. Instead, it ensures that the value returned refers to the same function as before. For example:
+
+```ts showLineNumbers
+import { useCallback } from 'react'
+
+const click = useCallback(
+  // highlight-next-line
+  () => { ... },
+  []
+)
+```
+
+In this example, `click()` and `() => { ... }` are still being redeclared within every render; it's just that the value returned by `useCallback()` always refers to the same function as before.
+
+:::
 
 ### When to `useCallback()`?
 
