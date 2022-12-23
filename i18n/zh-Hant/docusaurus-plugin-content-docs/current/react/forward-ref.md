@@ -16,13 +16,13 @@ import Video from '@site/src/widgets/Video'
 
 ## 什麼是 `forwardRef()`?
 
-`forwardRef()` 是一個內建的 [HOC](https://reactjs.org/docs/higher-order-components.html)，用於「轉發」組件的參考到指定目標上。更明確的說，他是用來改變 `ref` 屬性套用在子元件時的預設目標。
+`forwardRef()` 是一個內建的 [HOC](https://reactjs.org/docs/higher-order-components.html)，用於「轉發」元件的參考到指定目標上。更明確的說，他是用來**改變 `ref` 屬性套用在子元件時的預設目標**。
 
-`forwardRef<T, P>()` 中有兩個泛型類別；`T` 是要暴露給父元件的值的型別，`P` 是元件屬性的型別。
+`forwardRef<T, P>()` 中有兩個泛型型別；`T` 是要暴露給父元件的值的型別 (也就是父元件中 `useRef<T>` 的 `T`)，`P` 是子元件屬性的型別。
 
 ## 範例
 
-`forwardRef()` 對於在子函式元件上使用 `ref` 屬性是不可或缺的。與 `ref` 屬性被應用在在類別元件時不同的是，我們無法光憑 `forwardRef()` 來獲取函式元件的實體。我們最多只能取得某個 DOM 節點的實體，或是將參考傳遞給更深層的組件。
+`forwardRef()` 對於在子函式元件上使用 `ref` 屬性是不可或缺的。與 `ref` 屬性被應用在在類別元件時不同的是，我們無法光憑 `forwardRef()` 來獲取函式元件的實體。我們最多只能取得某個 DOM 節點的實體，或是將參考傳遞給更深層的元件。
 
 舉例來說，如果我們有這樣一個元件：
 
@@ -121,7 +121,7 @@ export const Parent = () => {
 <Video src="/video/react/forward-ref_1.mov" />
 
 <details>
-  <summary><code>forwardRef()</code>能用在類別元件身上嗎？</summary>
+  <summary><code>forwardRef()</code> 能用在類別元件身上嗎？</summary>
 
   可以，但是我們不建議這麼做；為了讓他動起來，一些怪招數是無法避免的。舉例來說：
 
@@ -157,11 +157,11 @@ export const Parent = () => {
 
   為了取得 `forwardRef()` 中的 `ref` 並在類別元件中使用，我們得將類別元件定義在 `forwardRef()` 之中 (或是做差不多的事情)。
   
-  此外，在這個範例中，由於 `MyComponent` (它是一個元件) 被定義在 `InputGroup` (它也是一個元件) 中，每次 `InputGroup` 重新渲染，`MyComponent` 就會被重新定義；代表「舊的」`<MyComponent {...props} />` 會被卸載，「新的」`<MyComponent {...props} />` 會被掛載，導致我們失去 `MyComponent` 中所有的狀態。
+  此外，在這個範例中，由於 `MyComponent` (它是一個元件) 被定義在 `InputGroup` 中 (也是一個元件)，每次 `InputGroup` 重新渲染，`MyComponent` 就會被重新定義；代表「舊的」`<MyComponent {...props} />` 會被卸載，「新的」`<MyComponent {...props} />` 會被掛載，導致我們失去 `MyComponent` 中所有的狀態。
 
   <Video src="/video/react/forward-ref_with-class-component.mov" />
 
-  要解決這個問題，最簡單的辦法就是在第一次渲染之前將 `MyComponent` 的定義記下來，並且從那時起只使用它來進行渲染。例如：
+  要解決這個問題，最簡單的解決方法就是在第一次渲染之前將 `MyComponent` 的定義記下來，並且從那時起只使用它來進行渲染。例如：
 
   ```tsx title="InputGroup.tsx" showLineNumbers
   import { Component, forwardRef } from 'react'
@@ -192,21 +192,21 @@ export const Parent = () => {
 
 ## `useImperativeHandle()`
 
-Even though the name makes it sound like it's something related to event handling or drag and drop, it actually has nothing to do with them. `useImperativeHandle()` is a **hook** that is used to change the value being exposed to parent when `ref` attribute is used on child components; this hook must be used together with `forwardRef()` (because that's the only way to get the `ref` being passed down from parent).
+雖然他的名字聽起來好像和事件監聽或是拖拉功能有關，但其實一點關係也沒有。`useImperativeHandle()` 是一個內建的鉤子 (hook)，用於**改變子元件的 `ref` 屬性暴露給父元件的值**；這個鉤子必須和 `forwardRef()` 一起使用 (因為那是唯一一個能在子元件取得 `ref` 屬性值的方法)。
 
-- There are three arguments in `useImperativeHandle()`:
-  1. The `ref` being passed down from parent; that is, the second argument of `forwardRef()`.
-  2. A function that returns the value to be exposed to parent (the result).
-  3. An optional dependency array that determines when should the result be re-computed; by default it's `undefined`, which means it re-computes within every render (same as [`useEffect()`](./use-effect)).
-- There are two optional generic types in `useImperativeHandle<T, R extends T>()`; `T` is the type of reference (the `T` in `useRef<T>()` from parent), and `R` is the type of value to be exposed to parent which must extends `T`.
+- `useImperativeHandle()` 中有三個參數，分別為：
+  1. 從父元件傳遞下來的 `ref` 屬性；也就是 `forwardRef()` 的第二個參數。
+  2. 一個用於暴露數值給父元件的函式。
+  3. 一個非必要的依賴值陣列 `dependencies`，用於決定被暴露的數值何時該被重新計算。類似於 [`useEffect()`](./use-effect#useeffect-是如何運作的)，`dependencies` 的預設值為 `undefined`，代表被暴露的數值會在元件重新渲染時重新計算。
+- `useImperativeHandle<T, R extends T>()` 中有兩個泛型別；`T` 是參考的型別 (就是父元件中 `useRef<T>` 的 `T`)，`R` 則是被暴露的值的型別，必須擴展 (extends) `T`。
 
-The way `useImperativeHandle()` works is like "intercepting" the `ref` and returning anything we want to expose to parent.
+`useImperativeHandle()` 的運作方式就像是把`ref`「攔截」下來，並回傳任何我們想要曝光給父元件的值。
 
-### Example
+### `useImperativeHandle()` 範例
 
-With the help of `useImperativeHandle()`, we can now call the methods defined in children from parent, just like what `ref` attribute could do on class components.
+在 `useImperativeHandle()` 的幫助下，我們現在能從父元件呼叫定義在子元件中的方法，就像類別元件的 `ref` 屬性那樣。
 
-We cannot stress this enough; **only use this when standard props/states cannot fulfill your requirements, or when using standard props/states is inconvenient**. The example below is the function component version of [one of the example](./use-ref#component-instances) we've mentioned in `useRef()`.
+我們必須在強調一次，這個作法只該在**標準的屬性/狀態無法達成您的需求，或是標準的屬性/狀態不便使用時**才被使用。下方是我們在 [`useRef()`](./use-ref) 章節中提到的[其中一個範例](./use-ref#元件實體)，但是使用函式元件的寫法。
 
 ```tsx title="Parent.tsx" showLineNumbers
 import { useRef } from 'react'
@@ -226,7 +226,9 @@ export const Parent = () => {
     <div>
       {/* highlight-next-line */}
       <Child ref={child} />
-      <button onClick={makeChilGetOld}>Make Child Get Old</button>
+      <button onClick={makeChilGetOld}>
+        Make Child Get Old
+      </button>
     </div>
   )
 }

@@ -42,19 +42,21 @@ export const Example = () => {
   return (
     <div>
       <h1>Count: {count}</h1>
-      <button onClick={increment}>Increment</button>
+      <button onClick={increment}>
+        Increment
+      </button>
     </div>
   )
 }
 ```
 
-在這個範例中，每次 "Increment" 按鈕被點擊，`count` 的數值都會增加 `1`。由於 `count` 是一個響應式數值，元件將會在他改變之後進行重新渲染，因此使用最新的數值「刷新」畫面。
+在這個範例中，每次 "Increment" 按鈕被點擊，`count` 的數值都會增加 `1`。由於 `count` 是一個響應式數值，元件將會在他改變之後進行重新渲染，使用最新的數值「刷新」畫面。
 
 <Video src="/video/react/reactive-values_reactive.mov" />
 
 然而，您可能已經注意到主控台中顯示的數值總是和畫面上顯示的數值不同。好消息是，這不是一個 bug，但是這的確讓大家很困惑！我們會在[元件渲染](./component-rendering)章節中解釋這一點，現在先不用擔心他。
 
-此外，若您還不知道 [`useState()`](./use-state) 是做什麼的也沒關係。只要記得響應式數值的改變會導致元件重新渲染，這樣就沒問題了！
+此外，若您還不知道 [`useState()`](./use-state) 是做什麼的也有沒關係。只要記得響應式數值的改變會導致元件重新渲染就好了！
 
 ### 非響應式數值
 
@@ -75,7 +77,9 @@ export const Example = () => {
     <div>
       <div>
         <h1>Count: {count}</h1>
-        <button onClick={increment}>Increment</button>
+        <button onClick={increment}>
+          Increment
+        </button>
       </div>
     </div>
   )
@@ -130,11 +134,11 @@ export const Example = () => {
 - 點擊 "Increment Count" 會修改 `count` 的數值，導致元件重新渲染。
 - 點擊 "Increment Age" 會修改 `age` 的數值，但是這**不會**導致元件重新渲染。
 
-這就是為什麼在上面的影片中，點擊 "Increment Age" 三次之後看似什麼事都沒發生，隨後我們點擊 "Increment Count" 一次，畫面就突然從 `Age: 0` 變成 `Age: 3` 了，非常令人困惑。
+這就是為什麼在上面的影片中，點擊 "Increment Age" 三次之後看似什麼事都沒發生，隨後我們點擊一次 "Increment Count"，畫面就突然從 `Age: 0` 變成 `Age: 3`，非常令人困惑。
 
-## 何時該將變數宣告為響應式
+## 何時該將變數宣告為響應式數值
 
-為了避免我們在上面看見的問題，在宣告變數時我們必須小心。簡單判斷基準是：
+為了避免我們在上方看見的問題，在宣告變數時我們必須小心。簡單判斷基準是：
 
 - 若某個數值**會發生變化**，而且**使用者必須在畫面上觀察到他的變化**，那麼就將他宣告為響應式數值。
 - 否則就將他宣告為非響應式數值。

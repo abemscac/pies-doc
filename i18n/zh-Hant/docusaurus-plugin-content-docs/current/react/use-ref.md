@@ -20,7 +20,7 @@ import Video from '@site/src/widgets/Video'
 
 `useRef()` 是一個內建的鉤子 (hook)，接收一個任意型別的參數，並回傳該參數的**參考 (reference)**。在 React 中，「參考」指的是**可以在渲染循環中保留變數值的非響應式物件**。
 
-請參考以下範例：
+請看以下範例：
 
 ```tsx showLineNumbers
 export const Example = () => {
@@ -55,9 +55,9 @@ export const Example = () => {
 
 在上面的範例中，`count` 的數值**不會**隨著 `Example` 的重新渲染而被重置為 `0`。
 
-然而，由於參考是非響應式的，代表改變它**並不會**造成元件重新渲染。此外，和狀態 (state) 不同的是，參考的改變是立即的－我們不需要等到下一次渲染才能拿到更新後的數值。這使得 `useRef()` 非常適合用在當我們想要在不同的渲染中保留變數值，但是又不希望元件因為變數的數值改變而重新渲染的情況。
+然而，由於參考是非響應式的，改變它**並不會**造成元件重新渲染。此外，和狀態 (state) 不同的是，參考的改變是立即的－我們不需要等到下一次渲染才能拿到更新後的數值。這使得 `useRef()` 非常適合用在當我們想要在不同的渲染中保留變數值，但是又不希望元件因為變數值的改變而重新渲染的情況。
 
-更重要的事，**參考給我們的數值永遠會是最新的，即使是在被記憶起來的函式中也一樣**。以 [`useCallback()`](./optimization-functions#usecallback) 為例：
+更重要的是，**參考給我們的數值永遠會是最新的，即使是在被記憶起來的函式中也一樣**。以 [`useCallback()`](./optimization-functions#usecallback) 為例：
 
 ```ts showLineNumbers
 import { useRef, useCallback } from 'react'
@@ -79,7 +79,7 @@ const logName = useCallback(() => {
 
 請注意，由於參考是非響應式的，任何依賴於他的副作用 (`useEffect()`、`useMemo()` 或 `useCallback()`) 在參考改變時都**不會**被執行，除非在同一時間依賴值陣列中有任何響應式數值發生變化。舉例來說：
 
-- 在下面的範例中，無論 `name.current` 改變多少次，副作用都不會執行：
+- 在下面的範例中，無論 `name.current` 改變多少次，副作用都不會再次執行：
   ```ts showLineNumbers
   import { useRef, useEffect } from 'react'
 
@@ -90,7 +90,7 @@ const logName = useCallback(() => {
   // highlight-next-line
   }, [name.current])
   ```
-- 在下面的範例中，`name.curent` 的改變不會導致副作用被執行，但是 `age` 則會！
+- 在下面的範例中，`name.curent` 的改變不會導致副作用被執行，但是 `age` 會！
   ```ts showLineNumbers
   import { useState, useRef, useEffect } from 'react'
 
@@ -307,9 +307,9 @@ export class Child extends Component<IChildProps, IChildState> {
 
 與建立 DOM 節點的參考時相同，這個作法只該在**標準的屬性/狀態無法達成您的需求，或是標準的屬性/狀態不便使用時**才被使用。這種情況在整合第三方元件到我們的應用程式的時候較常發生。
 
-### TODO: Uncontrolled Components
+### 未被控制的元件 (Uncontrolled Components)
 
-在處理表單時 (像是 `<input>`、`<textarea>`、豐富文本編輯器等等)，開發人員多半會選擇使用 `useState()` 來進行所有的處理。然而，依據狀態使用的情境不同，有時候使用 `useRef()` 會是比較好的選擇。舉例來說：
+在處理表單時 (像是 `<input>`、`<textarea>`、豐富文本編輯器等等)，開發人員多半會選擇使用 `useState()` 來進行所有的處理。然而，依據狀態使用的情境不同，有時候 `useRef()` 會是比較好的選擇。舉例來說：
 
 ```tsx showLineNumbers
 import { useState, FormEvent, ChangeEvent } from 'react'
@@ -344,8 +344,8 @@ export const Example = () => {
 
 - `name` 並沒有被顯示在畫面上。
 - `name` 並不是任何副作用的依賴值。
-- 我們沒有使 `<input>` 成為一個 TODO: controlled component。換句話說，`<input>` 裡面的數值並不受 `name` 影響。
-- 由於 `name` 是一個狀態，改變他將會導致元件重新渲染。這代表隨著每個字元的輸入，所有未被記憶的子元件都會重新渲染，導致效能不佳。有時甚至 `onBlur` 也救不了你。
+- 我們沒有使 `<input>` 成為一個被控制的元件 (controlled component)。換句話說，`<input>` 裡面的數值並不受 `name` 影響。
+- 由於 `name` 是一個狀態，改變他將會導致元件重新渲染。這代表隨著每個字元的輸入，所有未被記憶的子元件都會重新渲染，導致效能不佳。有時甚至連 `onBlur` 也救不了你。
 
 基於以上原因，在這個範例中，使用 `useRef()` 來宣告 `name` 會比使用 `useState()` 來得更理想：
 
@@ -494,4 +494,4 @@ export const Example = ({ something }: IExampleProps) => {
 
 ## 何時該使用 `useRef()`？
 
-綜上所述，當您需要在渲染之間保留變數數值，同時又不希望元件在該數值改變後重新渲染，`useRef()` 會是個合適的選擇。函式和計時器 (`setTimeout()` 和 `setInterval()` 的回傳值) 就是兩個常見的範例。
+綜上所述，當您需要在渲染之間保留變數值，同時又不希望元件在該數值改變後重新渲染，`useRef()` 會是個合適的選擇。函式和計時器 (`setTimeout()` 和 `setInterval()` 的回傳值) 就是兩個常見的範例。

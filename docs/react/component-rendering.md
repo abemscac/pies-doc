@@ -66,7 +66,7 @@ In this example, we use three `console.log()` successively to print out the valu
 
 <Video src="/video/react/component-rendering_state-with-timeout.mov" />
 
-From one of the example in [Reactive Values](./reactive-values#reactive-values-1), we already know that changes made by functions like `setState()` will not be applied immediately, so currently it's acceptable to see the second `console.log()` showing `0` (we'll talk about the real cause [below](#when-will-reactive-values-be-updated)!) But why is it that in the video, when we clearly see the number on the screen has changed from `0` to `5`, the last `console.log()` still shows `0`?
+From [one of the example](./reactive-values#reactive-values-1) in [Reactive Values](./reactive-values), we already know that changes made by functions like `setState()` will not be applied immediately, so currently it's acceptable to see the second `console.log()` showing `0` (we'll talk about the real cause [below](#when-will-reactive-values-be-updated)!) But why is it that in the video, when we clearly see the number on the screen has changed from `0` to `5`, the last `console.log()` still shows `0`?
 
 In React, a component does not wait until you need to use a reactive value to read it; instead, in each render, **it reads reactive values and use them to define everything first**, then it shows stuff on the screen.
 
@@ -262,7 +262,7 @@ Since unmemoized values are always redeclared during re-render, we must be caref
 
   In the above example, we declare a function called `View` that returns a JSX element `<Child />`, which is a common pattern. You may not have noticed, but we just defined a function component (`View`) inside another function component (`Example`)!
 
-  Although both `<View />` and `{View()}` will render `<Child />`, because `View` is redeclared every time `Example` re-renders, React will treat `<View />` as a new instance on each render, causing it to be unmounted and mounted again. This can have performance implications if what `View` returns is a complex component.
+  Although both `<View />` and `{View()}` will render `<Child />`, because `View` function is redeclared every time `Example` re-renders, React will treat `<View />` as a new instance on each render, causing it to be unmounted and mounted again. This can have performance implications if what `View` returns is a complex component.
 
   <Video src="/video/react/component-rendering_render-method-1.mov" />
 

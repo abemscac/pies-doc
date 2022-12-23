@@ -16,7 +16,7 @@ You must learn [`useRef()`](./use-ref#component-instances) before getting into t
 
 ## What Is `forwardRef()`?
 
-`forwardRef()` is a built-in [HOC](https://reactjs.org/docs/higher-order-components.html) that is used to forward the reference of a component to a specific target. To be more specific, it is used to change the default target of reference when `ref` attribute is used on child components.
+`forwardRef()` is a built-in [HOC](https://reactjs.org/docs/higher-order-components.html) that is used to forward the reference of a component to a specific target. To be more specific, it is used to **change the default target of reference when `ref` attribute is used on child components**.
 
 There are two generic types in `forwardRef<T, P>()`; `T` is the type of value being exposed to parent, and `P` is the type of component props.
 
@@ -192,12 +192,12 @@ export const Parent = () => {
 
 ## `useImperativeHandle()`
 
-Even though the name makes it sound like it's something related to event handling or drag and drop, it actually has nothing to do with them. `useImperativeHandle()` is a **hook** that is used to change the value being exposed to parent when `ref` attribute is used on child components; this hook must be used together with `forwardRef()` (because that's the only way to get the `ref` being passed down from parent).
+Even though the name makes it sound like it's something related to event handling or drag and drop, it actually has nothing to do with them. `useImperativeHandle()` is a built-in hook that is used to **change the value being exposed to parent when `ref` attribute is used on child components**; this hook must be used together with `forwardRef()` (because that's the only way to get the `ref` being passed down from parent).
 
 - There are three arguments in `useImperativeHandle()`:
   1. The `ref` being passed down from parent; that is, the second argument of `forwardRef()`.
-  2. A function that returns the value to be exposed to parent (the result).
-  3. An optional dependency array that determines when should the result be re-computed; by default it's `undefined`, which means it re-computes within every render (same as [`useEffect()`](./use-effect)).
+  2. A function that is used to expose a value to parent.
+  3. An optional dependency array `dependencies` that determines when should the exposed value be re-computed. Similar to [`useEffect()`](./use-effect), by default `dependencies` is `undefined`, meaning the exposed value is re-computed within every render.
 - There are two optional generic types in `useImperativeHandle<T, R extends T>()`; `T` is the type of reference (the `T` in `useRef<T>()` from parent), and `R` is the type of value to be exposed to parent which must extends `T`.
 
 The way `useImperativeHandle()` works is like "intercepting" the `ref` and returning anything we want to expose to parent.
@@ -206,7 +206,7 @@ The way `useImperativeHandle()` works is like "intercepting" the `ref` and retur
 
 With the help of `useImperativeHandle()`, we can now call the methods defined in children from parent, just like what `ref` attribute could do on class components.
 
-We cannot stress this enough; **only use this when standard props/states cannot fulfill your requirements, or when using standard props/states is inconvenient**. The example below is the function component version of [one of the example](./use-ref#component-instances) we've mentioned in `useRef()`.
+We cannot stress this enough; **only use this when standard props/states cannot fulfill your requirements, or when using standard props/states is inconvenient**. The example below is the function component version of [one of the example](./use-ref#component-instances) we've mentioned in [`useRef()`](./use-ref).
 
 ```tsx title="Parent.tsx" showLineNumbers
 import { useRef } from 'react'
@@ -226,7 +226,9 @@ export const Parent = () => {
     <div>
       {/* highlight-next-line */}
       <Child ref={child} />
-      <button onClick={makeChilGetOld}>Make Child Get Old</button>
+      <button onClick={makeChilGetOld}>
+        Make Child Get Old
+      </button>
     </div>
   )
 }

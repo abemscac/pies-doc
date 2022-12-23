@@ -1,12 +1,13 @@
 ---
 sidebar_position: 7
+title: 深入 useState()
 description: 介紹 React 中 useState() 的進階機制。
 keywords: [piesdoc, react, react useState()]
 ---
 
 import Video from '@site/src/widgets/Video'
 
-# 深入了解 `useState()`
+# 深入 `useState()`
 
 :::caution 先修章節
 
@@ -18,7 +19,7 @@ import Video from '@site/src/widgets/Video'
 
 :::info
 
-請務必看看這個由 [Dan Abramov](https://github.com/gaearon) 撰寫關於批量處理狀態更新的[文章](https://github.com/reactwg/react-18/discussions/21)！這個小節中大部分的資訊都只是在用另外一種方法表現該文章所傳達的內容。
+請務必看看這個由 [Dan Abramov](https://github.com/gaearon) 撰寫關於[批量處理狀態更新的文章](https://github.com/reactwg/react-18/discussions/21)！這個小節中大部分的內容都只是在用另外一種方法表現出該文章所傳達的內容。
 
 :::
 
@@ -42,9 +43,9 @@ const [state, setState] = useState({
 // highlight-end
 ```
 
-**在大部分情況下沒什麼差別**。我們會這麼說是因為 React 預設會批量處理狀態更新。
+**在大部分情況下其實沒什麼差別**。我們會這麼說是因為 React 預設會批量處理狀態更新。
 
-在 React 中，「批量處理 (batching)」指的是**將多個狀態更新合併的過程**。在 React 17之前，只有在 **React 事件處理程序 (React event handlers)** 中的狀態更新會被批量處理。從 React 18 開始，所有的狀態更新預設都會被批量處理。
+在 React 中，「批量處理 (batching)」指的是**將多個狀態更新合併的過程**。在 React 17 之前，只有在 **React 事件處理程序 (React event handlers)** 中的狀態更新會被批量處理。從 React 18 開始，所有的狀態更新預設都會被批量處理。
 
 <details>
   <summary>什麼是 React 事件處理程序？</summary>
@@ -53,11 +54,11 @@ const [state, setState] = useState({
 
   <img src="/img/react/use-state-in-depth_react-event-handler-hover.png" alt="How to check if a handler prop is React event handler in VSCode" />
 
-  您也可以在宣告檔案 (declaration file) 中看見所有的類別：
+  您也可以在宣告檔案 (declaration file) 中看見所有的型別：
 
   <img src="/img/react/use-state-in-depth_react-event-handler-type.png" alt="React event handler declaration file" />
 
-  絕大部分的原生事件都已經被 React 處理好了，像是`onClick()`、`onChange()`、`onBlur()`、`onDrag()`、`onSubmit()`等等。生命週期鉤子 (life-cycle hooks) 如 `componentDidMount()` 和 `useEffect()` 也都屬於 React 事件處理程序。
+  絕大部分的原生事件都屬於 React 事件處理程序，像是`onClick()`、`onChange()`、`onBlur()`、`onDrag()`、`onSubmit()`等等。生命週期鉤子 (life-cycle hooks) 如 `componentDidMount()` 和 `useEffect()` 也都屬於 React 事件處理程序。
 </details>
 
 
@@ -103,17 +104,17 @@ const updateData = () => {
 }
 ```
 
-在這個範例中，即使有這麼多個 `setState()` 在 `updateData()` 中被呼叫，元件仍然只會重新渲染**一次**。
+在這個範例中，即便有這麼多個 `setState()` 在 `updateData()` 中被呼叫，元件仍然只會重新渲染**一次**。
 
 <Video src="/video/react/use-state-in-depth_batching-2.mov" />
 
 為什麼？
 
-如果我們仔細想想，這其實挺合理的。在上面的範例中，當 `count` 的數值從 `0` 一路被更新到 `3` 時，我們不會想要使用者在畫面上看見快速的閃爍。既然我們知道最後被傳遞給 `setCount()` 的數值是 `3`，我們大可以跳過前面所有的數值，直接將 `count` 的值更新到 `3`。同樣的道理也可以套用在 `name` 身上。
+如果我們仔細想想，這其實挺合理的。在上面的範例中，當 `count` 的數值從 `0` 一路被更新到 `3` 時，我們不會想要使用者在畫面上看見快速的閃爍。既然我們知道最後被傳遞給 `setCount()` 的數值是 `3`，我們大可以跳過前面的數值，直接將 `count` 的值更新到 `3`。同樣的道理也可以套用在 `name` 身上。
 
 此外，在所有的[更新請求](./component-rendering#更新請求)都被處理完成後，React 就會知道該被更新的狀態是 `name` 和 `count`。為了將重新渲染的次數減到最少，同時避免使用者在畫面上看見任何閃爍，React 會同時更新這兩個狀態，而不是單獨更新他們。
 
-下面的動畫說明了在上面的範例中，狀態是如何被更新的。雖然動畫中的實作和 React 的實作不完全相同，但它應該能讓您大致了解元件中的渲染循環是如何進行的。
+下面的動畫說明了在上面的範例中，狀態是如何被更新的。雖然動畫中的實作和 React 的實作不太一樣，但它應該能讓您大致了解元件中的渲染循環是如何進行的。
 
 :::info
 
@@ -125,16 +126,16 @@ const updateData = () => {
 
 - 在首次渲染之前：
   - 元件中的所有狀態都會被存入一個虛擬的 `states` 物件當中。
-  - 一個名為 `updateRequests` 的虛擬物件會被建立，用來存放所有尚未處理的[更新請求](./component-rendering#更新請求)。
+  - 一個名為 `updateRequests` 的虛擬物件會被建立，用來存放所有尚未處理的更新請求。
   - 一個名為 `patches` 的虛擬物件會被建立，用來存放 `states` 在下一次渲染中的值。
 - 當 `setState()` 被呼叫時，該參數 (數值或是函式) 會被放入該狀態在 `updateRequests` 中所對應的陣列裡。
-- 針對每個狀態，React 依據他們各自的更新請求計算出他們在下一次渲染中的值並放入 `patches` 中，然後清除 `updateRequests` 和 `patches`。
+- 針對每個狀態，React 會依據他們各自的更新請求計算出他們在下一次渲染中的值，將他們放入 `patches` 中，然後清除 `updateRequests` 和 `patches`。
 
 在那之後，React 會依據 `states` 中的值更新 DOM 節點，然後等待下一個[處理更新請求的時機](./component-rendering#響應式數值何時會被更新)。
 
 ## 更新函式 (Updater Functions)
 
-在 React 中，更新函式指的是**被傳遞給 [`setState()](./use-state#setstate) 的函式**。若我們需要依據某個狀態先前的數值做更新，或是當狀態是一個非原始型別的數值 (像是物件或是陣列)，更新函式就會派上用場。
+在 React 中，更新函式指的是**被傳遞給 [`setState()`](./use-state#setstate) 的函式**。若我們需要依據某個狀態先前的數值做更新，或是當該狀態是一個非原始型別的數值 (像是物件或是陣列)，更新函式就會派上用場。
 
 請看以下範例：
 
@@ -185,7 +186,7 @@ const updateCount = () => {
 
 ## 該傳遞數值還是更新函式？
 
-**在大部分情況下沒什麼差別**。大部分的開發人員頻繁使用更新函式，因為它是一種方便、可靠的方法，可以依據狀態先前的值來更新狀態，而無需擔心其他事情。但是依據情況的不同，您也許不見得需要更新函式。請看以下範例：
+**在大部分情況下沒什麼差別**。大部分的開發人員頻繁使用更新函式，因為它是一種方便、可靠的方法，可以依據狀態先前的值來更新狀態，而無需擔心其他事情。但是依據情況的不同，您不見得需要使用更新函式。請看以下範例：
 
 ```ts showLineNumbers
 import { useState } from 'react'
@@ -204,7 +205,7 @@ const updateUser = (name, value) => {
 }
 ```
 
-在上面的範例中，即使我們沒有使用更新函式，`updateUser()` 仍然保證會取得 `user` 最即時的數值。因為 `user` 是一個狀態，它的改變會造成元件重新渲染，`updateUser()` 也會隨之重新宣告。但是若您還是想要在每個地方都使用更新函式，那也沒問題，它通常不會破壞任何東西！
+在這個範例中，即使我們沒有使用更新函式，`updateUser()` 仍然保證會取得 `user` 最即時的數值。因為 `user` 是一個狀態，它的改變會造成元件重新渲染，`updateUser()` 也會隨之重新宣告。但是若您還是想要在每個地方都使用更新函式，那也沒問題，它通常不會破壞任何東西！
 
 使用更新函式的優點之一是，即使在不便存取狀態的情況下，它也能依據狀態先前的數值做更新。舉例來說：
 

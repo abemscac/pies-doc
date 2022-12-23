@@ -124,7 +124,7 @@ If you're interested in how state updates are processed in React, please refer t
 
 - Before the first render:
   - All states in a component are stored in an imaginary object called `states`.
-  - An imaginary object called `updateRequests` is created to hold all of the unprocessed [update requests](./component-rendering#update-requests).
+  - An imaginary object called `updateRequests` is created to hold all of the unprocessed update requests.
   - An imaginary object called `patches` is created to hold the values of `states` for the next render.
 - Every time `setState()` is called, the parameter (a value or a function) is pushed to the corresponding array in `updateRequests`.
 - For each state, React evaluates the output based on the update requests and put it in `patches`. Once all update requests have been processed, React copies all the properties from `patches` to `states` and clears `updateRequests` and `patches`.

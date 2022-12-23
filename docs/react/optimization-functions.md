@@ -54,7 +54,7 @@ Therefore, **the effect of `memo()` is only to be seen when the memoized compone
 
 ### When to `memo()`?
 
-Usually `memo()` is used when the rendering of a component is expensive, and some props are causing unnecessary re-renders. This usually happenes when parent component re-renders frequently (i.e. when drag and drop is involved) or when a child component is bulky (i.e. editor-ish component).
+Usually `memo()` is used when the rendering of a component is expensive, and some props are causing unnecessary re-renders. This usually happens when parent component re-renders frequently (i.e. when drag and drop is involved) or when a child component is bulky (i.e. editor-ish component).
 
 The following example is the solution to [the problem](./component-rendering#rendering-is-recursive) we've described in [Component Rendering](./component-rendering), but in `memo()` version:
 
@@ -100,7 +100,7 @@ If a component is memoized by `memo()`, is it correct to say that as long as the
 
 **No, that's not true!** We know that a component re-renders when any [reactive value](./reactive-values) changes, but props is not the only reactive value in a component. `memo()` only functions when the re-render is triggered by parent component, that is, when parent component re-renders. If the re-render is triggered by a non-prop reactive value (i.e. a state), the component will still re-render.
 
-Think of it this way: `memo()` memoizes neither the output HTML nor the snapshot of a component; instead, it acts like a pointer to a specific instance of a component. When the result of `arePropsEqual()` is falsy, a new instance of the component will be created, and the pointer will change from the old instance to new the new one.
+Think of it this way: `memo()` memoizes neither the output HTML nor the snapshot of a component; instead, it acts like a pointer to a specific instance of a component. When the result of `arePropsEqual()` is falsy, a new instance of the component will be created, and the pointer will change from the old instance to new the new one. Therefore, changes that happen in a component can still work without being affected by `memo()`.
 
 :::
 

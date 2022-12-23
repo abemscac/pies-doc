@@ -10,7 +10,7 @@ import Video from '@site/src/widgets/Video'
 
 ## 什麼是 `useEffect()`?
 
-`useEffect()` 是一個具有多種功能的內建鉤子 (hook)。`useEffect()` 中的 "Effect" 指的是**副作用 (side effect)**，依據情況的不同有不同的意思。在 React 中，在沒有涉及任何第三方套件或是框架的情況下，「副作用」指的通常是間接被執行 (修改) 的事物 (狀態)。我們會在本章節的最後解釋這一點。
+`useEffect()` 是一個具有多種功能的內建鉤子 (hook)。`useEffect()` 中的 "Effect" 指的是**副作用 (side effect)**，依據情況的不同會有不同的意思。在 React 中，假設沒有涉及任何第三方套件或是框架，「副作用」指的通常是間接被執行 (修改) 的事物 (狀態)。我們會在本章節的最後解釋這一點。
 
 ## `useEffect()` 可以做什麼？
 
@@ -23,17 +23,17 @@ import Video from '@site/src/widgets/Video'
 
 ## `useEffect()` 是如何運作的？
 
-`useEffect()` 接收兩個參數，一個**回呼函式 (callback)** 和一個非必要的**依賴值陣列**。簡化版的 `useEffect()` 如下：
+`useEffect()` 接收兩個參數，一個**回呼函式 (callback)** 和一個非必要的**依賴值陣列**。簡化版的 `useEffect()` 介面如下：
 
 ```ts showLineNumbers
+type CleanUpFunction = () => void
+
 const useEffect = (
   callback: () => void | CleanUpFunction,
   dependencies?: any[]
 ): void => {
   // ...
 }
-
-type CleanUpFunction = () => void
 
 // 使用 `useEffect()`
 useEffect(() => {
@@ -43,20 +43,20 @@ useEffect(() => {
 
 `callback` 就是在這個 `useEffect()` 中要被呼叫的函式，而 `dependencies` 則是用來控制 `callback` 何時該被呼叫。
 
-`useEffect()` 的運作方式如下 (若您覺得文字描述看起來很複雜，可以直接看看下方的[範例](#examples)！)：
+`useEffect()` 的運作方式如下 (若您覺得文字描述看起來很複雜，可以直接看下方的[範例](#範例)！)：
 
 1. React 在元件掛載時呼叫 `callback`
 2. 依據 `dependencies` 的不同：
    - 若 `dependencies` 是 `undefined` (預設是如此)，React 會在元件重新渲染時呼叫 `callback`。
    - 否則在每次重新渲染前，React 都會使用 [`Object.is()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is) 來檢查 `dependencies` 中每個元素的數值是否和前一次渲染相同。
-    - 若沒有任何元素發生變化，就什麼事都不會發生。
-    - 否則 React 就會呼叫 `callback`。
+      - 若沒有任何元素發生變化，就什麼事都不會發生。
+      - 否則 React 就會呼叫 `callback`。
 3. 在任何後續的副作用中，若 `callback` 有回傳[清理函式](#清理函式-clean-up-functions)，React 就會在下次呼叫 `callback` 之前先呼叫該清理函式。
 4. 在元件即將卸載之前，若 `callback` 有回傳清理函式，React 就會在卸載元件之前呼叫該清理函式。
 
 ### 清理函式 (Clean Up Functions)
 
-清理函式是一種**用來清理前次副作用中所產生的資源**的函式，像是計時器、事件監聽、API 請求等等。清理函式會在下一次副作用發生前，以及在元件即將卸載之前被呼叫。
+清理函式是一種**用來清理前次副作用中所產生的資源**的函式，像是計時器、事件監聽 (event listeners)、API 請求等等。清理函式會在下一次副作用發生前，以及在元件即將卸載之前被呼叫。
 
 要使用清理函式，我們只需將他從副作用的 `callback` 中回傳。例如：
 
@@ -64,7 +64,7 @@ useEffect(() => {
 import { useEffect } from 'react'
 
 useEffect(() => {
-  // 做些事情。
+  // 做一些事情。
   // ...
 
   // 這個函式即為這個副作用的清理函式 (非必要)。
@@ -228,14 +228,14 @@ useEffect(() => {
 
 ## 副作用是好的嗎？
 
-就如我們在文章開頭時所說，「副作用」會依據情況的不同有不同的意思。在 React 中，在沒有涉及任何第三方套件或是框架的情況下，「副作用」指的通常是間接被執行的事物；這些事物通常**不直觀**，而且可能會使程式碼變得難懂和難以維護。
+就如我們在文章開頭時所說，「副作用」在不同的情況會有不同的意思。在 React 中，假設沒有涉及任何第三方套件或是框架，「副作用」指的通常是間接被執行的事物；這些事物通常**不直觀**，而且可能會使程式碼變得難懂和難以維護。
 
 有時候副作用的確是我們唯一的選擇，像是在元件掛載時呼叫 API，或是在元件卸載前做某些事情；但是有時候我們有比副作用更好的選擇，**特別是 `useEffect()` 和 `setState()` 一起使用**的情況。
 
 請考慮以下情境：
 
 - 畫面上有個輸入框，我們必須記錄使用者輸入的內容。
-- 如果其中有任何禁止的字元 (像是 `a`)，我們就要在畫面上顯示 `Prohobited characters found`。
+- 若輸入的內容中含有被禁止的字元 (像是 `a`)，我們就要在畫面上顯示 `Prohobited characters found`。
 
 <Video src="/video/react/use-effect_prohibited-characters.mov" />
 
@@ -270,7 +270,7 @@ export const Example = () => {
 
 在上面的範例中，除了 `value` 狀態之外，我們還宣告了 `hasProhibitedChars` 狀態，用來表示 `value` 中是否包含被禁止的字元。然後我們使用了 `useEffect()` 並將 `value` 作為他的依賴值，這樣我們才能在 `value` 改變時更新 `hasProhibitedChars`。
 
-雖然這樣的寫法能正常運作，但是如果我們仔細想想，會發現其實根本不需要副作用。既然我們知道 `setValue()` 會在什麼時候被呼叫，也就是說我們知道什麼數值會被傳入 `setValue()`，為什麼我們不乾脆同時呼叫 `setHasProhibitedChars()` 就好了呢？例如：
+雖然這樣的寫法能正常運作，但是如果我們仔細想想，會發現其實不需要副作用。既然我們知道 `setValue()` 會在什麼時候被呼叫，也就是說我們知道什麼數值會被傳入 `setValue()`，為什麼我們不乾脆同時呼叫 `setHasProhibitedChars()` 呢？例如：
 
 ```tsx showLineNumbers
 import { useState, ChangeEvent } from 'react'
@@ -295,7 +295,7 @@ export const Example = () => {
 }
 ```
 
-如此一來，和使用副作用相比，我們的程式碼就會變得簡潔許多。此外，在這種情況下，我們也不見得需要將 `hasProhibitedChars` 宣告為一個獨立的狀態；將他宣告成一般的變數或是使用 [`useMemo()`](./optimization-functions#usememo) 都很足夠。例如：
+如此一來，和使用副作用相比，我們的程式碼就變得簡潔許多。此外，在這種情況下，我們也不見得需要將 `hasProhibitedChars` 宣告為一個獨立的狀態；將他宣告成一般的變數或是使用 [`useMemo()`](./optimization-functions#usememo) 都很足夠。例如：
 
 ```tsx showLineNumbers
 import { useState, ChangeEvent } from 'react'

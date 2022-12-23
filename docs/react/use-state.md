@@ -4,6 +4,8 @@ description: Introduce the usage and commonly seen issues of useState() in React
 keywords: [piesdoc, react, react useState()]
 ---
 
+import Video from '@site/src/widgets/Video'
+
 # `useState()`
 
 ## What Is `useState()`?
@@ -17,10 +19,7 @@ import { useState } from 'react'
 const [count, setCount] = useState(0)
 ```
 
-In this example: 
-
-- `count` is the state, and `setCount()` is the function to update `count`.
-- We wrote `useState(0)`, which means the value of `count` will be `0` in the very beginning.
+In this example, `count` is a state with `0` as the initial value, while `setCount()` is the function used to update `count`.
 
 :::note
 
@@ -75,7 +74,7 @@ export const Example = () => {
 }
 ```
 
-<Video src="/video/react/use-state_counter.mov" />
+<Video src="/video/react/use-state_counter-app.mov" height="300px" />
 
 In the above example, `0` is being used as the initial value of `count`. Every time the "Increment" button is clicked, `increment()` will be called, thus updating the value of `count` to `count + 1`.
 
@@ -85,7 +84,7 @@ In React, all states should only be updated via the corresponding `setState()` f
 
 You may have heard people say "`setState()` is asynchronous". While this statement is partly true, as the changes made by `setState()` will not be immediately applied, `setState()` itself is actually synchronous; it does not return a promise. Therefore, it is not necessary to use `await` on it.
 
-But why is it that in one of the [example](./reactive-values#reactive-values-1) in [Reactive Values](./reactive-values), we can't immediately retrieve the updated value of a state right after `setState()` is called? This is a somewhat complex concept that we'll discuss in more detail as we [delve deeper into React](./use-state-in-depth#updater-functions), so don't worry about it for now!
+But why can't we immediately retrieve the updated value of a state right after `setState()` is called ([example](./reactive-values#reactive-values-1))? This is a somewhat complex concept that we'll discuss in more detail as we [delve deeper into React](./use-state-in-depth#updater-functions), so don't worry about it for now!
 
 ## State Initializer
 
