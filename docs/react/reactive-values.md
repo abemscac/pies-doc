@@ -42,7 +42,9 @@ export const Example = () => {
   return (
     <div>
       <h1>Count: {count}</h1>
-      <button onClick={increment}>Increment</button>
+      <button onClick={increment}>
+        Increment
+      </button>
     </div>
   )
 }
@@ -75,7 +77,9 @@ export const Example = () => {
     <div>
       <div>
         <h1>Count: {count}</h1>
-        <button onClick={increment}>Increment</button>
+        <button onClick={increment}>
+          Increment
+        </button>
       </div>
     </div>
   )

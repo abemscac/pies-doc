@@ -20,13 +20,13 @@ import Badge from '@site/src/widgets/Badge'
 
 :::
 
-類別元件已經存在了很長一段時間。在鉤子 API (Hooks API) 推出之前，類別元件是 React 中唯一能宣告狀態的元件。之所以被稱為類別元件是因為他允許我們使用 JavaScript 的[類別](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes) 來定義元件。大部分適用於原生 JavaScript 類別的規則也能套用在 React 的類別元件上。
+類別元件已經存在了很長一段時間。在鉤子 (Hooks) API 推出之前，類別元件是 React 中唯一能宣告狀態的元件。之所以被稱為類別元件是因為他允許我們使用 JavaScript 的[類別](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes)來定義元件。大部分適用於原生 JavaScript 類別的規則也能套用在 React 的類別元件上。
 
 在類別元件中：
 
-- 類別必須擴展 (extends) `React.Component<P, S>` 來將他轉換為 React 元件；`P` 和 `S` 分別為屬性 (props) 和狀態 (states) 的泛型類別 (非必要)。
+- 類別必須擴展 (extends) `React.Component<P, S>` 來將他轉換為 React 元件；`P` 和 `S` 分別為屬性 (props) 和狀態 (states) 的泛型型別 (非必要)。
 - 屬性、狀態及方法 (methods) 必須使用 `this` 關鍵字才可進行存取。
-- 建構子的第一個參數會是元件的屬性；我們可以使用 `this.props` 在建構子外面存取這些屬性。
+- 建構子的第一個參數會是元件的屬性；我們可以在建構子外面使用 `this.props` 來存取這些屬性。
 - 狀態會被存放在一個名為 `state` 的物件中，並於建構子中初始化。
 - `React.Component` 提供一個 `setState()` 方法來更新 `this.state` 中的值。
 - `render()` 方法必須被明確定義並回傳一個 JSX 元素。

@@ -12,7 +12,7 @@ import Video from '@site/src/widgets/Video'
 
 本章節介紹的功能旨在改善應用程式中的效能。在不必要的情況下使用這些函式不僅會降低程式碼的可讀性，也會增加維護的難度。
 
-一般來說，若您的應用程式中沒有效能問題，那就不費心使用這些功能中的任何一個！ (除了 [`useMemo()`](#usememo) 之外，因為有時候他可以作為別種用途)。
+一般來說，若您的應用程式中沒有效能問題，那就不要費心使用這些功能！(除了 [`useMemo()`](#usememo) 之外，因為它有時候可以作為別種用途)。
 
 :::
 
@@ -44,11 +44,11 @@ const MemoizedComponent = memo(Component, () => {
 
 `memo()` 的運作方式如下：
 
-- 元件完成首次渲染後，React 會記住這次渲染結果。
+- 元件完成首次渲染後，React 會記住這次的渲染結果。
 - 當元件**因為父元件的重新渲染而隨之重新渲染**時，React 會使用 [`Object.is()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is) 來檢查 props 中每個屬性的數值是否和前一次渲染相同。
   - 若沒有任何屬性發生變化，React 就會直接回傳上次記住的渲染結果，不會執行元件中的任何程式碼。
   - 否則元件就會照常重新渲染，並將先前的記憶值替換為新的渲染結果。
-- 若您想要元件僅在特定的屬性發生變化時才重新渲染，您可以傳遞一個函式給第二個參數 `arePropsEqual()` 來自訂屬性相等性的檢查邏輯。
+- 若您想要元件僅在特定的屬性發生變化時才重新渲染，您可以傳遞一個函式給第二個參數 `arePropsEqual()` 來自訂屬性相等的檢查邏輯。
 
 因此，**只有在被記憶的元件作為子元件時，`memo()` 的效果才得以顯現**。
 
@@ -98,9 +98,9 @@ export const Parent = () => {
 
 假設某個元件被 `memo()` 記憶起來，這是否代表只要 `arePropsEqual()` 回傳的是真值 (truthy)，該元件就不會重新渲染？
 
-**不，並不是這樣的！**我們知道元件會在[響應式數值](./reactive-values)改變時重新渲染，但是屬性並不是元件中唯一一個響應式數值。`memo()` 僅有在該次重新渲染是由父元件觸發時才會作用，如果該次重新渲染是由非屬性的響應式數值 (例如狀態) 所導致的，那麼元件依然會重新渲染。
+**不，並不是這樣！**我們知道元件會在[響應式數值](./reactive-values)改變時重新渲染，但是屬性並不是元件中唯一一個響應式數值。`memo()` 僅有在該次重新渲染是由父元件觸發時才會作用，如果該次重新渲染是由非屬性的響應式數值 (例如狀態) 所導致的，那麼元件依然會重新渲染。
 
-我們可以這樣想：`memo()` 記憶的並不是元件輸出的 HTML，也不是元件在某一個時刻的快照 (snapshot)；相反地，他運作的方式比較像是指向某個特定元件實體的指標。當 `arePropsEqual()` 回傳的為假值 (falsy) 時，新的元件實體會被產生，然後該指標就會從舊的轉向新的實體。
+您可以這樣想：`memo()` 記憶的並不是元件輸出的 HTML，也不是元件在某一個時刻的快照 (snapshot)；相反地，他運作的方式比較像是指向某個特定元件實體的指標。當 `arePropsEqual()` 回傳的為假值 (falsy) 時，新的元件實體會被產生，然後該指標就會從舊的實體轉向新的實體。因此元件內部的變化依然會照常發生，不受 `memo()` 影響。
 
 :::
 
@@ -112,7 +112,7 @@ export const Parent = () => {
 
 :::
 
-`useMemo()` 是一個內建的鉤子，用於**記憶任何您想記憶的東西**。與 `useEffect()` 相似，`useMemo()` 接收一個**回呼函式 (calback function)** 和一個**依賴值陣列 (dependency array)** 作為參數。簡化版的 `useMemo()` 介面如下：
+`useMemo()` 是一個內建的鉤子，用於**記憶任何您想記憶的東西**。與 `useEffect()` 相似，`useMemo()` 接收一個**回呼函式 (calback function)** 和一個**依賴值陣列** 作為參數。簡化版的 `useMemo()` 介面如下：
 
 ```ts showLineNumbers
 type useMemo<T> = (
@@ -155,7 +155,7 @@ export const Example = () => {
     { id: 3, name: 'User C' },
   ])
 
-  // 這會在每次渲染執行。
+  // 這會在每次渲染時執行。
   // highlight-start
   const matchedUsers = users.filter(
     (user) => user.name.includes('A')
@@ -280,7 +280,7 @@ export const Example = ({ keyword }: IExampleProps) => {
 
 :::
 
-很重要的一點是，**傳入 `useMemo()` 的 `callback` 函式不該有副作用**，例如修改變數或是呼叫 API。該函式應該要是純淨的，意即相同的輸入總是會得到相同的輸出，而且不會影響到其他的變數。
+很重要的一點是，**傳入 `useMemo()` 的 `callback` 不該有副作用**，例如修改變數或是呼叫 API。該函式應該要是純淨的，意即相同的輸入總是會得到相同的輸出，而且不會影響到其他的變數。
 
 ## `useCallback()`
 
@@ -420,7 +420,7 @@ export const Example = () => {
 }
 ```
 
-請注意我們如何將[更新函式](./use-state-in-depth#更新函式-updater-functions)傳遞給 `setCount()`，這樣我們就不需要將 `count` 放在 `useCallback()` 的依賴值陣列中。如此一來我們就能保證被傳遞給 `MemoizedChild` 的 `increment()` 在每次渲染中都指向相同的物件，從而使 `memo()` 能如預期的運作。
+請注意，我們在 `setCount()` 中使用了[更新函式](./use-state-in-depth#更新函式-updater-functions)，這樣我們就不需要將 `count` 放在 `useCallback()` 的依賴值陣列中。如此一來我們就能保證被傳遞給 `MemoizedChild` 的 `increment()` 在每次渲染中都會指向相同的物件，從而使 `memo()` 能如預期的運作。
 
 <Video src="/video/react/optimization-functions_use-callback-after.mov" />
 
