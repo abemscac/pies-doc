@@ -1,39 +1,39 @@
 ---
 sidebar_position: 7
-description: Introduce the advanced mechanism of useState() in React.
+description: 介紹 React 中 useState() 的進階機制。
 keywords: [piesdoc, react, react useState()]
 ---
 
 import Video from '@site/src/widgets/Video'
 
-# `useState() In Depth`
+# 深入了解 `useState()`
 
 :::caution 先修章節
 
-You must learn [Component Rendering](./component-rendering) before getting into this chapter.
+建議您在學習完[元件渲染](./component-rendering)之後再閱讀此章節。
 
 :::
 
-## Batching
+## 批量處理狀態更新 (Batching)
 
 :::info
 
-Be sure to check out [this awesome post](https://github.com/reactwg/react-18/discussions/21) by [Dan Abramov](https://github.com/gaearon) about batching! Most of the information in this section is simply a rephrasing of the ideas presented in the post.
+請務必看看這個由 [Dan Abramov](https://github.com/gaearon) 撰寫關於批量處理狀態更新的[文章](https://github.com/reactwg/react-18/discussions/21)！這個小節中大部分的資訊都只是在用另外一種方法表現該文章所傳達的內容。
 
 :::
 
-Have you ever wondered about the difference between declaring two states and declaring one state with two properties? For example:
+您是否曾經想過「宣告兩個狀態」和「宣告一個具有兩個屬性的狀態」之間有什麼區別？例如：
 
 ```ts showLineNumbers
 import { useState } from 'react'
 
-// Two states
+// 兩個狀態
 // highlight-start
 const [loading, setLoading] = useState(true)
 const [data, setData] = useState(null)
 // highlight-end
 
-// One state with two properties
+// 具有兩個屬性的狀態
 // highlight-start
 const [state, setState] = useState({
   loading: true,
@@ -42,25 +42,26 @@ const [state, setState] = useState({
 // highlight-end
 ```
 
-**In most cases, it doesn't matter**. We're saying this because React batches state updates by default.
+**在大部分情況下沒什麼差別**。我們會這麼說是因為 React 預設會批量處理狀態更新。
 
-**"Batching"** refers to the process of grouping multiple state updates into a single update. Before React 17, only the updates in **React event handlers** are automatically batched. Starting from React 18, all updates are batched by default.
+在 React 中，「批量處理 (batching)」指的是**將多個狀態更新合併的過程**。在 React 17之前，只有在 **React 事件處理程序 (React event handlers)** 中的狀態更新會被批量處理。從 React 18 開始，所有的狀態更新預設都會被批量處理。
 
 <details>
-  <summary>What are React event handlers?</summary>
+  <summary>什麼是 React 事件處理程序？</summary>
 
-  React event handlers are those things that come with `React.[Something]EventHandler` you see in VSCode when you hover on a handler prop:
+  React 事件處理程序指的是您在 VSCode 中將鼠標停留在處理程序屬性 (handler prop) 上面會看到的 `React.[什麼]EventHandler`：
 
   <img src="/img/react/use-state-in-depth_react-event-handler-hover.png" alt="How to check if a handler prop is React event handler in VSCode" />
 
-  You can also see all the types in the declaration file:
+  您也可以在宣告檔案 (declaration file) 中看見所有的類別：
 
   <img src="/img/react/use-state-in-depth_react-event-handler-type.png" alt="React event handler declaration file" />
 
-  React already handles most of the native HTML events, such as `onClick()`, `onChange()`, `onBlur()`, `onDrag()`, `onSubmit()`, etc. Life-cycle hooks like `componentDidMount()` and `useEffect()` are also considered React event handlers.
+  絕大部分的原生事件都已經被 React 處理好了，像是`onClick()`、`onChange()`、`onBlur()`、`onDrag()`、`onSubmit()`等等。生命週期鉤子 (life-cycle hooks) 如 `componentDidMount()` 和 `useEffect()` 也都屬於 React 事件處理程序。
 </details>
 
-To understand how batching works, please take a look at the following example:
+
+要了解批量狀態更新的運作方式，請看以下範例：
 
 ```ts showLineNumbers
 import { useState } from 'react'
@@ -76,11 +77,11 @@ const updateData = () => {
 }
 ```
 
-In the above example, we might expect the component to re-render twice after `updateData()` is called because two separate `setState()` calls are made within `updateData()`; but in this example, the component will only re-render once.
+在這個範例中，我們可能會認為執行 `updateData()` 會導致元件重新渲染兩次，因為有兩個不同的 `setState()` 被呼叫了；但是在這個範例中，元件只會重新渲染一次。
 
 <Video src="/video/react/use-state-in-depth_batching-1.mov" />
 
-Before explaining why is this happening, let's take a look at another example:
+在解釋為何會如此之前，我們再多看看另外一個範例：
 
 ```ts showLineNumbers
 import { useState } from 'react'
@@ -102,40 +103,40 @@ const updateData = () => {
 }
 ```
 
-In the above example, even though so many `setState()` are called, the component is still going to re-render **once** after `updateData()` is called.
+在這個範例中，即使有這麼多個 `setState()` 在 `updateData()` 中被呼叫，元件仍然只會重新渲染**一次**。
 
 <Video src="/video/react/use-state-in-depth_batching-2.mov" />
 
-Why?
+為什麼？
 
-It actually makes sense if we think about it. In the above example, we don't want users to see flickers when `count` is being updated from `0` all the way to `3`. Since we know that the last value being passed to `setCount()` is `3`, we can simply skip over all previous values and directly set `count` to `3`. The same approach can be applied to `name` as well.
+如果我們仔細想想，這其實挺合理的。在上面的範例中，當 `count` 的數值從 `0` 一路被更新到 `3` 時，我們不會想要使用者在畫面上看見快速的閃爍。既然我們知道最後被傳遞給 `setCount()` 的數值是 `3`，我們大可以跳過前面所有的數值，直接將 `count` 的值更新到 `3`。同樣的道理也可以套用在 `name` 身上。
 
-Additionally, after all update requests have been processed, React knows that the states to be updated are `name` and `count`. To minimize the number of re-renders and avoid any flicker that users might notice, React updates them both at the same time instead of individually.
+此外，在所有的[更新請求](./component-rendering#更新請求)都被處理完成後，React 就會知道該被更新的狀態是 `name` 和 `count`。為了將重新渲染的次數減到最少，同時避免使用者在畫面上看見任何閃爍，React 會同時更新這兩個狀態，而不是單獨更新他們。
 
-The following video illustrates how states are updated in the above example. While the implementation may not be the same as React, it should give you a general understanding of how the render cycle works within a component.
+下面的動畫說明了在上面的範例中，狀態是如何被更新的。雖然動畫中的實作和 React 的實作不完全相同，但它應該能讓您大致了解元件中的渲染循環是如何進行的。
 
 :::info
 
-If you're interested in how state updates are processed in React, please refer to [the official documentation](https://beta.reactjs.org/learn/queueing-a-series-of-state-updates).
+若您有興趣了解 React 如何處理狀態更新，請參考[官方文件](https://beta.reactjs.org/learn/queueing-a-series-of-state-updates)。
 
 :::
 
 <Video src="/video/react/use-state-in-depth_batching-analysis.mov" />
 
-- Before the first render:
-  - All states in a component are stored in an imaginary object called `states`.
-  - An object called `updateRequests` is created to hold all of the unprocessed [update requests](./component-rendering#update-requests).
-  - An object called `patches` is created to hold the values of `states` for the next render.
-- Every time `setState()` is called, the parameter is pushed to the corresponding array in the `updateRequests` object.
-- For each state, React evaluates the output based on the update requests and put it in the `patches` object. Once all update requests have been processed, React copies all the properties from `patches` to `states` and clears `updateRequests` and `patches`.
+- 在首次渲染之前：
+  - 元件中的所有狀態都會被存入一個虛擬的 `states` 物件當中。
+  - 一個名為 `updateRequests` 的虛擬物件會被建立，用來存放所有尚未處理的[更新請求](./component-rendering#更新請求)。
+  - 一個名為 `patches` 的虛擬物件會被建立，用來存放 `states` 在下一次渲染中的值。
+- 當 `setState()` 被呼叫時，該參數 (數值或是函式) 會被放入該狀態在 `updateRequests` 中所對應的陣列裡。
+- 針對每個狀態，React 依據他們各自的更新請求計算出他們在下一次渲染中的值並放入 `patches` 中，然後清除 `updateRequests` 和 `patches`。
 
-After that, React updates the DOM nodes based on the values in `states`, and then waits for [the next opportunity](./component-rendering#when-will-reactive-values-be-updated) to process update requests.
+在那之後，React 會依據 `states` 中的值更新 DOM 節點，然後等待下一個[處理更新請求的時機](./component-rendering#響應式數值何時會被更新)。
 
-## Updater Functions
+## 更新函式 (Updater Functions)
 
-In React, an updater function is **a function that is passed to [`setState()`](./use-state#setstate)** as an argument. It is useful when we need to update the state based on its previous value, or when the state is a non-primitive value like an object or an array.
+在 React 中，更新函式指的是**被傳遞給 [`setState()](./use-state#setstate) 的函式**。若我們需要依據某個狀態先前的數值做更新，或是當狀態是一個非原始型別的數值 (像是物件或是陣列)，更新函式就會派上用場。
 
-For example, consider the following code:
+請看以下範例：
 
 ```ts showLineNumbers
 import { useState } from 'react'
@@ -144,17 +145,17 @@ const [count, setCount] = useState(0)
 
 const updateCount = () => {
   setCount(1)
-  // `prevCount` will be `1`.
+  // `prevCount` 會是 `1`.
   // highlight-next-line
   setCount((prevCount) => prevCount + 2)
 }
 ```
 
-In the above example, we first call `setCount(1)`, which will update the value of `count` to `1` in the next render. Then, we call `setCount((prevCount) => prevCount + 2)`, which means "give me the last value being passed to `setCount()`, and update the value of `count` to `(that value + 2)`". Thus, in this example, `count` will be updated to `3` after `updateCount()` is executed.
+在這個範例中，我們首先呼叫 `setCount(1)`，這會讓 `count` 的值在下一次渲染中被更新成 `1`。之後，我們呼叫了 `setCount((prevCount) => prevCount + 2)`，它的意思是「給我上次被傳入 `setCount()` 的數值，然後將 `count` 更新成 `(那個數值 + 2)`」。因此，在這個範例中，執行 `updateCount()` 會使 `count` 的值被更新成 `3`。
 
 <Video src="/video/react/use-state-in-depth_updater-function-1.mov" height="300px" />
 
-Great, now let's take a look at another example:
+很好，讓我們看看另外一個範例：
 
 ```ts showLineNumbers
 import { useState } from 'react'
@@ -171,20 +172,20 @@ const updateCount = () => {
 }
 ```
 
-In the above example:
+在這個範例中：
 
-- An updater function is used before any value is passed to `setCount()`. In this case, React will use the current value of `count`, which is `0`, as the previous value. This means the `prevCount` in the first `setCount()` will be `0`, which will update the value of `count` to `0 + 1`. Thus, `1` will be the next value of `count` for the next render.
-- When `setCount((prevCount) => prevCount + 2)` is called, React knows that the last evaluated output in `setCount()` was `1`. This means the `prevCount` in the second `setCount()` will be `1`, which will update the value of `count` to `1 + 2`. Thus, `3` will be the next value of `count` for the next render.
-- When `setCount((prevCount) => prevCount + 3)` is called, React knows that the last evaluated output in `setCount()` was `3`. This means the `prevCount` in the third `setCount()` will be `3`, which will update the value of `count` to `3 + 3`. Thus, `6` will be the next value of `count` for the next render.
-- When `setCount(4)` is called, it overwrites the next value of `count` with `4`.
+- 有一個更新函式在數值被傳遞給 `setCount()` 之前被使用了。在這種情況下，React 會使用該狀態目前的數值作為先前的數值，也就是 `0`。這代表第一個 `setCount()` 中的 `prevCount` 會是 `0`，導致 `count` 的數值被更新成 `0 + 1`。因此，`1` 會是 `count` 在下一次渲染中的數值。
+- 當 `setCount((prevCount) => prevCount + 2)` 被呼叫時，React 知道上一次在 `setCount()` 中計算出來的數值為 `1`。這代表第二個 `setCount()` 中的 `prevCount` 會是 `1`，導致 `count` 的數值被更新成 `1 + 2`。因此，`3` 會是 `count` 在下一次渲染中的數值。
+- 當 `setCount((prevCount) => prevCount + 3)` 被呼叫時，React 知道上一次在 `setCount()` 中計算出來的數值為 `3`。這代表第三個 `setCount()` 中的 `prevCount` 會是 `3`，導致 `count` 的數值被更新成 `3 + 3`。因此，`6` 會是 `count` 在下一次渲染中的數值。
+- 當 `setCount(4)` 被呼叫時，它會將 `count` 在下一個渲染中的值覆蓋為 `4`。
 
-Therefore, the value of `count` will be `4` after `updateCount()` is called.
+因此，執行 `updateCount()` 會使 `count` 的值被更新成 `4`。
 
 <Video src="/video/react/use-state-in-depth_updater-function-2.mov" />
 
-## Fixed Value or Updater Function?
+## 該傳遞數值還是更新函式？
 
-**In most cases, it makes no difference**. Many developers use updater functions frequently because updater function is a convenient and reliable way to update a state based on its current value without having to worry about anything else. However, depending on the situation, updater functions may not always be necessary. Consider the following example:
+**在大部分情況下沒什麼差別**。大部分的開發人員頻繁使用更新函式，因為它是一種方便、可靠的方法，可以依據狀態先前的值來更新狀態，而無需擔心其他事情。但是依據情況的不同，您也許不見得需要更新函式。請看以下範例：
 
 ```ts showLineNumbers
 import { useState } from 'react'
@@ -203,9 +204,9 @@ const updateUser = (name, value) => {
 }
 ```
 
-In the above example, `updateUser()` is still guaranteed to have the latest value of `user`, even if updater functions are not being used. This is because `user` is a state, changing it will cause the component to re-render, causing `updateUser()` to be redeclared. But it's still okay if you prefer using updater functions everywhere; it won't break anything!
+在上面的範例中，即使我們沒有使用更新函式，`updateUser()` 仍然保證會取得 `user` 最即時的數值。因為 `user` 是一個狀態，它的改變會造成元件重新渲染，`updateUser()` 也會隨之重新宣告。但是若您還是想要在每個地方都使用更新函式，那也沒問題，它通常不會破壞任何東西！
 
-One of the benefits of using updater functions is that it allows us to update a state based on its current value, even when it's inconvenient to access the state. For example:
+使用更新函式的優點之一是，即使在不便存取狀態的情況下，它也能依據狀態先前的數值做更新。舉例來說：
 
 ```ts showLineNumbers
 import { useState, useCallback } from 'react'
@@ -219,4 +220,4 @@ const increment = useCallback(() => {
 // highlight-end
 ```
 
-In the above example, `count` will still be correctly updated even though `increment()` is wrapped inside [`useCallback()`](./optimization-functions#usecallback) thanks to the use of an updater function. This makes updater functions particularly useful when a function is being passed as a prop to memoized children.
+在這個範例中，由於我們使用了更新函式，即使 `increment()` 被包裹在沒有任何依賴值的 [`useCallback()`](./optimization-functions#usecallback) 中，`count` 的數值仍然會正確的更新。這使得更新函式在需要將函式傳遞給被記憶的子元件作為屬性時特別有用。

@@ -1,7 +1,7 @@
 ---
 sidebar_position: 2
-description: Introduce what reactive values are in React.
-keywords: [piesdoc, react, react reactive values]
+description: 介紹 React 中的響應式數值。
+keywords: [piesdoc, react, react響應式數值]
 ---
 
 import Video from '@site/src/widgets/Video'
@@ -24,7 +24,7 @@ import Video from '@site/src/widgets/Video'
 
 ## 範例
 
-### 響應式數值
+### 響應式數值範例
 
 ```tsx showLineNumbers
 import { useState } from 'react'

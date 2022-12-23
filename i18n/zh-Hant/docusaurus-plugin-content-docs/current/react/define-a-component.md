@@ -8,9 +8,9 @@ import Badge from '@site/src/widgets/Badge'
 
 # 定義元件
 
-在 React 中，您可以使用**類別 (class)** 或是**函式 (function)** 來定義元件。兩者可以做到的事情幾乎相同，但由於 function component 不僅樣板程式碼 (boilerplate) 較少，也較容易上手。除此之外，React 的 Hooks API 也僅支援 function component，因此我們推薦使用 **function component**。
+在 React 中，您可以使用**類別 (class)** 或是**函式 (function)** 來定義元件。兩者可以做到的事情幾乎相同，但由於函式元件不僅樣板程式碼 (boilerplate) 較少，也較容易上手。除此之外，React 的 Hooks API 也僅支援函式元件，因此我們推薦使用**函式元件**。
 
-由於 class component 出現的頻率已經不如從前，而且 Hook API 也僅支援 function component，因此在這份文件中，我們並不會深入探討 class component。此外，在提供相關範例時，我們也會以 function component 為主。
+由於類別元件出現的頻率已經不如從前，因此在這份文件中，我們並不會深入探討類別元件。此外，在提供相關範例時，我們也會以函式元件為主。
 
 ## 類別元件 (Class Component)
 
@@ -83,7 +83,7 @@ export class App extends Component<IAppProps, IAppState> {
 </p>
 
 
-函式元件在鉤子 API 推出之前就已經存在了，但是那個時候僅有類別元件可以宣告狀態。出於這個原因，function component 在那個時候都是無狀態的元件，僅能依照給予的屬性來渲染使用者介面。
+函式元件在鉤子 API 推出之前就已經存在了，但是那個時候僅有類別元件可以宣告狀態。因此，函式元件在當時都是無狀態的元件，僅能依照給予的屬性來渲染使用者介面。
 
 隨著鉤子 API 的發展，函式元件已逐漸取代類別元件並成為主流。整體而言，與類別元件相比，函式元件更具可讀性、可維護性和可擴展性。
 
