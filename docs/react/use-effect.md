@@ -10,7 +10,7 @@ import Video from '@site/src/widgets/Video'
 
 ## What Is `useEffect()`?
 
-`useEffect()` is a built-in hook with multiple purposes. The "effect" in `useEffect()` refers to **side effect**, which may have different meanings depending on the context. In React, if no 3rd party libraries or frameworks are invloved, "effects" usually means things (states) that are performed (changed) indirectly. We'll further explain this idea at the end of this chapter.
+`useEffect()` is a built-in hook with multiple purposes. The "effect" in `useEffect()` refers to **side effect**, which may have different meanings depending on the context. In React, if no third-party libraries or frameworks are invloved, "effects" usually means things (states) that are performed (changed) indirectly. We'll further explain this idea at the end of this chapter.
 
 ## What Can `useEffect()` Do?
 
@@ -56,7 +56,7 @@ useEffect(() => {
 
 ### Clean Up Functions
 
-Clean up function is **a function that is used to clean up the resources created in the previous run of an effect**, such as timers, event listeners, API requests, etc. A clean up function will be called before the next effect happens, or when the component is about to unmount.
+Clean up function is **a function that is used to clean up the resources created in the previous run of an effect**, such as timers, event listeners, API requests, etc. A clean up function will be called before the next effect happens, and when the component is about to unmount.
 
 To use a clean up function, we just need to return it in the `callback` of an effect. For example:
 
@@ -231,7 +231,7 @@ useEffect(() => {
 
 ## Are Side Effects Good?
 
-As we mentioned at the beginning of this article, "side effects" may have different meanings depending on the context, so we can't just say it's good or bad without knowing the context. However, in React, assuming no 3rd party libraries and frameworks are involved, "effects" usually refers to things that are performed indirectly, which is usually **not intuitive** and makes your code hard to understand and maintain.
+As we mentioned at the beginning of this article, "side effects" may have different meanings depending on the context, so we can't just say it's good or bad without knowing the context. However, in React, assuming no third-party libraries and frameworks are involved, "effects" usually refers to things that are performed indirectly, which is usually **not intuitive** and may make your code hard to understand and maintain.
 
 Sometimes an effect is indeed the only option, such as calling an API on mount, or doing something right before the component unmounts; but sometimes there are other better choices than using an effect, **especially when `useEffect()` is used with `setState()`**.
 

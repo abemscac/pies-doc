@@ -18,7 +18,7 @@ For class components, use [`createRef()`](https://reactjs.org/docs/refs-and-the-
 
 ## What Is `useRef()`?
 
-`useRef()` is a built-in hook that takes an argument of any type and returns a **reference** of that value. In React, a "reference" is **a non-reactive JavaScript object whose value can persist across render cycles**.
+`useRef()` is a built-in hook that takes an argument of any type and returns a **reference** of that value. In React, a "reference" is **a non-reactive object whose value can persist across render cycles**.
 
 For example, consider the following code:
 
@@ -55,7 +55,7 @@ export const Example = () => {
 
 In the above example, the value of `count` will **not** be reset back to `0` whenever `Example` re-renders.
 
-However, since a reference is non-reactive, updating it will **not** cause the component to re-render. Besides, unlike state, the update of a reference is immediate — we don't have to wait until the next render to get the updated value. This makes `useRef()` a good choice for situations where you want to preserve a value between renders, but you also don't want the component to re-render when the value changes.
+However, since a reference is non-reactive, changing it will **not** cause the component to re-render. Besides, unlike state, the update of a reference is immediate — we don't have to wait until the next render to get the updated value. This makes `useRef()` a good choice for situations where you want to preserve a value between renders, but you also don't want the component to re-render when the value changes.
 
 More importantly, **a reference will always give you the latest value, even in a memoized function**. Take [`useCallback()`](./optimization-functions#usecallback) as an example:
 
@@ -77,9 +77,9 @@ In this example, even if `logName()` is being memoized by a `useCallback()` with
 
 :::caution
 
-Please beware that since a reference is non-reactive, any effect (`useEffect()`, `useMemo()`, or `useCallback()`) depends on this value will **not** get computed after changes, unless any other value in the same dependency array is being changed at the same time. For example:
+Please beware that since a reference is non-reactive, any effect (`useEffect()`, `useMemo()`, or `useCallback()`) depends on this value will **not** get computed after changes, unless any other reactive value in the same dependency array is being changed at the same time. For example:
 
-- In the example below, no side effect will be executed, no matter how many times `name.current` changes:
+- In the example below, the changes of `name.current` will not trigger any side effect, no matter how many times `name.current` changes:
   ```ts showLineNumbers
   import { useRef, useEffect } from 'react'
 
@@ -136,9 +136,9 @@ const name = useRef('hello')
 console.log(name) // { current: 'hello' }
 ```
 
-## Update a `MutableRefObject<T>`
+## Update a Reference
 
-To update a `MutableRefObject<T>`, we can simply do it in the classic JavaScript way:
+To update a reference, we can simply do it in the classic JavaScript way:
 
 ```ts showLineNumbers
 import { useRef } from 'react'
@@ -176,13 +176,13 @@ user.current.name = 'world'
 console.log(user.current) // { name: 'world', age: 5 }
 ```
 
-##  Examples
+## Examples
 
 Below here we'll list some commonly seen cases where we think `useRef()` may come in handy.
 
-### DOM Nodes
+### DOM Node Instance
 
-You can get the instance of any DOM node by binding it to a `MutableRefObject<T>`. For example:
+You can get the instance of any DOM node by binding it to a reference. For example:
 
 ```tsx
 import { useRef } from 'react'
@@ -210,7 +210,7 @@ export const Example = () => {
 }
 ```
 
-By putting a `MutableRefObject<T>` in the `ref` attribute of a DOM node, you'll be able to manipulate [Element](https://developer.mozilla.org/en-US/docs/Web/API/Element) object in a vanilla JavaScript way. Notice that we must use `null` as the initial value of reference if the target is a DOM node.
+By putting a reference in the `ref` attribute of a DOM node, you'll be able to manipulate [Element](https://developer.mozilla.org/en-US/docs/Web/API/Element) object in a vanilla JavaScript way. Notice that we must use `null` as the initial value of reference if the target is a DOM node.
 
 <Video src="/video/react/use-ref_html-element.mov" />
 
@@ -224,7 +224,7 @@ By default this only works on the instance of a class component. If you wish to 
 
 :::
 
-Similar to DOM nodes, you can get the instance of any child-class component by binding it to a `MutableRefObject<T>`. For example:
+Similar to DOM node instance, you can get the instance of any child-class component by binding it to a reference. For example:
 
 ```tsx title="Parent.tsx" showLineNumbers
 import { useRef } from 'react'
@@ -245,7 +245,9 @@ export const Parent = () => {
     <div>
       {/* highlight-next-line */}
       <Child ref={child} />
-      <button onClick={makeChilGetOld}>Make Child Get Old</button>
+      <button onClick={makeChilGetOld}>
+        Make Child Get Old
+      </button>
     </div>
   )
 }
@@ -303,7 +305,7 @@ If you tried to `console.log(child.current)` in `Parent`, you'll see the instanc
 
 Since everything is now exposed to parent component, you should be very careful when dealing with this instance; even calling `setState()` for children (from parent component) is now doable!
 
-Same as creating references of DOM nodes, you should **only do this when standard props/states cannot fulfill your requirements, or when using standard props/states is inconvenient**. Sometimes this happens when you try to integrate a 3rd party component into your app.
+Same as creating references of DOM nodes, you should **only do this when standard props/states cannot fulfill your requirements, or when using standard props/states is inconvenient**. Sometimes this happens when you try to integrate a thiry-party component into your app.
 
 ### Uncontrolled Components
 
@@ -338,12 +340,12 @@ export const Example = () => {
 }
 ```
 
-In this example, `name` is being declared as a state, but it might be more efficient to use a reference instead, because:
+In this example, `name` is being declared as a state, but it might be more efficient to declare it as a reference, because:
 
 - `name` is not being displayed on the screen.
 - `name` is not a dependency of any effect.
 - We didn't make `<input>` into a controlled component. In other words, the value of `<input>` is not affected (controlled) by `name`.
-- Since `name` is a state, updating it will cause the component to re-render. This means every time a character is entered, all unmemoized children will be re-rendered, leading to poor performance. Sometimes even `onBlur` won't save you.
+- Since `name` is a state, changing it will cause the component to re-render. This means every time a character is entered, all unmemoized children will be re-rendered, leading to poor performance. Sometimes even `onBlur` won't save you.
 
 For these reasons, in this example, declaring `name` with `useRef()` would be more efficient than using `useState()`:
 
@@ -380,7 +382,7 @@ export const Example = () => {
 
 ### Keeping Value for Later Use
 
-Sometimes we may want to share a value between two different life-cycles, usually a function that comes from a 3rd party library, or an id returned by `setTimeout()` or `setInterval()`. For example:
+Sometimes we may want to share a value between two different life-cycles, usually a function that comes from a thiry-party library, or an id returned by `setTimeout()` or `setInterval()`. For example:
 
 ```tsx showLineNumbers
 import { useEffect } from 'react'
@@ -416,11 +418,11 @@ In this example:
 
 - `SomeRandomLibrary.init()` is a method that initializes the library (usually asynchronous).
 - `SomeRandomLibrary.init()` will return a function, which is expected to be called every time the button is clicked.
-- `SomeRandomLibrary.init()` depends on a prop `something`; considering there will probably be multiple instances of this component with different props, it makes more sense to initialize them individually.
+- `SomeRandomLibrary.init()` depends on a prop `something`; considering there will probably be multiple instances of this component with different `something` each time, it makes more sense to initialize them individually.
 
-Here, we call `SomeRandomLibrary.init()` after the component is mounted, which is the most reasonable timing for initialization. The most obvious solution would be to move `SomeRandomLibrary.init()` in `doSomething()` so that we can access `thatFunction()` right after the initialization is done. However, since `SomeRandomLibrary.init()` is used to initialize the library, calling it multiple times may lead to unwanted results like waste of resources or errors. Therefore, the most appropriate way would be to store `thatFunction()` in a variable so that we can access it later. But how can we do this?
+Here, we call `SomeRandomLibrary.init()` after the component is mounted, which is the most reasonable timing for initialization. The most obvious solution to the problem we see in the example would be to move `SomeRandomLibrary.init()` in `doSomething()` so that we can access `thatFunction()` right after the initialization is done. However, since `SomeRandomLibrary.init()` is used to initialize the library, calling it multiple times may lead to unwanted results like waste of resources or errors. Therefore, the most appropriate way would be to store `thatFunction()` in a variable so that we can access it from different life-cycles. But how can we do this?
 
-We want to make sure each component instance has its own `thatFunction()`, but we also don't want the component to re-render just because `thatFunction()` is stored in a variable. Thus, `useRef()` would be the best choice here because updating a reference will not cause the component to re-render. For example:
+We want to make sure each component instance has its own `thatFunction()`, but we also don't want the component to re-render just because `thatFunction()` is stored in a variable. Thus, `useRef()` would be the best choice here because it can preserve the value between renders, and updating a reference will not cause the component to re-render. For example:
 
 ```tsx showLineNumbers
 import { useRef, useEffect } from 'react'
@@ -492,4 +494,4 @@ export const Example = ({ something }: IExampleProps) => {
 
 ## When to `useRef()`?
 
-In summary, `useRef()` is useful when you need to preserve a value between renders without causing the component to re-render. Functions and timers (the returned value of `setTimeout()` and `setInterval()`) are two common examples of this.
+In summary, `useRef()` is useful when you need to preserve a value between renders, and don't want the component to re-render when the value gets updated. Functions and timers (the returned value of `setTimeout()` and `setInterval()`) are two common examples of this.

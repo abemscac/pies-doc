@@ -10,7 +10,7 @@ import Badge from '@site/src/widgets/Badge'
 
 In React, you could use either **classes** or **functions** to define components. Both options can accomplish similar tasks, but we generally recommend using **function components** because they have less boilerplate code and are easier to start with. Additionally, the Hooks API in React only supports function components.
 
-Due to the fact that class components do not appear as often as it did before, and Hooks API can only be used with function components, we will not go deep into class components in this documentation. In addition, we'll use function components instead of class components to explain things when giving examples.
+Due to the fact that class components do not appear as often as it did before, we will not go deep into class components in this documentation. In addition, we'll use function components instead of class components to explain things when giving examples.
 
 ## Class Component
 

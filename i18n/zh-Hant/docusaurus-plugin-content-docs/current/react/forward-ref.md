@@ -43,7 +43,7 @@ export const InputGroup = ({ label }: IInputGroupProps) => {
 }
 ```
 
-In the parent component, we may use it like this:
+在父元件中，我們可能會這樣使用它：
 
 ```tsx title="Parent.tsx" showLineNumbers
 import { InputGroup } from './InputGroup'
@@ -58,13 +58,13 @@ export const Parent = () => {
 }
 ```
 
-The result would look like this:
+結果就會像是這個樣子：
 
 <Video src="/video/react/forward-ref_0.mov" />
 
-Everything works well at first, however, we're now required to add a new feature — focuses on "Last Name" input when a button in `Parent` is clicked. Since the `<input>` tag is placed inside `InputGroup`, there doesn't seem to be an elegant way to do this.
+目前一切都運作良好，但是我們現在被要求增加一個新的功能－在某個父元件的按鈕被點擊時，我們要聚焦 (focus) 在 "Last Name" 的輸入框上。由於 `<input>` 標籤被放在子元件中，似乎沒有優雅的方式可以達成這個目的。
 
-This is where `forwardRef()` could be useful. We could use it to make `ref` attribute available on function components, and forward the reference to the `<input>` inside `InputGroup`. For example:
+這就是 `forwardRef()` 有用的地方。它可以讓 `ref` 屬性也能在函式元件上運作，並且轉發參考的對象至 `InputGroup` 中的 `<input>` 上。例如：
 
 ```tsx title="InputGroup.tsx" showLineNumbers
 import { forwardRef } from 'react'
@@ -88,7 +88,7 @@ export const InputGroup = forwardRef<HTMLInputElement, IInputGroupProps>(
 )
 ```
 
-As you can see, `ref` is not a member of props; instead, `forwardRef()` puts it in the second argument for us to use. After binding the `ref` to the `<input>` tag, we can finally use `useRef()` to get the instance of `<input>` from `Parent`:
+如您所見，`ref` 並不會被放在屬性 (props) 之中；相反地，它被放在 `forwardRef()` 的第二個參數中供我們使用。在將 `ref` 綁定到 `<input>` 身上之後，我們終於可以從父元件使用參考取得子元件 `<input>` 的實體：
 
 ```tsx title="Parent.tsx" showLineNumbers
 import { useRef } from 'react'
@@ -121,9 +121,9 @@ export const Parent = () => {
 <Video src="/video/react/forward-ref_1.mov" />
 
 <details>
-  <summary>Does <code>forwardRef()</code> work with class components?</summary>
+  <summary><code>forwardRef()</code>能用在類別元件身上嗎？</summary>
 
-  Yes, but we don't recommend this because some weird tricks are inevitable in order to make it work. For example:
+  可以，但是我們不建議這麼做；為了讓他動起來，一些怪招數是無法避免的。舉例來說：
 
   ```tsx title="InputGroup.tsx" showLineNumbers
   import { Component, forwardRef } from 'react'
@@ -155,13 +155,13 @@ export const Parent = () => {
   )
   ```
 
-  In order to use the `ref` from `forwardRef()` in a class component, we have to wrap the definition of class component inside `forwardRef()` (or do something similar).
+  為了取得 `forwardRef()` 中的 `ref` 並在類別元件中使用，我們得將類別元件定義在 `forwardRef()` 之中 (或是做差不多的事情)。
   
-  Furthermore, since `MyComponent` is defined inside `InputGroup`, every time `InputGroup` re-renders, `MyComponent` is going to be redeclared again. Thus, the "old" `<MyComponent {...props} />` will unmount, and the "new" `<MyComponent {...props} />` will mount within every render, causing you to lose everything in the old `MyComponent`.
+  此外，在這個範例中，由於 `MyComponent` (它是一個元件) 被定義在 `InputGroup` (它也是一個元件) 中，每次 `InputGroup` 重新渲染，`MyComponent` 就會被重新定義；代表「舊的」`<MyComponent {...props} />` 會被卸載，「新的」`<MyComponent {...props} />` 會被掛載，導致我們失去 `MyComponent` 中所有的狀態。
 
   <Video src="/video/react/forward-ref_with-class-component.mov" />
 
-  To solve this problem, the easiest solution would be to memoize the definition of `MyComponent` before the very first render and only use it since then. For example:
+  要解決這個問題，最簡單的辦法就是在第一次渲染之前將 `MyComponent` 的定義記下來，並且從那時起只使用它來進行渲染。例如：
 
   ```tsx title="InputGroup.tsx" showLineNumbers
   import { Component, forwardRef } from 'react'
@@ -187,7 +187,7 @@ export const Parent = () => {
   )
   ```
 
-  All in all, to to make things easier, just use the built-in `ref` from `React.Component`!
+  總而言之，為了讓事情變得更簡單，我們建議使用類別元件內建的 `ref` 就好了！
 </details>
 
 ## `useImperativeHandle()`

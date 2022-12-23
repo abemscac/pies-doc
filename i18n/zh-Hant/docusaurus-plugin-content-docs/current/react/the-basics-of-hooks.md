@@ -1,6 +1,6 @@
 ---
 sidebar_position: 3
-description: Introduce the basics of hooks in React.
+description: 介紹 React 鉤子 (hooks) 的基礎知識。
 keywords: [piesdoc, react, react hooks]
 ---
 

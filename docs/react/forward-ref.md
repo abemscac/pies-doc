@@ -62,7 +62,7 @@ The result would look like this:
 
 <Video src="/video/react/forward-ref_0.mov" />
 
-Everything works well at first, however, we're now required to add a new feature — focuses on "Last Name" input when a button in `Parent` is clicked. Since the `<input>` tag is placed inside `InputGroup`, there doesn't seem to be an elegant way to do this.
+Everything works well at first, however, we're now required to add a new feature — focuses on "Last Name" input when a button in `Parent` is clicked. Since the `<input>` tag is placed inside a child component, there doesn't seem to be an elegant way to do this.
 
 This is where `forwardRef()` could be useful. We could use it to make `ref` attribute available on function components, and forward the reference to the `<input>` inside `InputGroup`. For example:
 
@@ -88,7 +88,7 @@ export const InputGroup = forwardRef<HTMLInputElement, IInputGroupProps>(
 )
 ```
 
-As you can see, `ref` is not a member of props; instead, `forwardRef()` puts it in the second argument for us to use. After binding the `ref` to the `<input>` tag, we can finally use `useRef()` to get the instance of `<input>` from `Parent`:
+As you can see, `ref` is not a member of props; instead, it is put in the second argument of `forwardRef()` for us to use. After binding the `ref` to the `<input>` tag, we can finally use reference to get the instance of `<input>` from parent:
 
 ```tsx title="Parent.tsx" showLineNumbers
 import { useRef } from 'react'
@@ -157,7 +157,7 @@ export const Parent = () => {
 
   In order to use the `ref` from `forwardRef()` in a class component, we have to wrap the definition of class component inside `forwardRef()` (or do something similar).
   
-  Furthermore, since `MyComponent` is defined inside `InputGroup`, every time `InputGroup` re-renders, `MyComponent` is going to be redeclared again. Thus, the "old" `<MyComponent {...props} />` will unmount, and the "new" `<MyComponent {...props} />` will mount within every render, causing you to lose everything in the old `MyComponent`.
+  Furthermore, in this example, since `MyComponent` (a component) is defined inside `InputGroup` (also a component), every time `InputGroup` re-renders, `MyComponent` is going to be redeclared again. Thus, the "old" `<MyComponent {...props} />` will unmount, and the "new" `<MyComponent {...props} />` will mount within every render, causing you to lose everything in the old `MyComponent`.
 
   <Video src="/video/react/forward-ref_with-class-component.mov" />
 
@@ -187,7 +187,7 @@ export const Parent = () => {
   )
   ```
 
-  All in all, to to make things easier, just use the built-in `ref` from `React.Component`!
+  All in all, to to make things easier, just use the built-in `ref` in a class component!
 </details>
 
 ## `useImperativeHandle()`

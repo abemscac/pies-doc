@@ -8,7 +8,7 @@ keywords: [piesdoc, react, react useState()]
 
 ## What Is `useState()`?
 
-`useState()` is a built-in hook that is used to declare a [reactive value](./reactive-values) in a component. `useState()` takes an argument of any type as the initial value of the state, and returns an array with two elements: **the current value of the state** and **a function to update the state**. For example:
+`useState()` is a built-in hook that is used to **declare a state in a component**, which is a [reactive value](./reactive-values). `useState()` takes an argument of any type as the initial value of the state, and returns an array with two elements: **the current value of the state** and **a function to update the state**. For example:
 
 ```ts showLineNumbers
 import { useState } from 'react'
@@ -83,9 +83,9 @@ In React, all states should only be updated via the corresponding `setState()` f
 
 ## Is `setState()` Asynchronous?
 
-You may have heard people say "`setState()` is asynchronous". While this statement is partly true, as the changes made by `setState()` will not be immediately applied, `setState()` itself is actually synchronous; it does not return a promise. Therefore, it is not necessary to use await on it.
+You may have heard people say "`setState()` is asynchronous". While this statement is partly true, as the changes made by `setState()` will not be immediately applied, `setState()` itself is actually synchronous; it does not return a promise. Therefore, it is not necessary to use `await` on it.
 
-But why is it that in one of the example in [Reactive Values](./reactive-values#reactive-values-1), we can't immediately retrieve the updated value of a state right after `setState()` is called? This is a somewhat complex concept that we'll discuss in more detail as we [delve deeper into React](./use-state-in-depth#updater-functions), so don't worry about it for now!
+But why is it that in one of the [example](./reactive-values#reactive-values-1) in [Reactive Values](./reactive-values), we can't immediately retrieve the updated value of a state right after `setState()` is called? This is a somewhat complex concept that we'll discuss in more detail as we [delve deeper into React](./use-state-in-depth#updater-functions), so don't worry about it for now!
 
 ## State Initializer
 
@@ -175,7 +175,7 @@ In the above example, the component will still re-render even though we're updat
 
 <Video src="/video/react/use-state_referential-equality.mov" />
 
-This issue occurs with all non-primitive values, such as objects, arrays, maps, etc.
+This issue occurs with all non-primitive values, such as objects, arrays, [maps](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map), etc.
 
 ## What Kind of Value Is Suitable to Be a State?
 

@@ -1,7 +1,7 @@
 ---
 sidebar_position: 9
-description: Introduce the optimization functions in React, including memo(), useMemo(), and useCallback().
-keywords: [piesdoc, react, react optimization, memo(), useMemo(), useCallback()]
+description: 介紹 React 中的效能優化函式，包含 memo(), useMemo() 和 useCallback()。
+keywords: [piesdoc, react, react效能優化, memo(), useMemo(), useCallback()]
 ---
 
 import Video from '@site/src/widgets/Video'
@@ -420,7 +420,7 @@ export const Example = () => {
 }
 ```
 
-請注意我們如何將 [`updater function`](./use-state-in-depth#updater-functions) 傳遞給 `setCount()`，這樣我們就不需要將 `count` 放在 `useCallback()` 的依賴值陣列中。如此一來我們就能保證被傳遞給 `MemoizedChild` 的 `increment()` 在每次渲染中都指向相同的物件，從而使 `memo()` 能如預期的運作。
+請注意我們如何將[更新函式](./use-state-in-depth#更新函式-updater-functions)傳遞給 `setCount()`，這樣我們就不需要將 `count` 放在 `useCallback()` 的依賴值陣列中。如此一來我們就能保證被傳遞給 `MemoizedChild` 的 `increment()` 在每次渲染中都指向相同的物件，從而使 `memo()` 能如預期的運作。
 
 <Video src="/video/react/optimization-functions_use-callback-after.mov" />
 
