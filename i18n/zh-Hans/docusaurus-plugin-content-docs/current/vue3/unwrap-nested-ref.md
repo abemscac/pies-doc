@@ -131,9 +131,11 @@ import { reactive } from 'reactive'
 const user = {
   name: 'hello',
   friend: {
+    // highlight-start
     child: reactive({
       name: 'world',
     }),
+    // highlight-end
   },
 }
 ```

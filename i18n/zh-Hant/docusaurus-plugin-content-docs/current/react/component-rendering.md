@@ -372,6 +372,8 @@ export const Parent = ({ children }: IParentProps) => {
 }
 ```
 
+:::
+
 現在我們需要做的就是從 `Parent` 的屬性中取出 `children` 並將他放置在我們想要他顯示的地方：
 
 ```tsx showLineNumbers
@@ -401,8 +403,6 @@ export const Parent = ({ children }: PropsWithChildren) => {
 如此一來 `Child` 將不再受到 `Parent` 的重新渲染影響。
 
 <Video src="/video/react/component-rendering_children-prop.mov" />
-
-:::
 
 ## 響應式數值何時會被更新？
 
@@ -505,7 +505,7 @@ useEffect(() => {
 
 :::caution
 
-雖然狀態會在 `await` 完成等待後馬上被更新，千萬別忘了，由於[響應式數值在元件中的運作方式](#響應式數值在元件中的運作方式)的緣故，我們還是得等到下一次渲染才能拿到更新後的值！
+雖然狀態會在 `await` 完成等待後馬上被更新，別忘了，由於[響應式數值在元件中的運作方式](#響應式數值在元件中的運作方式)的緣故，我們還是得等到下一次渲染才能拿到更新後的值！
 
 :::
 
