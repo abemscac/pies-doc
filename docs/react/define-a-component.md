@@ -91,7 +91,7 @@ In function components:
 - Components are declared in the same way as typical JavaScript functions.
 - Function components are basically functions, so we can access everything without using `this`.
 - Props would be the first (and only) argument of function components.
-- States must be declared and updated using [`useState()`](./use-state) hook, or any other custom hooks that utilize `useState()` internally.
+- States must be declared and updated using either [`useState()`](./use-state) or [`useReducer()`](https://beta.reactjs.org/reference/react/useReducer#usereducer), or any other custom hooks that utilize those hooks internally.
 - Life-cycle hooks are replaced by a multipurpose hook [`useEffect()`](./use-effect), which is equivalent to `componentDidMount()`, `componentDidUpdate()`, and `componentWillUnmount()` in class components combined.
 
 ### Example

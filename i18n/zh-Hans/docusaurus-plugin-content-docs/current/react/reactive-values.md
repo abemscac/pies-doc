@@ -18,6 +18,16 @@ import Video from '@site/src/widgets/Video'
 
 任何未被列在此处的数值都属于非响应式，因此更新他们并不会造成组件重新渲染。
 
+:::caution
+
+那么透过 [`createContext()`](https://beta.reactjs.org/reference/react/createContext#createcontext) 建立出来的值呢？我们使用 [`useContext()`](https://beta.reactjs.org/reference/react/useContext#usecontext) 将他们注入组件的时候，他们不也是响应式的吗？
+
+没错，但是那只有在 **context 里面的数值和更新数值的函数是由 `useState()` 或是 `useReducer()` 建立的时候**才会发生。若您放置一个非响应式数值到 context 中，更新他并不会造成元件重新渲染。
+
+因此，目前 React 中响应式数值的来源还是只有 `useState()`、`useReducer()` 和组件的属性。
+
+:::
+
 ## 渲染是什么意思？
 
 在 React 中，「渲染」指的是**从上到下运行组件中的所有代码，并将输出的 JSX 元素转换为 DOM 节点**。首次渲染之后的任何后续渲染都被称为「重新渲染」。

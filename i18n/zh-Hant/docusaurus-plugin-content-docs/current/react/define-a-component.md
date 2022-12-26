@@ -92,7 +92,7 @@ export class App extends Component<IAppProps, IAppState> {
 - 宣告元件的方式和宣告 JavaScript 函式相同。
 - 函式元件本身就是函式，所以我們不需要使用 `this` 也能存取屬性和狀態。
 - 屬性會是函式元件的第一個 (也是唯一一個) 參數。
-- 狀態必須使用 [`useState()`](./use-state) 或是任何利用 `useState()` 的鉤子來進行宣告及更新。
+- 狀態必須使用 [`useState()`](./use-state)、[`useReducer()`](https://beta.reactjs.org/reference/react/useReducer#usereducer)，或是利用上述兩個鉤子的自定鉤子來進行宣告及更新。
 - 生命週期鉤子被有著多種功能的 [`useEffect()`](./use-effect) 取代，他能同時做到類別元件中的 `componentDidMount()`、`componentDidUpdate()` 和 `componentWillUnmount()`。
 
 ### 範例
