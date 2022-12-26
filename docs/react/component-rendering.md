@@ -372,6 +372,8 @@ export const Parent = ({ children }: IParentProps) => {
 }
 ```
 
+:::
+
 So all we have to do now is to take `children` out from the props of `Parent` and put it where we want it to be displayed:
 
 ```tsx showLineNumbers
@@ -401,8 +403,6 @@ export const Parent = ({ children }: PropsWithChildren) => {
 This way the re-render of `Parent` will no longer impact `Child`.
 
 <Video src="/video/react/component-rendering_children-prop.mov" />
-
-:::
 
 ## When Will Reactive Values Be Updated?
 
