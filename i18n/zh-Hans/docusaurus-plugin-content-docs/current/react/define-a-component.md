@@ -92,7 +92,7 @@ export class App extends Component<IAppProps, IAppState> {
 - 声明组件的方式和声明 JavaScript 函数相同。
 - 函数组件本身就是函数，所以我们不需要使用 `this` 也能存取属性和状态。
 - 属性会是函数组件的第一个 (也是唯一一个) 参数。
-- 状态必须使用 [`useState()`](./use-state) 或是任何利用 `useState()` 的钩子来进行声明及更新。
+- 状态必须使用 [`useState()`](./use-state)、[`useReducer()`](https://beta.reactjs.org/reference/react/useReducer#usereducer)，或是利用上述两个钩子的自定钩子来进行宣告及更新。
 - 生命周期钩子被有着多种功能的 [`useEffect()`](./use-effect) 取代，他能同时做到类别组件中的 `componentDidMount()`、`componentDidUpdate()` 和 `componentWillUnmount()`。
 
 ### 范例

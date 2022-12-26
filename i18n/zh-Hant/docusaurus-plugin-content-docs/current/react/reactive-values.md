@@ -18,6 +18,16 @@ import Video from '@site/src/widgets/Video'
 
 任何未被列在此處的數值都屬於非響應式，因此更新他們並不會造成元件重新渲染。
 
+:::caution
+
+那麼透過 [`createContext()`](https://beta.reactjs.org/reference/react/createContext#createcontext) 建立出來的值呢？我們使用 [`useContext()`](https://beta.reactjs.org/reference/react/useContext#usecontext) 將他們注入元件的時候，他們不也是響應式的嗎？
+
+沒錯，但是那只有在 **context 裡面的數值和更新數值的函式是由 `useState()` 或是 `useReducer()` 建立的時候**才會發生。若您放置一個非響應式數值到 context 中，更新他並不會造成元件重新渲染。
+
+因此，目前 React 中響應式數值的來源還是只有 `useState()`、`useReducer()` 和元件的屬性。
+
+:::
+
 ## 渲染是什麼意思？
 
 在 React 中，「渲染」指的是**從上到下執行元件中的所有程式碼，並將輸出的 JSX 元素轉換為 DOM 節點**。首次渲染之後的任何後續渲染都被稱為「重新渲染」。
