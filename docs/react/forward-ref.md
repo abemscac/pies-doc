@@ -16,7 +16,7 @@ You must learn [`useRef()`](./use-ref#component-instances) before getting into t
 
 ## What Is `forwardRef()`?
 
-`forwardRef()` is a built-in [HOC](https://reactjs.org/docs/higher-order-components.html) that is used to forward the reference of a component to a specific target. To be more specific, it is used to **change the default target of reference when `ref` attribute is used on child components**.
+`forwardRef()` is a built-in function that is used to forward the reference of a component to a specific target. To be more specific, it is used to **change the default target of reference when `ref` attribute is used on child components**.
 
 There are two generic types in `forwardRef<T, P>()`; `T` is the type of value being exposed to parent, and `P` is the type of component props.
 

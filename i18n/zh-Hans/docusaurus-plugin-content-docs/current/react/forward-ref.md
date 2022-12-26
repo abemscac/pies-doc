@@ -16,7 +16,7 @@ import Video from '@site/src/widgets/Video'
 
 ## 什么是 `forwardRef()`?
 
-`forwardRef()` 是一个内建的 [HOC](https://reactjs.org/docs/higher-order-components.html)，用于「转发」组件的参考到指定目标上。更明确的说，他是用来**改变 `ref` 属性套用在子组件时的默认目标**。
+`forwardRef()` 是一个内建函数，用于「转发」组件的参考到指定目标上。更明确的说，他是用来**改变 `ref` 属性套用在子组件时的默认目标**。
 
 `forwardRef<T, P>()` 中有两个泛型型别；`T` 是要暴露给父组件的值的型别 (也就是父组件中 `useRef<T>` 的 `T`)，`P` 是子组件属性的型别。
 

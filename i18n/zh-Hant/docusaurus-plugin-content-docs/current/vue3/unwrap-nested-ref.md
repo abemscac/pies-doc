@@ -37,6 +37,7 @@ const dog = ref({
 const we = ref({
   have: {
     a: {
+      // highlight-next-line
       dog,
     }
   }

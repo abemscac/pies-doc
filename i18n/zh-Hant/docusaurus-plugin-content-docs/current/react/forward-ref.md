@@ -16,7 +16,7 @@ import Video from '@site/src/widgets/Video'
 
 ## 什麼是 `forwardRef()`?
 
-`forwardRef()` 是一個內建的 [HOC](https://reactjs.org/docs/higher-order-components.html)，用於「轉發」元件的參考到指定目標上。更明確的說，他是用來**改變 `ref` 屬性套用在子元件時的預設目標**。
+`forwardRef()` 是一個內建函式，用於「轉發」元件的參考到指定目標上。更明確的說，他是用來**改變 `ref` 屬性套用在子元件時的預設目標**。
 
 `forwardRef<T, P>()` 中有兩個泛型型別；`T` 是要暴露給父元件的值的型別 (也就是父元件中 `useRef<T>` 的 `T`)，`P` 是子元件屬性的型別。
 
