@@ -71,7 +71,7 @@ const logName = useCallback(() => {
 }, [])
 ```
 
-In this example, even if `logName()` is being memoized by a `useCallback()` with no dependency, the `name.current` in `logName()` will still point to the latest value of `name`. The same rule can be applied to `useEffect()` and `useMemo()` as well.
+In this example, even if `logName()` is being memoized by a `useCallback()` with no dependency, the `name.current` in `logName()` will still refer to the latest value of `name`. The same rule can be applied to `useEffect()` and `useMemo()` as well.
 
 <Video src="/video/react/use-ref_always-latest.mov" />
 
@@ -466,7 +466,7 @@ interface IExampleProps {
   something: string
 }
 
-// Be careful!
+// Beware!
 // All instances of this component will access the same value in this way!
 // highlight-next-line
 let thatFunction: (() => void) | undefined = undefined

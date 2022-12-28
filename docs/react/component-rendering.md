@@ -68,9 +68,15 @@ In this example, we use three `console.log()` successively to print out the valu
 
 From [one of the example](./reactive-values#reactive-values-1) in [Reactive Values](./reactive-values), we already know that changes made by functions like `setState()` will not be applied immediately, so currently it's acceptable to see the second `console.log()` showing `0` (we'll talk about the real cause [below](#when-will-reactive-values-be-updated)!) But why is it that in the video, when we clearly see the number on the screen has changed from `0` to `5`, the last `console.log()` still shows `0`?
 
-In React, a component does not wait until you need to use a reactive value to read it; instead, in each render, **it reads reactive values and use them to define everything first**, then it shows stuff on the screen.
+In a React component, **every render has its own unique set of props, states, and everything**. To simplify this idea, just think of it as **a find and replace operation that occurs during each render**.
 
-To explain this idea in a much simpler way, just think of it as **find and replace** in each render. Let's take a look at the `click()` function in this component:
+:::caution
+
+Please note that "find and replace" is just a concept to give you a quick idea of ​​​​what the result will be after a component re-renders, and is **not** how React actually handles things internally.
+
+:::
+
+Let's use the `click()` function in this component as a example:
 
 ```ts showLineNumbers
 const click = () => {
@@ -85,7 +91,7 @@ const click = () => {
 }
 ```
 
-In the first render, the value of `count` is `0`. Thus, React will define `click()` by replacing all occurrences of `count` with its value in this render, which is `0`. Therefore, the following code is what the component did while defining `click()` in the first render:
+In the first render, the value of `count` is `0`. This means in this render, all occurrences of `count` in this component will be "replaced" by `0`. The following code illustrates what the component does when defining `click()` in this render:
 
 ```ts showLineNumbers
 const click = () => {
@@ -103,7 +109,7 @@ const click = () => {
 }
 ```
 
-Notice how all the `count` are replaced by `0`. This explains why we still get `0` in the timeout, even though the `count` on the screen has already been updated to `5`.
+Notice how all the `count` are now `0`. This explains why we still get `0` in the timeout, even though the `count` on the screen has already been updated to `5`.
 
 Here's another example that "broke" for the same reason:
 
@@ -125,7 +131,7 @@ In this example, after `click()` is executed, the value of `count` will be `1` i
 
 Since the initial value of `count` is `0`, all `setCount(count + 1)` in `click()` will evaluate to `setCount(0 + 1)`. So in the first render, the component will define `click()` as a function that runs `setCount(0 + 1)` three times, which updates the value of `count` to `1` instead of `3`.
 
-From these examples, we've learned a very important lesson — in a React component, **everything works by rendering**, not by time. **Reactive values can only represent the status of a component in a specific render, even in a halfway through function call**. That's why a component needs to **re-render**. But what exactly does re-render do?
+From these examples, we've learned a very important lesson — in a React component, **everything works by rendering**, not by time. **Reactive values can only represent the status of a component in a specific render**. That's why a component needs to **re-render**. But what exactly does re-render do?
 
 ## What Happens When A Component Re-Renders?
 
@@ -180,52 +186,52 @@ The only state in this component is `count`, and we can update `count` by clicki
 
 In the first render, React initializes the component according to the following steps:
 
-1. Runs `const [count, setCount] = useState(0)` to make `count` and `setCount()` available.
-2. Runs `const countPlusFive = count + 5`; since the initial value of `count` is `0`, all occurrences of `count` will be replaced by `0`, so `countPlusFive` will evaluate to `0 + 5`.
-3. Runs `const increment = () => { ... }`; since the initial value of `count` is `0`, all occurrences of `count` will be replaced by `0`, so `setCount(count + 1)` will evaluate to `setCount(0 + 1)`.
+1. Declare `count` and `setCount` by running `const [count, setCount] = useState(0)`.
+2. Declare `countPlusFive` by running `const countPlusFive = count + 5`.
+    - Since the initial value of `count` is `0`, `countPlusFive` will evaluate to `0 + 5` in this render, which is `5`.
+3. Declare `increment()` by running `const increment = () => { ... }`.
+    - Since the initial value of `count` is `0`, `setCount(count + 1)` will evaluate to `setCount(0 + 1)` in this render.
 4. Binds all necessary values to the JSX elements in the return section while rendering all child components, and do the return.
 
 ### The Second Render (The First Re-Render)
 
 After the "Increment" button is clicked once, the value of `count` will be updated from `0` to `1`. Since `count` is a reactive value, this change will cause the component to re-render. Thus, React re-renders the component by re-running every single piece of code in the component from top to bottom:
 
-1. Runs `const [count, setCount] = useState(0)`. However, thanks to how `useState()` works internally, `count` and `setCount()` will **not** be redeclared; they will still point to the same variables as in the previous render.
-2. Runs `const countPlusFive = count + 5`.
-    - Since `countPlusFive` is an unmemoized value, React will redeclare it during re-render.
-    - The value of `count` has been updated from `0` to `1`, so `count + 5` will evaluate to `1 + 5`, which is `6` in this render.
-3. Runs `const increment = () => { ... }`.
-    - Since `increment()` is an unmemoized value, React will redeclare it during re-render.
-    - The value of `count` has been updated from `0` to `1`, so `setCount(count + 1)` will evaluate to `setCount(1 + 1)`.
+1. Declare `count` and `setCount` by running `const [count, setCount] = useState(0)`. However, thanks to how `useState()` works internally, `count` and `setCount()` will still refer to the same variables as in the previous render; they're just being assigned to new variables with the same names as in the previous render.
+2. Declare `countPlusFive` by running `const countPlusFive = count + 5`.
+    - Since value of `count` has been updated from `0` to `1`, `count + 5` will evaluate to `1 + 5` in this render, which is `6`.
+3. Declare `increment()` by running `const increment = () => { ... }`.
+    - Since the value of `count` has been updated from `0` to `1`, `setCount(count + 1)` will evaluate to `setCount(1 + 1)` in this render.
 4. Binds all necessary values to the JSX elements in the return section while re-rendering all children, and do the return.
 
 Any subsequent render will just follow the same rule as the the first re-render, with no exception.
 
-As you can see, render and re-render are actually not that different from each other; they both follow the same rule — runs the code in a component from top to bottom. Therefore, in each render, **the definitions of everything are still the same as in the previous render; the only difference is the value of reactive variables**. Please keep in mind that:
+As you can see, render and re-render are actually not that different from each other; they both follow the same rule — runs the code in a component from top to bottom. Therefore, **in each render, everything gets redeclared; the only difference is how the values are evaluated**. Please keep in mind that:
 
 - Reactive values will never change within the same render. In other words, **reactive values can actually be seen as constants in each render**; they only change in the next render.
-- **By default, all unmemoized values get redeclared during re-render**. You can prevent this from happening by using memoization functions like [`useMemo()`](./optimization-functions#usememo) and [`useCallback()`](./optimization-functions#usecallback).
+- **Although everything gets redeclared in each render,  it doesn't necessarily mean that all variables will point to different memory addresses compared to the previous render**. You can use memoization functions like [`useMemo()`](./optimization-functions#usememo) and [`useCallback()`](./optimization-functions#usecallback) to make a variable point to the same memory address across different renders.
 
 :::caution
 
-Since unmemoized values are always redeclared during re-render, we must be careful when using them in a component.
+Since everything gets redeclared during re-render, we must be careful when using them in a component.
 
 - Pay attention to the referential equality of variables.
 
-  If the value is non-[primitive](https://developer.mozilla.org/en-US/docs/Glossary/Primitive), and it's being used as a prop of a child, the [`memo()`](./optimization-functions#reactmemo) on the child will then lose its effectiveness. For example:
+  If an unmemoized, non-[primitive](https://developer.mozilla.org/en-US/docs/Glossary/Primitive) value is declared in a component, and it's being used as a prop of a child, the [`memo()`](./optimization-functions#reactmemo) on the child will then lose its effectiveness. For example:
 
   ```tsx showLineNumbers
   import { Child } from './Child'
 
   export const Example = () => {
     // Beware!
-    // This object gets redeclared whenever `Example` re-renders.
+    // `user` will refer to a different object in each render.
     // highlight-next-line
     const user = {
       age: 5,
     }
 
     // Beware!
-    // This function gets redeclared whenever `Example` re-renders, too!
+    // `sayHi()` will also refer to a different object in each render!
     // highlight-next-line
     const sayHi = () => {
       console.log('Hi')
@@ -262,7 +268,7 @@ Since unmemoized values are always redeclared during re-render, we must be caref
 
   In the above example, we declare a function called `View` that returns a JSX element `<Child />`, which is a common pattern. You may not have noticed, but we just defined a function component (`View`) inside another function component (`Example`)!
 
-  Although both `<View />` and `{View()}` will render `<Child />`, because `View` function is redeclared every time `Example` re-renders, React will treat `<View />` as a new instance on each render, causing it to be unmounted and mounted again. This can have performance implications if what `View` returns is a complex component.
+  Although both `<View />` and `{View()}` will render `<Child />`, because each render has its own `View` function, React will treat `<View />` as an instance of a "new" component in each render, causing it to be unmounted and mounted again. This can have performance implications if what `View` returns is a complex component.
 
   <Video src="/video/react/component-rendering_render-method-1.mov" />
 
@@ -505,7 +511,7 @@ useEffect(() => {
 
 :::caution
 
-While states will be updated immediately after an `await` statement is executed, don't forget that the updated values will only be available in the next render due to [how reactive value works in a compoent](#how-reactive-value-works-in-a-component)!
+While states will be updated immediately after an `await` statement is executed, don't forget that the states in a function will remain the same as they were in the render they were defined, due to [how reactive value works in a component](#how-reactive-value-works-in-a-component). Updated states will only be available in the next render!
 
 :::
 
