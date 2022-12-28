@@ -68,9 +68,15 @@ export const Example = () => {
 
 在[响应式数值](./reactive-values)的[其中一个范例](./reactive-values#响应式数值范例)中，我们已经知道 `setState()` 这种函数所造成的变化并不会立即生效，因此目前看到第二个 `console.log()` 显示 `0` 是可以接受的 (我们会在[下方](#响应式数值何时会被更新)解释导致这个现象的原因！)。但是为何在上面的影片中，即使我们清楚的看见画面上的数字已经从 `0` 变成了 `5`，`console.log()` 却还是显示 `0` 呢？
 
-在 React 中，组件不会等到您需要用到某个响应式数值时才去读取他的值；相反地，在每次渲染之前，**组件会先读取响应式数值并用他们来定义所有内容**，然后才将内容显示在萤幕上。
+在 React 组件中，**每一次的渲染都有他自己的属性、状态及所有东西**。若用个简单的方式来比喻，这就像是在每次渲染前都会做一次**寻找并取代**。
 
-用更简单的话来说，这就像是在每次渲染前都会做一次**寻找并取代**。让我们看看组件中的 `click()` 函数：
+:::caution
+
+请注意，「寻找并取代」的说法只是一个虚构的概念，目的是为了让您能快速了解组件重新渲染后会产生什么样的结果，它并不是 React 的实际运作逻辑。
+
+:::
+
+让我们以组件中的 `click()` 函数来当做例子：
 
 ```ts showLineNumbers
 const click = () => {
@@ -85,7 +91,7 @@ const click = () => {
 }
 ```
 
-在首次渲染中，`count` 的值为 `0`。在定义 `click()` 时，React 会将所有的 `count` 都取代成 `count` 在当前渲染的值，也就是 `0`。因此，以下代码是组件在首次渲染时所定义的 `click()`：
+在首次渲染中，`count` 的值为 `0`。这代表在这次渲染中，组件中所有的 `count` 都会被「取代」成 `0`。以下代码展示了组件在这次渲染中是如何定义 `click()`：
 
 ```ts showLineNumbers
 const click = () => {
@@ -125,7 +131,7 @@ const click = () => {
 
 由于 `count` 的初始值为 `0`，`click()` 中所有的 `setCount(count + 1)` 都会被解读成 `setCount(0 + 1)`。因此，在首次渲染中，组件会将 `click()` 定义成一个运行 `setCount(0 + 1)` 三次的函数，导致 `count` 的值被更新成 `1` 而非 `3`。
 
-从这些范例中，我们学到了非常重要的一课－在 React 组件中，**所有事物都照着渲染运作**，而非时间。**响应式数值只能代表组件在某次渲染时的状态，即使在运行到一半的函数中也一样**。这就是为什么组件需要**重新渲染**。但是重新渲染到底做了什么？
+从这些范例中，我们学到了非常重要的一课－在 React 组件中，**所有事物都照着渲染运作**，而非时间。**响应式数值只能代表组件在某次渲染时的状态**。这就是为什么组件需要**重新渲染**。但是重新渲染到底做了什么？
 
 ## 组件重新渲染时会发生什么事？
 
@@ -180,52 +186,52 @@ export const Example = () => {
 
 在首次渲染中，React 会依照以下步骤初始化组件：
 
-1. 运行 `const [count, setCount] = useState(0)` 来让 `count` 和 `setCount()` 可用。
-2. 运行 `const countPlusFive = count + 5`；由于 `count` 的初始值是 `0`，组件中所有的 `count` 都会被取代成 `0`，因此 `countPlusFive` 会被定义为 `0 + 5`。
-3. 运行 `const increment = () => { ... }`；由于 `count` 的初始值是 `0`，组件中所有的 `count` 都会被取代成 `0`，因此 `setCount(count + 1)` 会被解读为 `setCount(0 + 1)`.
+1. 运行 `const [count, setCount] = useState(0)` 来声明 `count` 和 `setCount()`。
+2. 运行 `const countPlusFive = count + 5` 来声明 `countPlusFive`。
+    - 由于 `count` 的初始值是 `0`，`countPlusFive` 在这次渲染中会被定义为 `0 + 5`。
+3. 运行 `const increment = () => { ... }` 来声明 `increment()`。
+    - 由于 `count` 的初始值是 `0`，`setCount(count + 1)` 在这次渲染中会被解读为 `setCount(0 + 1)`。
 4. 绑定所有必要的数值到返回区的 JSX 元素上，同时渲染所有子组件并返回结果。
 
 ### 第二次渲染 (首次重新渲染)
 
 在 "Increment" 按钮被点击一次之后，`count` 的数值会从 `0` 被更新到 `1`。由于 `count` 是一个响应式数值，这个变动会造成组件重新渲染。因此，React 会从上到下再次运行组件中所有的代码来达到重新渲染：
 
-1. 运行 `const [count, setCount] = useState(0)`。由于 `useState()` 内部运作机制的缘故，`count` 和 `setCount()` **不会**被重新声明；他们仍然会指向和前一次渲染相同的变量。
-2. 运行 `const countPlusFive = count + 5`.
-    - 由于 `countPlusFive` 是一个未被记忆的值，React 会在组件重新渲染时重新声明他。
-    - 因为 `count` 已经从 `0` 更新到 `1` 了，所以这次渲染中的 `count + 5` 会被解读为 `1 + 5`，也就是 `6`。
-3. 运行 `const increment = () => { ... }`.
-    - 由于 `increment()` 是一个没有被记忆的值，React 会在组件重新渲染时重新声明他。
-    - 因为 `count` 已经从 `0` 更新到 `1` 了，所以这次渲染中的 `setCount(count + 1)` 会被解读为 `setCount(1 + 1)`。
+1. 运行 `const [count, setCount] = useState(0)` 来声明 `count` 和 `setCount()`。由于 `useState()` 内部运作机制的缘故，`count` 和 `setCount()` 仍然会指向和前一次渲染相同的变量；我们只是将它们赋予到和前一次渲染中相同名称的新变量上。
+2. 运行 `const countPlusFive = count + 5` 来声明 `countPlusFive`。
+    - 由于 `count` 已经从 `0` 被更新到 `1` 了，所以这次渲染中的 `count + 5` 会被解读为 `1 + 5`，也就是 `6`。
+3. 运行 `const increment = () => { ... }` 来声明 `increment()`。
+    - 由于 `count` 已经从 `0` 被更新到 `1` 了，所以这次渲染中的 `setCount(count + 1)` 会被解读为 `setCount(1 + 1)`。
 4. 绑定所有必要的数值到返回区的 JSX 元素上，同时重新渲染所有子组件并返回结果。
 
 任何后续的渲染都会遵循与第一次重新渲染相同的步骤，无一例外。
 
-如您所见，渲染和重新渲染其实没有这么不同；他们都依照相同的规则－从上到下运行组件中的代码。因此，在每次渲染中，**一切的定义还是和前次渲染一样，唯一的差别是响应式变量的值**。请记住：
+如您所见，渲染和重新渲染其实没有这么不同；他们都依照相同的规则－从上到下运行组件中的代码。因此，在每次渲染中，**所有东西都会被重新声明，唯一的差别是他们的值是如何被决定的**。请记住：
 
 - 响应式数值在同次渲染中永远不会改变。换句话说，**在每次渲染中，响应式数值可以被当做常数看待**；他们只会在下一次渲染中被改变。
-- **默认情况下，所有未被记忆的值都会在组件重新渲染时被重新声明**。您可以使用像是 [`useMemo()`](./optimization-functions#usememo) 和 [`useCallback()`](./optimization-functions#usecallback) 等记忆函数来防止这种情况发生。
+- **虽然所有东西在每次的渲染中都会被重新声明，但是这并不代表所有变量所指向的记忆体位置都会和前一次渲染不同**。您可以使用像是 [`useMemo()`](./optimization-functions#usememo) 和 [`useCallback()`](./optimization-functions#usecallback) 等记忆函数来让变量在不同的渲染中指向相同的记忆体位置。
 
 :::caution
 
-由于未被记忆的值会在重新渲染时被重新声明，因此在组件中使用他们时要格外小心。
+由于所有东西都会在组件重新渲染时被重新声明，因此在组件中使用他们时要格外小心。
 
 - 注意变量之间的相等性
 
-  如果该数值属于非[原始型别](https://developer.mozilla.org/en-US/docs/Glossary/Primitive)，并且被用来当做子组件的属性，那么他就会导致子组件上的 [`memo()`](./optimization-functions#memo) 失效。举例来说：
+  若我们在组件中声明一个未被记忆的非[原始型别](https://developer.mozilla.org/en-US/docs/Glossary/Primitive)数值，并且用它来当做子组件的属性，这将会导致子组件上的 [`memo()`](./optimization-functions#memo) 失效。举例来说：
 
   ```tsx showLineNumbers
   import { Child } from './Child'
 
   export const Example = () => {
     // 小心！
-    // 这个物件会随着 `Example` 的重新渲染被重新声明。
+    // `user` 在每次渲染中都会指向不同的物件。
     // highlight-next-line
     const user = {
       age: 5,
     }
 
     // 小心！
-    // 这个函数也会随着 `Example` 的重新渲染被重新声明。
+    // `sayHi()` 在每次渲染中也会指向不同的物件！
     // highlight-next-line
     const sayHi = () => {
       console.log('Hi')
@@ -262,7 +268,7 @@ export const Example = () => {
 
   在这个范例中，我们声明了一个名为 `View` 的函数，他返回一个 JSX 元素 `<Child />`，这是挺常见的写法。然而，您可能没有注意到，我们正在一个函数组件 (`Example`) 中定义另外一个函数组件 (`View`)！
 
-  虽然 `<View />` 和 `{View()}` 都会渲染出 `<Child />`，但由于 `View` 函数会随着 `Example` 的重新渲染被重新定义，React 会将每次渲染的 `<View />` 当成新的组件，导致他随着重新渲染而被卸载又重新挂载。如果 `View` 返回的是一个较消耗资源的组件，这可能会对效能产生影响。
+  虽然 `<View />` 和 `{View()}` 都会渲染出 `<Child />`，但由于每次的渲染都有着它自己的 `View` 函数，React 会将每次渲染的 `<View />` 当成是一个「新」组件的新实体，导致他随着重新渲染而被卸载又重新挂载。如果 `View` 返回的是一个较消耗资源的组件，这可能会对效能产生影响。
 
   <Video src="/video/react/component-rendering_render-method-1.mov" />
 
@@ -505,7 +511,7 @@ useEffect(() => {
 
 :::caution
 
-虽然状态会在 `await` 完成等待后马上被更新，别忘了，由于[响应式数值在组件中的运作方式](#响应式数值在组件中的运作方式)的缘故，我们还是得等到下一次渲染才能拿到更新后的值！
+虽然状态会在 `await` 完成等待后马上被更新，别忘了，由于[响应式数值在组件中的运作方式](#响应式数值在组件中的运作方式)的缘故，函数中的状态仍然会保持函数被声明时的数值。我们还是得等到下一次渲染才能拿到更新后的值！
 
 :::
 

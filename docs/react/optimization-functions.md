@@ -138,7 +138,7 @@ const something = useMemo(() => {
 Usually `useMemo()` is used when:
 
 1. Skipping expensive calculations during re-render.
-2. Preventing variables from being redeclared during re-render.
+2. Making vairables point to the same memory addresses across different renders.
 3. When `useEffect()` is used with `setState()`.
 
 #### Skipping Expensive Calculations During Re-Render
@@ -176,9 +176,9 @@ export const Example = () => {
 }
 ```
 
-#### Preventing Variables From Being Redefined During Re-Render
+#### Making Vairables Point to the Same Memory Addresses Across Different Renders
 
-Sometimes we may want to use a non-primitive value (e.g. a function) as a prop for a child component. However, because unmemoized values are redeclared during re-render, they will actually point to different objects in each render, which can cause the `memo()` on the children to lose its effectiveness.
+Sometimes we may want to use a non-primitive value (e.g. a function) as a prop for a child component. However, because unmemoized values are redeclared during re-render, they will actually refer to different objects in each render, which can cause the `memo()` on the children to lose its effectiveness.
 
 To solve this problem, we can use `useMemo()` to memoize the value so that we always get the same object between renders. For example:
 
@@ -187,13 +187,13 @@ import { useMemo } from 'react'
 
 export const Example = () => {
   // Beware!
-  // This object gets redeclared whenever `Example` re-renders.
+  // This will make `user` refer to a different object in each render.
   // highlight-next-line
   const user = {
     age: 5,
   }
 
-  // This object will not be redeclared when `Example` re-renders.
+  // This will cause `user` to always refer to the same object.
   // highlight-start
   const user = useMemo(() => ({
     age: 5,
@@ -404,9 +404,9 @@ In this example, even if `MemoizedChild` is already wrapped in `memo()`, it'll s
 
 <Video src="/video/react/optimization-functions_use-callback-before.mov" />
 
-This is because every time `Example` re-renders, `increment()` will be redeclared; since `increment()` is a non-primitive value, it'll actually point to a different value after being redeclared, causing `memo()` to think that `increment()` has changed between renders.
+This is because every time `Example` re-renders, `increment()` will be redeclared; since `increment()` is a non-primitive value, it'll actually refer to a different value after being redeclared, causing `memo()` to think that `increment()` has changed between renders.
 
-To solve this problem, we can wrap `increment()` inside `useCallback()` so that it can point to the same value when `Example` re-renders:
+To solve this problem, we can wrap `increment()` inside `useCallback()` so that it can refer to the same value when `Example` re-renders:
 
 ```tsx showLineNumbers
 // highlight-next-line
