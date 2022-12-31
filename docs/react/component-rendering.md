@@ -421,7 +421,7 @@ First, we must understand that the purpose of functions like [`setState()`](./us
 In general, React will process update requests when any of the following conditions are met:
 
 1. When the call stack is empty.
-2. When the caller of async function resumes execution.
+2. When `await` is executed.
 
 #### When the Call Stack Is Empty
 
@@ -465,9 +465,9 @@ export const Example = () => {
 
 In this example, `click()` is the `onClick` event handler of the button, which means `click()` will be the only function call in the call stack when the button is clicked. Since `console.log('Done')` is the last action to be done in `click()`, the execution of `click()` will be considered as done after `console.log('Done')` is completed. Thus, React will immediately update the states according to our update request (which is `setCount(1)`) once the execution of `click()` is done.
 
-#### When the Caller of Async Function Resumes Execution
+#### When `await` Is Executed
 
-Update requests will also be processed when the caller of async function resumes execution. Simply put, states will be updated right after `await` has done "awaited". For example:
+Update requests will also be processed when `await` is executed. For example:
 
 ```ts showLineNumbers
 import { useState } from 'react'
@@ -492,8 +492,8 @@ const doSomethingAsync = () => {
 
 In the above example, `count` is going to be updated twice:
 
-1. Right after the first `await doSomethingAsync()` is done (updated from `0` to `1`).
-2. Right after the second `await doSomethingAsync()` is done (updated from `1` to `2`).
+1. Right when the first `await doSomethingAsync()` is executed, before `doSomethingAsync()` is resolved or rejected (updated from `0` to `1`).
+2. Right when the second `await doSomethingAsync()` is executed, before `doSomethingAsync()` is resolved or rejected (updated from `1` to `2`).
   
 We can verify this with the help of `useEffect()`:
 
@@ -511,7 +511,7 @@ useEffect(() => {
 
 :::caution
 
-While states will be updated immediately after an `await` statement is executed, don't forget that the states in a function will remain the same as they were in the render they were defined, due to [how reactive value works in a component](#how-reactive-value-works-in-a-component). Updated states will only be available in the next render!
+While states will be updated immediately when an `await` statement is executed, don't forget that the states in a function will remain the same as they were in the render they were defined, due to [how reactive value works in a component](#how-reactive-value-works-in-a-component). Updated states will only be available in the next render!
 
 :::
 
@@ -556,8 +556,8 @@ const doSomethingAsync = () => {
 
   In this example, `count` is going to be updated three times:
 
-  1. Right after the first `await doSomethingAsync()` is done (updated from `0` to `1`).
-  2. Right after the second `await doSomethingAsync()` is done (updated from `1` to `2`).
+  1. Right when the first `await doSomethingAsync()` is executed, before `doSomethingAsync()` is resolved or rejected (updated from `0` to `1`).
+  2. Right when the second `await doSomethingAsync()` is executed, before `doSomethingAsync()` is resolved or rejected (updated from `1` to `2`).
   3. When the execution of `click()` is done (updated from `2` to `3`).
 
   <Video src="/video/react/component-rendering_update-request-exercise.mov" />

@@ -421,7 +421,7 @@ export const Parent = ({ children }: PropsWithChildren) => {
 总的来说，React 会在以下任意条件符合时处理更新请求：
 
 1. 当调用堆叠 (call stack) 为空。
-2. 当异步函数的调用者恢复运行。
+2. 当 `await` 被运行。
 
 #### 当调用堆叠为空
 
@@ -465,9 +465,9 @@ export const Example = () => {
 
 在这个范例中，`click()` 是按钮 `onClick` 事件的处理程序 (event handler)，代表当按钮被点击时，`click()` 会是调用堆叠中唯一的一个函数。由于 `console.log('Done')` 是 `click()` 中的最后一个动作，`click()` 的运行会在 `console.log('Done')` 运行完成后被视为完成。因此， React 会在 `click()` 运行完成后立即依照我们所提出的更新请求 (就是 `setCount(1)`) 对状态进行更新。
 
-#### 当异步函数的调用者恢复运行
+#### 当 `await` 被运行
 
-React 也会在异步函数的调用者恢复运行时处理更新请求。简单来说，状态会在 `await` 完成等待后马上被更新。例如：
+React 也会在 `await` 被运行时处理更新请求，例如：
 
 ```ts showLineNumbers
 import { useState } from 'react'
@@ -492,8 +492,8 @@ const doSomethingAsync = () => {
 
 在上面的范例中，`count` 将会被更新两次：
 
-1. 在第一个 `await doSomethingAsync()` 完成之后 (从 `0` 被更新到 `1`)。
-2. 在第二个 `await doSomethingAsync()` 完成之后 (从 `1` 被更新到 `2`)。
+1. 在第一个 `await doSomethingAsync()` 被运行时，`doSomethingAsync()` 被 resolved 或 rejected 之前 (从 `0` 被更新到 `1`)。
+2. 在第二个 `await doSomethingAsync()` 被运行时，`doSomethingAsync()` 被 resolved 或 rejected 之前 (从 `1` 被更新到 `2`)。
 
 我们可以使用 `useEffect()` 来验证这一点：  
 
@@ -511,7 +511,7 @@ useEffect(() => {
 
 :::caution
 
-虽然状态会在 `await` 完成等待后马上被更新，别忘了，由于[响应式数值在组件中的运作方式](#响应式数值在组件中的运作方式)的缘故，函数中的状态仍然会保持函数被声明时的数值。我们还是得等到下一次渲染才能拿到更新后的值！
+虽然状态会在 `await` 运行时马上被更新，别忘了，由于[响应式数值在组件中的运作方式](#响应式数值在组件中的运作方式)的缘故，函数中的状态仍然会保持函数被声明时的数值。我们还是得等到下一次渲染才能拿到更新后的值！
 
 :::
 
@@ -556,8 +556,8 @@ const doSomethingAsync = () => {
 
   在这个范例中，`count` 会被更新三次：
 
-  1. 在第一个 `await doSomethingAsync()` 完成之后 (从 `0` 被更新到 `1`)。
-  2. 在第二个 `await doSomethingAsync()` 完成之后 (从 `1` 被更新到 `2`)。
+  1. 在第一个 `await doSomethingAsync()` 被运行时，`doSomethingAsync()` 被 resolved 或 rejected 之前 (从 `0` 被更新到 `1`)。
+  2. 在第二个 `await doSomethingAsync()` 被运行时，`doSomethingAsync()` 被 resolved 或 rejected 之前 (从 `1` 被更新到 `2`)。
   3. 当 `click()` 完成之后 (从 `2` 被更新到 `3`)。
 
   <Video src="/video/react/component-rendering_update-request-exercise.mov" />
