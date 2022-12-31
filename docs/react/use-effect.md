@@ -276,18 +276,16 @@ useEffect(() => {
   flowB(sharedValue, onlyUsedInB)
   
   // highlight-start
+  // We don't want `flowA()` to be executed when `onlyUsedInB` changes.
   if (!onlyUsedInB) {
-    // We don't want `flowA()` to be executed
-    // when `onlyUsedInB` changes.
-    // Besides, `!onlyUsedInB` doesn't guarantee
-    // `onlyUsedInB` hasn't changed!
+    // Beware, `!onlyUsedInB` doesn't guarantee `onlyUsedInB` hasn't changed!
     flowA(sharedValue)
   }
   // highlight-end
 }, [sharedValue, onlyUsedInB])
 ```
 
-As the app grows and more logic is added to the effect, it can become increasingly difficult to maintain over time. In this situation, it's often a better choice to split the effect into multiple smaller effects, as it can help ensure that the code remains maintainable as the app grows. For example:
+As the app grows and more logic is added to the effect, it can become increasingly difficult to maintain over time. In this situation, it's often a better choice to divide the effect into multiple smaller effects, with each effect handling a specific flow. This can help ensure that the code remains maintainable as the app grows and evolves. For example:
 
 ```ts showLineNumbers
 useEffect(() => {
@@ -300,6 +298,8 @@ useEffect(() => {
 ```
 
 One advantage of this approach is that modifying the dependencies of one effect will not affect the other. This can be especially helpful in the long run, as it can help ensure that **the code for each flow remains independent and does not interfere with the other**.
+
+Furthermore, we can wrap these flows (effects) into their own hooks for better readability and maintainability, which will be discussed in the next section.
 
 ### Make Good Use of Hooks
 

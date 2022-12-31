@@ -226,6 +226,146 @@ useEffect(() => {
 }, [])
 ```
 
+## 如何使用 `useEffect()`？
+
+在使用 `useEffect()` 时，「`callback` 何时该被运行」不该是唯一被纳入考量的因素，因为该作法通常会导致代码难以理解和维护。由于使用 `useEffect()` 的原因会因不同的应用程序而异，因此很难归纳出一条适用于所有 `useEffect()` 使用情境的规则。话虽如此，我们还是试着整理了一些在使用 `useEffect()` 时可能有用，或是值得考虑的建议。
+
+### 减少 `callback` 被调用的次数
+
+使用 `useEffect()` 时，减少 `callback` 被调用的次数将有助于改善应用程序的效能及维护性。实现此目的的其中一个方法是仔细挑选该被放入依赖值阵列中的值。举例来说，若我们想要在组件挂载时读取资料，有时候我们会看见这样的代码：
+
+```ts
+const [article, setArticle] = useState(null)
+
+// highlight-start
+useEffect(() => {
+  const fetchArticle = async () => {
+    const data = await articleApi.getById(1)
+    setArticle(data)
+  }
+  
+  fetchArticle()
+})
+// highlight-end
+```
+
+在这个范例中，虽然他的确能在组件挂载时读取资料，但是由于 `dependencies` 是 `undefined`，这个副作用在每次的渲染中都会被运行，导致不必要的 API 请求被发送及潜在的效能问题。若我们使用的是 Firebase API 等第三方服务，一不小心可能很快就会达到 API 的速率限制 (rate limit)。
+
+因此，在使用 `useEffect()` 时，仔细选择依赖值是很重要的，**以确保副作用只会在应该发生的时间点发生**。
+
+### 考虑对不同的流程使用不同的副作用
+
+尽管副作用的依赖值很重要，我们也不能忽视代码的可读性及可维护性。在某些情况下，两个独立的流程可能会共享相同的变量，例如：
+
+```ts showLineNumbers
+useEffect(() => {
+  // highlight-start
+  flowA(sharedValue)
+  flowB(sharedValue)
+  // highlight-end
+}, [sharedValue])
+```
+
+在这个范例中，`flowA()` 和 `flowB()` 的运作都依赖着 `sharedValue`，因此将他们放在同一个副作用中是合理的。若 `flowB()` 现在需要依赖于另一个变量 `onlyUsedInB`，我们可能就得在副作用中增加一些 if/else 语句，这将会使得代码变得难以阅读和维护，如下所示：
+
+```ts showLineNumbers
+useEffect(() => {
+  flowB(sharedValue, onlyUsedInB)
+  
+  // highlight-start
+  // 我们不希望 `flowA()` 在 `onlyUsedInB` 改变时被运行。
+  if (!onlyUsedInB) {
+    // 注意，`!onlyUsedInB` 的写法并不能保证 `onlyUsedInB` 没有改变！
+    flowA(sharedValue)
+  }
+  // highlight-end
+}, [sharedValue, onlyUsedInB])
+```
+
+随着应用程序的成长及更多的逻辑被加入副作用中，我们的代码将变得越来越难维护。通常在这种情况下，将一个副作用拆成数个会是比较好的选择，每个副作用都只用来处理一个独立的流程。这可以确保代码在应用程序成长时仍然能保持在较容易维护的状态，举例来说：
+
+```ts showLineNumbers
+useEffect(() => {
+  // highlight-next-line
+  flowA(sharedValue)
+}, [sharedValue])
+
+useEffect(() => {
+  // highlight-next-line
+  flowB(sharedValue, onlyUsedInB)
+}, [sharedValue, onlyUsedInB])
+```
+
+这种作法的其中一个好处是，修改一个副作用的依赖值不会影响到另一个副作用。长远来看这特别有用，因为它可以确保**每个独立流程的代码都能保持独立，不会互相干扰**。
+
+除此之外，我们还可以将这些流程 (副作用) 包裹在属于他们自己的钩子中，藉此达到更好的可读性和维护性。这将在下一个小节中讨论。
+
+### 善用钩子
+
+:::tip
+
+这一点不仅适用于副作用上；它适用于函数组件中的任何一个部分！
+
+:::
+
+当副作用的逻辑有些复杂时，常常会看见组件中有很大一部分的代码都只是了该副作用而存在。例如：
+
+```tsx showLineNumbers
+import { useEffect } from 'react'
+
+export const Example = (props) => {
+  // ...
+
+  // highlight-start
+  const A = () => {
+    // ...
+  }
+
+  const B = () => {
+    // ...
+  }
+
+  const C = () => {
+    // ...
+  }
+
+  useEffect(() => {
+    A()
+    B()
+    C()
+  }, [props.a, props.b, props.c])
+  // highlight-end
+
+  return (
+    // ...
+  )
+}
+```
+
+在这个范例中，`A()`、`B()` 和 `C()` 只有在副作用中被使用。这代表如果我们想要修改组件中和副作用无关的逻辑，我们将会被迫阅读/处理大量和当前任务无关的代码。有时候这会让人感到烦躁并扰乱我们的工作流程。
+
+要解决这个问题，我们可以妥善运用钩子。**若您觉得某个副作用的代码在组件中占了太多空间，不妨考虑将它移到自定的钩子中**。若这能使我们的代码变得更好读，请不要害怕，放心的去做。例如：
+
+```tsx showLineNumbers
+// highlight-next-line
+import { useSyncUser } from './UseSyncUser'
+
+export const Example = (props) => {
+  // ...
+  
+  // highlight-next-line
+  useSyncUser(props)
+
+  return (
+    // ...
+  )
+}
+```
+
+藉由将副作用的代码移到自定的钩子中，我们可以使组件变得更容易阅读及理解。别忘了要替钩子选择一个具有描述性且直观的命名，并将必要的数值作为参数传递进去。举例来说，若某个副作用的目的是要同步 `user` 状态，那么 `useSyncUser()` 可能就是个好名字。
+
+正如我们在[钩子的基础知识](./the-basics-of-hooks#注意事项)中所说，重用性并不是创造钩子时唯一需要考量的点。只要该钩子有助于提升代码的质量，创造一个在整个应用程序中只被特定组件使用的钩子也是完全可以接受的。
+
 ## 副作用是好的吗？
 
 就如我们在文章开头时所说，「副作用」在不同的情况会有不同的意思。在 React 中，假设没有涉及任何第三方套件或是框架，「副作用」指的通常是间接被运行的事物；这些事物通常**不直观**，而且可能会使代码变得难懂和难以维护。
