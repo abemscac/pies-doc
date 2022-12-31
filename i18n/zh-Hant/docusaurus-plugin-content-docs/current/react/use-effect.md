@@ -228,7 +228,7 @@ useEffect(() => {
 
 ## 如何使用 `useEffect()`？
 
-在使用 `useEffect()` 時，「`callback` 何時該被執行」不該是唯一被納入考量的因素，因為該作法通常會導致程式碼難以理解和維護。由於使用 `useEffect()` 的原因會因不同的應用程式而異，因此很難整理出一條適用於所有情境的 `useEffect()` 使用規則。然而，我們還是整理了一些在使用 `useEffect()` 時可能有用，或是值得考慮的建議。
+在使用 `useEffect()` 時，「`callback` 何時該被執行」不該是唯一被納入考量的因素，因為該作法通常會導致程式碼難以理解和維護。由於使用 `useEffect()` 的原因會因不同的應用程式而異，因此很難歸納出一條適用於所有 `useEffect()` 使用情境的規則。話雖如此，我們還是試著整理了一些在使用 `useEffect()` 時可能有用，或是值得考慮的建議。
 
 ### 減少 `callback` 被呼叫的次數
 
@@ -253,7 +253,7 @@ useEffect(() => {
 
 因此，在使用 `useEffect()` 時，仔細選擇依賴值是很重要的，**以確保副作用只會在應該發生的時間點發生**。
 
-### 考慮對不同的邏輯流程使用不同的副作用
+### 考慮對不同的流程使用不同的副作用
 
 儘管副作用的依賴值很重要，我們也不能忽視程式碼的可讀性及可維護性。在某些情況下，兩個獨立的流程可能會共享相同的變數，例如：
 
@@ -266,47 +266,49 @@ useEffect(() => {
 }, [sharedValue])
 ```
 
-在這個範例中，`flowA()` 和 `flowB()` 都依賴著 `sharedValue` 在運作，因此將他們放在同一個副作用中是合理的。但是，若 `flowB()` 現在需要依賴於另一個變數 `onlyUsedInB`，我們可能就必須在副作用中增加一些 if/else 語句，這將會使得程式碼變得難以閱讀和維護，如下所示：
+在這個範例中，`flowA()` 和 `flowB()` 的運作都依賴著 `sharedValue`，因此將他們放在同一個副作用中是合理的。若 `flowB()` 現在需要依賴於另一個變數 `onlyUsedInB`，我們可能就得在副作用中增加一些 if/else 語句，這將會使得程式碼變得難以閱讀和維護，如下所示：
 
 ```ts showLineNumbers
 useEffect(() => {
   flowB(sharedValue, onlyUsedInB)
   
   // highlight-start
+  // 我們不希望 `flowA()` 在 `onlyUsedInB` 改變時被執行。
   if (!onlyUsedInB) {
-    // 我們不希望 `flowA()` 在 `onlyUsedInB`
-    // 改變時被執行。
-    // 此外，`!onlyUsedInB` 的寫法也無法保證
-    // `onlyUsedInB` 沒有改變！
+    // 注意，`!onlyUsedInB` 的寫法並不能保證 `onlyUsedInB` 沒有改變！
     flowA(sharedValue)
   }
   // highlight-end
 }, [sharedValue, onlyUsedInB])
 ```
 
-隨著應用程式的成長和更多的邏輯被加入副作用中，它將變得越來越難維護。在這種情況下，通常將一個副作用拆成數個會是比較好的選擇，因為這能確保程式碼的維護性可以在應用程式成長時被維持，例如：
+隨著應用程式的成長及更多的邏輯被加入副作用中，我們的程式碼將變得越來越難維護。通常在這種情況下，將一個副作用拆成數個會是比較好的選擇，每個副作用都只用來處理一個獨立的流程。這可以確保程式碼在應用程式成長時仍然能保持在較容易維護的狀態，舉例來說：
 
 ```ts showLineNumbers
 useEffect(() => {
+  // highlight-next-line
   flowA(sharedValue)
 }, [sharedValue])
 
 useEffect(() => {
+  // highlight-next-line
   flowB(sharedValue, onlyUsedInB)
 }, [sharedValue, onlyUsedInB])
 ```
 
-這種作法的其中一個好處是，修改一個副作用的依賴值不會影響到另一個副作用。長遠來看這特別有用，因為它可以確保**每個流程的程式碼都能保持獨立，不會互相干擾**。
+這種作法的其中一個好處是，修改一個副作用的依賴值不會影響到另一個副作用。長遠來看這特別有用，因為它可以確保**每個獨立流程的程式碼都能保持獨立，不會互相干擾**。
+
+除此之外，我們還可以將這些流程 (副作用) 包裹在屬於他們自己的鉤子中，藉此達到更好的可讀性和維護性。這將在下一個小節中討論。
 
 ### 善用鉤子
 
 :::tip
 
-This tip is not just applicable to effects; it can be applied to any part of the code in a function component!
+這一點不僅適用於副作用上；它適用於函式元件中的任何一個部分！
 
 :::
 
-When the logic of an effect is somewhat complex, it is common for a large portion of the code in a component to be there specifically for the effect. For example:
+當副作用的邏輯有些複雜時，常常會看見元件中有很大一部分的程式碼都只是了該副作用而存在。例如：
 
 ```tsx showLineNumbers
 import { useEffect } from 'react'
@@ -340,9 +342,9 @@ export const Example = (props) => {
 }
 ```
 
-In this example, `A()`, `B()`, and `C()` are only used in the effect. This means if we need to make changes to the component that are unrelated to the effect, we will have to wade through a large amount of code that is not relevant to the task at hand. Sometimes this can be frustrating and disrupt the flow of our work.
+在這個範例中，`A()`、`B()` 和 `C()` 只有在副作用中被使用。這代表如果我們想要修改元件中和副作用無關的邏輯，我們將會被迫閱讀/處理大量和當前任務無關的程式碼。有時候這會讓人感到煩躁並擾亂我們的工作流程。
 
-To solve this problem, we can make good use of hooks. **If you feel that the code for an effect is taking up too much space in a component, consider moving it to a custom hook**. Don't be afraid to do this if it will improve the organization and readability of our code. For example:
+要解決這個問題，我們可以妥善運用鉤子。**若您覺得某個副作用的程式碼在元件中佔了太多空間，不妨考慮將它移到自定的鉤子中**。若這能使我們的程式碼變得更好讀，請不要害怕，放心的去做。例如：
 
 ```tsx showLineNumbers
 // highlight-next-line
@@ -360,9 +362,9 @@ export const Example = (props) => {
 }
 ```
 
-By moving the code that is only used in the effect into a custom hook, we can tidy up our component and make it easier to read and understand. Make sure to choose a descriptive and intuitive name for the hook, and pass in the necessary values as arguments. For example, if the purpose of the effect is to synchronize the `user` state, a good name for the hook might be `useSyncUser`.
+藉由將副作用的程式碼移到自定的鉤子中，我們可以使元件變得更容易閱讀及理解。別忘了要替鉤子選擇一個具有描述性且直觀的命名，並將必要的數值作為參數傳遞進去。舉例來說，若某個副作用的目的是要同步 `user` 狀態，那麼 `useSyncUser()` 可能就是個好名字。
 
-As we've mentioned in [The Basics of Hooks](./the-basics-of-hooks.md#things-to-keep-in-mind), reusability is not the only thing to be taken into consideration before making hooks. As long as the hook helps to enhance the quality of our code, it is completely acceptable to create a hook that is only used within a specific component in the entire application.
+正如我們在[鉤子的基礎知識](./the-basics-of-hooks#注意事項)中所說，重用性並不是創造鉤子時唯一需要考量的點。只要該鉤子有助於提昇程式碼的品質，創造一個在整個應用程式中只被特定元件使用的鉤子也是完全可以接受的。
 
 ## 副作用是好的嗎？
 
