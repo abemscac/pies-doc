@@ -229,6 +229,144 @@ useEffect(() => {
 }, [])
 ```
 
+## How to `useEffect()`?
+
+When using `useEffect()`, "when should `callback` be executed" should not be the only thing taken into consideration, as this usually leads to code that is hard to understand and maintain. It's difficult to provide a general summary of how to use `useEffect()` in all possible scenarios, as the reasons for using `useEffect()` can vary between different applications. However, we have compiled some tips that may be helpful or worth considering when using `useEffect()`.
+
+### Reduce the Number of Times `callback` Is executed
+
+Reducing the number of times `callback` is executed when using `useEffect()` can improve the performance and maintainability of your app. One way to achieve this is by carefully choosing the values that go into the dependency array. For example, when fetching data when the component is mounted, sometimes we'll see code like this:
+
+```ts
+const [article, setArticle] = useState(null)
+
+// highlight-start
+useEffect(() => {
+  const fetchArticle = async () => {
+    const data = await articleApi.getById(1)
+    setArticle(data)
+  }
+  
+  fetchArticle()
+})
+// highlight-end
+```
+
+In this example, it does indeed fetch the desired data when the component is mounted, but because `dependencies` is `undefined`, the effect will run on every render, resulting in unnecessary API requests sent and potentially poor performance. If we're using third-party services like Firebase API, we may quickly reach the rate limit if not being careful.
+
+Therefore, when using `useEffect()`, it's important to carefully consider the `dependencies` so that **the effect is only run when it's actually needed**.
+
+### Consider Using Separate Effects for Different Logic Flows
+
+Even though the dependencies of an effect are important, it's also necessary to consider the readability, maintainability, and organization of the code. In some cases, two separate flows may share the same variables. For example:
+
+```ts showLineNumbers
+useEffect(() => {
+  // highlight-start
+  flowA(sharedValue)
+  flowB(sharedValue)
+  // highlight-end
+}, [sharedValue])
+```
+
+In the above example, `flowA()` and `flowB()` both rely on `sharedValue` for their functionality, so it makes sense to include them in the same effect. However, if `flowB()` now needs to rely on another value `onlyUsedInB`, it may be necessary to include some if/else statements in the effect, which can make the code more difficult to read and maintain, as shown below:
+
+```ts showLineNumbers
+useEffect(() => {
+  flowB(sharedValue, onlyUsedInB)
+  
+  // highlight-start
+  if (!onlyUsedInB) {
+    // We don't want `flowA()` to be executed
+    // when `onlyUsedInB` changes.
+    // Besides, `!onlyUsedInB` doesn't guarantee
+    // `onlyUsedInB` hasn't changed!
+    flowA(sharedValue)
+  }
+  // highlight-end
+}, [sharedValue, onlyUsedInB])
+```
+
+As the app grows and more logic is added to the effect, it can become increasingly difficult to maintain over time. In this situation, it's often a better choice to split the effect into multiple smaller effects, as it can help ensure that the code remains maintainable as the app grows. For example:
+
+```ts showLineNumbers
+useEffect(() => {
+  flowA(sharedValue)
+}, [sharedValue])
+
+useEffect(() => {
+  flowB(sharedValue, onlyUsedInB)
+}, [sharedValue, onlyUsedInB])
+```
+
+One advantage of this approach is that modifying the dependencies of one effect will not affect the other. This can be especially helpful in the long run, as it can help ensure that **the code for each flow remains independent and does not interfere with the other**.
+
+### Make Good Use of Hooks
+
+:::tip
+
+This tip is not just applicable to effects; it can be applied to any part of the code in a function component!
+
+:::
+
+When the logic of an effect is somewhat complex, it is common for a large portion of the code in a component to be there specifically for the effect. For example:
+
+```tsx showLineNumbers
+import { useEffect } from 'react'
+
+export const Example = (props) => {
+  // ...
+
+  // highlight-start
+  const A = () => {
+    // ...
+  }
+
+  const B = () => {
+    // ...
+  }
+
+  const C = () => {
+    // ...
+  }
+
+  useEffect(() => {
+    A()
+    B()
+    C()
+  }, [props.a, props.b, props.c])
+  // highlight-end
+
+  return (
+    // ...
+  )
+}
+```
+
+In this example, `A()`, `B()`, and `C()` are only used in the effect. This means if we need to make changes to the component that are unrelated to the effect, we will have to wade through a large amount of code that is not relevant to the task at hand. Sometimes this can be frustrating and disrupt the flow of our work.
+
+To solve this problem, we can make good use of hooks. **If you feel that the code for an effect is taking up too much space in a component, consider moving it to a custom hook**. Don't be afraid to do this if it will improve the organization and readability of our code. For example:
+
+```tsx showLineNumbers
+// highlight-next-line
+import { useSyncUser } from './UseSyncUser'
+
+export const Example = (props) => {
+  // ...
+  
+  // highlight-next-line
+  useSyncUser(props)
+
+  return (
+    // ...
+  )
+}
+```
+
+By moving the code that is only used in the effect into a custom hook, we can tidy up our component and make it easier to read and understand. Make sure to choose a descriptive and intuitive name for the hook, and pass in the necessary values as arguments. For example, if the purpose of the effect is to synchronize the `user` state, a good name for the hook might be `useSyncUser`.
+
+As we've mentioned in [The Basics of Hooks](./the-basics-of-hooks.md#things-to-keep-in-mind), reusability is not the only thing to be taken into consideration before making hooks. As long as the hook helps to enhance the quality of our code, it is completely acceptable to create a hook that is only used within a specific component in the entire application.
+
 ## Are Side Effects Good?
 
 As we mentioned at the beginning of this article, "side effects" may have different meanings depending on the context, so we can't just say it's good or bad without knowing the context. However, in React, assuming no third-party libraries and frameworks are involved, "effects" usually refers to things that are performed indirectly, which is usually **not intuitive** and may make your code hard to understand and maintain.
