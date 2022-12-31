@@ -226,6 +226,144 @@ useEffect(() => {
 }, [])
 ```
 
+## 如何使用 `useEffect()`？
+
+在使用 `useEffect()` 時，「`callback` 何時該被執行」不該是唯一被納入考量的因素，因為該作法通常會導致程式碼難以理解和維護。由於使用 `useEffect()` 的原因會因不同的應用程式而異，因此很難整理出一條適用於所有情境的 `useEffect()` 使用規則。然而，我們還是整理了一些在使用 `useEffect()` 時可能有用，或是值得考慮的建議。
+
+### 減少 `callback` 被呼叫的次數
+
+使用 `useEffect()` 時，減少 `callback` 被呼叫的次數將有助於改善應用程式的效能及維護性。實現此目的的其中一個方法是仔細挑選該被放入依賴值陣列中的值。舉例來說，若我們想要在元件掛載時讀取資料，有時候我們會看見這樣的程式碼：
+
+```ts
+const [article, setArticle] = useState(null)
+
+// highlight-start
+useEffect(() => {
+  const fetchArticle = async () => {
+    const data = await articleApi.getById(1)
+    setArticle(data)
+  }
+  
+  fetchArticle()
+})
+// highlight-end
+```
+
+在這個範例中，雖然他的確能在元件掛載時讀取資料，但是由於 `dependencies` 是 `undefined`，這個副作用在每次的渲染中都會被執行，導致不必要的 API 請求被發送及潛在的效能問題。若我們使用的是 Firebase API 等第三方服務，一不小心可能很快就會達到 API 的速率限制 (rate limit)。
+
+因此，在使用 `useEffect()` 時，仔細選擇依賴值是很重要的，**以確保副作用只會在應該發生的時間點發生**。
+
+### 考慮對不同的邏輯流程使用不同的副作用
+
+儘管副作用的依賴值很重要，我們也不能忽視程式碼的可讀性及可維護性。在某些情況下，兩個獨立的流程可能會共享相同的變數，例如：
+
+```ts showLineNumbers
+useEffect(() => {
+  // highlight-start
+  flowA(sharedValue)
+  flowB(sharedValue)
+  // highlight-end
+}, [sharedValue])
+```
+
+在這個範例中，`flowA()` 和 `flowB()` 都依賴著 `sharedValue` 在運作，因此將他們放在同一個副作用中是合理的。但是，若 `flowB()` 現在需要依賴於另一個變數 `onlyUsedInB`，我們可能就必須在副作用中增加一些 if/else 語句，這將會使得程式碼變得難以閱讀和維護，如下所示：
+
+```ts showLineNumbers
+useEffect(() => {
+  flowB(sharedValue, onlyUsedInB)
+  
+  // highlight-start
+  if (!onlyUsedInB) {
+    // 我們不希望 `flowA()` 在 `onlyUsedInB`
+    // 改變時被執行。
+    // 此外，`!onlyUsedInB` 的寫法也無法保證
+    // `onlyUsedInB` 沒有改變！
+    flowA(sharedValue)
+  }
+  // highlight-end
+}, [sharedValue, onlyUsedInB])
+```
+
+隨著應用程式的成長和更多的邏輯被加入副作用中，它將變得越來越難維護。在這種情況下，通常將一個副作用拆成數個會是比較好的選擇，因為這能確保程式碼的維護性可以在應用程式成長時被維持，例如：
+
+```ts showLineNumbers
+useEffect(() => {
+  flowA(sharedValue)
+}, [sharedValue])
+
+useEffect(() => {
+  flowB(sharedValue, onlyUsedInB)
+}, [sharedValue, onlyUsedInB])
+```
+
+這種作法的其中一個好處是，修改一個副作用的依賴值不會影響到另一個副作用。長遠來看這特別有用，因為它可以確保**每個流程的程式碼都能保持獨立，不會互相干擾**。
+
+### 善用鉤子
+
+:::tip
+
+This tip is not just applicable to effects; it can be applied to any part of the code in a function component!
+
+:::
+
+When the logic of an effect is somewhat complex, it is common for a large portion of the code in a component to be there specifically for the effect. For example:
+
+```tsx showLineNumbers
+import { useEffect } from 'react'
+
+export const Example = (props) => {
+  // ...
+
+  // highlight-start
+  const A = () => {
+    // ...
+  }
+
+  const B = () => {
+    // ...
+  }
+
+  const C = () => {
+    // ...
+  }
+
+  useEffect(() => {
+    A()
+    B()
+    C()
+  }, [props.a, props.b, props.c])
+  // highlight-end
+
+  return (
+    // ...
+  )
+}
+```
+
+In this example, `A()`, `B()`, and `C()` are only used in the effect. This means if we need to make changes to the component that are unrelated to the effect, we will have to wade through a large amount of code that is not relevant to the task at hand. Sometimes this can be frustrating and disrupt the flow of our work.
+
+To solve this problem, we can make good use of hooks. **If you feel that the code for an effect is taking up too much space in a component, consider moving it to a custom hook**. Don't be afraid to do this if it will improve the organization and readability of our code. For example:
+
+```tsx showLineNumbers
+// highlight-next-line
+import { useSyncUser } from './UseSyncUser'
+
+export const Example = (props) => {
+  // ...
+  
+  // highlight-next-line
+  useSyncUser(props)
+
+  return (
+    // ...
+  )
+}
+```
+
+By moving the code that is only used in the effect into a custom hook, we can tidy up our component and make it easier to read and understand. Make sure to choose a descriptive and intuitive name for the hook, and pass in the necessary values as arguments. For example, if the purpose of the effect is to synchronize the `user` state, a good name for the hook might be `useSyncUser`.
+
+As we've mentioned in [The Basics of Hooks](./the-basics-of-hooks.md#things-to-keep-in-mind), reusability is not the only thing to be taken into consideration before making hooks. As long as the hook helps to enhance the quality of our code, it is completely acceptable to create a hook that is only used within a specific component in the entire application.
+
 ## 副作用是好的嗎？
 
 就如我們在文章開頭時所說，「副作用」在不同的情況會有不同的意思。在 React 中，假設沒有涉及任何第三方套件或是框架，「副作用」指的通常是間接被執行的事物；這些事物通常**不直觀**，而且可能會使程式碼變得難懂和難以維護。

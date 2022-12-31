@@ -6,11 +6,11 @@ keywords: [派氏文件, vue3, vue props]
 
 import Video from '@site/src/widgets/Video';
 
-# Props
+# 属性 (Props)
 
-## 什么是 Props？
+## 什么是属性？
 
-Props 指的是**从父组件传递下来的属性**。这些属性会被存放在一个通常叫做 `props` 的物件中。
+Props 指的是**从父组件传递下来的数值**。这些数值会被存放在一个通常叫做 `props` 的物件中。
 
 举例来说，若您在子组件中这样宣告 props：
 

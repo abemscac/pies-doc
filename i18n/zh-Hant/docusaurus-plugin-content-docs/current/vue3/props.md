@@ -6,11 +6,11 @@ keywords: [派氏文件, vue3, vue props]
 
 import Video from '@site/src/widgets/Video';
 
-# Props
+# 屬性 (Props)
 
-## 什麼是 Props？
+## 什麼是屬性？
 
-Props 指的是**從父元件傳遞下來的屬性**。這些屬性會被存放在一個通常叫做 `props` 的物件中。
+Props 指的是**從父元件傳遞下來的數值**。這些數值會被存放在一個通常叫做 `props` 的物件中。
 
 舉例來說，若您在子元件中這樣宣告 props：
 
