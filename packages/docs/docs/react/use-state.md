@@ -74,7 +74,7 @@ export const Example = () => {
 }
 ```
 
-<Video src="/video/react/use-state_counter-app.mov" height="300px" />
+<Video src="/video/react/use-state_counter-app.mp4" height="300px" />
 
 In the above example, `0` is being used as the initial value of `count`. Every time the "Increment" button is clicked, `increment()` will be called, thus updating the value of `count` to `count + 1`.
 
@@ -172,7 +172,7 @@ export const Example = () => {
 
 In the above example, the component will still re-render even though we're updating `user` with the same value. This is because the object we pass to `setUser()` is not the same as the one we used in the initial `useState()` call.
 
-<Video src="/video/react/use-state_referential-equality.mov" />
+<Video src="/video/react/use-state_referential-equality.mp4" />
 
 This issue occurs with all non-primitive values, such as objects, arrays, [maps](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map), etc.
 

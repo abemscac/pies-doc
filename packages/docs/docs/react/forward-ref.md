@@ -60,7 +60,7 @@ export const Parent = () => {
 
 The result would look like this:
 
-<Video src="/video/react/forward-ref_0.mov" />
+<Video src="/video/react/forward-ref_0.mp4" />
 
 Everything works well at first, however, we're now required to add a new feature — focuses on "Last Name" input when a button in `Parent` is clicked. Since the `<input>` tag is placed inside a child component, there doesn't seem to be an elegant way to do this.
 
@@ -118,7 +118,7 @@ export const Parent = () => {
 }
 ```
 
-<Video src="/video/react/forward-ref_1.mov" />
+<Video src="/video/react/forward-ref_1.mp4" />
 
 <details>
   <summary>Does <code>forwardRef()</code> work with class components?</summary>
@@ -159,7 +159,7 @@ export const Parent = () => {
   
   Furthermore, in this example, since `MyComponent` (a component) is defined inside `InputGroup` (also a component), every time `InputGroup` re-renders, `MyComponent` is going to be redeclared again. Thus, the "old" `<MyComponent {...props} />` will unmount, and the "new" `<MyComponent {...props} />` will mount within every render, causing you to lose everything in the old `MyComponent`.
 
-  <Video src="/video/react/forward-ref_with-class-component.mov" />
+  <Video src="/video/react/forward-ref_with-class-component.mp4" />
 
   To solve this problem, the easiest solution would be to memoize the definition of `MyComponent` before the very first render and only use it since then. For example:
 

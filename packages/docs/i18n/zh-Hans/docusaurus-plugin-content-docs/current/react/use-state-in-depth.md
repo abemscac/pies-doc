@@ -80,7 +80,7 @@ const updateData = () => {
 
 在这个范例中，我们可能会认为运行 `updateData()` 会导致组件重新渲染两次，因为有两个不同的 `setState()` 被调用了；但是在这个范例中，组件只会重新渲染一次。
 
-<Video src="/video/react/use-state-in-depth_batching-1.mov" />
+<Video src="/video/react/use-state-in-depth_batching-1.mp4" />
 
 在解释为何会如此之前，我们再多看看另外一个范例：
 
@@ -106,7 +106,7 @@ const updateData = () => {
 
 在这个范例中，即便有这么多个 `setState()` 在 `updateData()` 中被调用，组件仍然只会重新渲染**一次**。
 
-<Video src="/video/react/use-state-in-depth_batching-2.mov" />
+<Video src="/video/react/use-state-in-depth_batching-2.mp4" />
 
 为什么？
 
@@ -122,7 +122,7 @@ const updateData = () => {
 
 :::
 
-<Video src="/video/react/use-state-in-depth_batching-analysis.mov" />
+<Video src="/video/react/use-state-in-depth_batching-analysis.mp4" />
 
 - 在首次渲染之前：
   - 组件中的所有状态都会被存入一个虚拟的 `states` 物件当中。
@@ -154,7 +154,7 @@ const updateCount = () => {
 
 在这个范例中，我们首先调用 `setCount(1)`，这会让 `count` 的值在下一次渲染中被更新成 `1`。之后，我们调用了 `setCount((prevCount) => prevCount + 2)`，它的意思是「给我上次被传入 `setCount()` 的数值，然后将 `count` 更新成 `(那个数值 + 2)`」。因此，在这个范例中，运行 `updateCount()` 会使 `count` 的值被更新成 `3`。
 
-<Video src="/video/react/use-state-in-depth_updater-function-1.mov" height="300px" />
+<Video src="/video/react/use-state-in-depth_updater-function-1.mp4" height="300px" />
 
 很好，让我们看看另外一个范例：
 
@@ -182,7 +182,7 @@ const updateCount = () => {
 
 因此，运行 `updateCount()` 会使 `count` 的值被更新成 `4`。
 
-<Video src="/video/react/use-state-in-depth_updater-function-2.mov" />
+<Video src="/video/react/use-state-in-depth_updater-function-2.mp4" />
 
 ## 该传递数值还是更新函数？
 

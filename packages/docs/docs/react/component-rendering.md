@@ -64,7 +64,7 @@ In this example, we use three `console.log()` successively to print out the valu
 2. Right after `setCount()` is called.
 3. 5 seconds after `setCount()` is called.
 
-<Video src="/video/react/component-rendering_state-with-timeout.mov" />
+<Video src="/video/react/component-rendering_state-with-timeout.mp4" />
 
 From [one of the example](./reactive-values#reactive-values-1) in [Reactive Values](./reactive-values), we already know that changes made by functions like `setState()` will not be applied immediately, so currently it's acceptable to see the second `console.log()` showing `0` (we'll talk about the real cause [below](#when-will-reactive-values-be-updated)!) But why is it that in the video, when we clearly see the number on the screen has changed from `0` to `5`, the last `console.log()` still shows `0`?
 
@@ -180,7 +180,7 @@ First, let's review the members of this component:
 
 The only state in this component is `count`, and we can update `count` by clicking the "Increment" button.
 
-<Video src="/video/react/component-rendering_counter-app.mov" height="200px" />
+<Video src="/video/react/component-rendering_counter-app.mp4" height="200px" />
 
 ### The First Render (Initialization)
 
@@ -270,11 +270,11 @@ Since everything gets redeclared during re-render, we must be careful when using
 
   Although both `<View />` and `{View()}` will render `<Child />`, because each render has its own `View` function, React will treat `<View />` as an instance of a "new" component in each render, causing it to be unmounted and mounted again. This can have performance implications if what `View` returns is a complex component.
 
-  <Video src="/video/react/component-rendering_render-method-1.mov" />
+  <Video src="/video/react/component-rendering_render-method-1.mp4" />
 
   On the other hand, `{View()}` will not be unmounted and mounted again because it is not an element; it is simply the result of calling the `View` function.
 
-  <Video src="/video/react/component-rendering_render-method-2.mov" />
+  <Video src="/video/react/component-rendering_render-method-2.mp4" />
 
   Therefore, if a function declared in a component returns a JSX element, it is generally recommended to use it like `{View()}` instead of `<View />` to avoid unnecessary unmounting and mounting of the element.
   
@@ -321,7 +321,7 @@ export const Parent = () => {
 }
 ```
 
-<Video src="/video/react/component-rendering_rendering-is-recursive.mov" />
+<Video src="/video/react/component-rendering_rendering-is-recursive.mp4" />
 
 In the above example, `Child` is not using any states declared in `Parent` as props; however, whenever `Parent` re-renders, `Child` will also re-render. In most cases this is fine, because `Child` may not be a computationally espensive component; but if it is, it would be not ideal to re-render `Child` whenever `Parent` re-renders. So, is there a way to change this behavior, so that we don't re-render `Child` when `Parent` re-renders?
 
@@ -408,7 +408,7 @@ export const Parent = ({ children }: PropsWithChildren) => {
 
 This way the re-render of `Parent` will no longer impact `Child`.
 
-<Video src="/video/react/component-rendering_children-prop.mov" />
+<Video src="/video/react/component-rendering_children-prop.mp4" />
 
 ## When Will Reactive Values Be Updated?
 
@@ -507,7 +507,7 @@ useEffect(() => {
 // highlight-end
 ```
 
-<Video src="/video/react/component-rendering_await-triggers-states-update.mov" />
+<Video src="/video/react/component-rendering_await-triggers-states-update.mp4" />
 
 :::caution
 
@@ -560,7 +560,7 @@ const doSomethingAsync = () => {
   2. Right when the second `await doSomethingAsync()` is executed, before `doSomethingAsync()` is resolved or rejected (updated from `1` to `2`).
   3. When the execution of `click()` is done (updated from `2` to `3`).
 
-  <Video src="/video/react/component-rendering_update-request-exercise.mov" />
+  <Video src="/video/react/component-rendering_update-request-exercise.mp4" />
   
 </details>
 

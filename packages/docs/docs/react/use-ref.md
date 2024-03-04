@@ -73,7 +73,7 @@ const logName = useCallback(() => {
 
 In this example, even if `logName()` is being memoized by a `useCallback()` with no dependency, the `name.current` in `logName()` will still refer to the latest value of `name`. The same rule can be applied to `useEffect()` and `useMemo()` as well.
 
-<Video src="/video/react/use-ref_always-latest.mov" />
+<Video src="/video/react/use-ref_always-latest.mp4" />
 
 :::caution
 
@@ -212,7 +212,7 @@ export const Example = () => {
 
 By putting a reference in the `ref` attribute of a DOM node, you'll be able to manipulate [Element](https://developer.mozilla.org/en-US/docs/Web/API/Element) object in a vanilla JavaScript way. Notice that we must use `null` as the initial value of reference if the target is a DOM node.
 
-<Video src="/video/react/use-ref_html-element.mov" />
+<Video src="/video/react/use-ref_html-element.mp4" />
 
 However, you should **only use this when standard props/states cannot fulfill your requirements, or when using standard props/states is inconvenient**. Two good cases for using `useRef()` are calculating the width/height of a DOM node and focusing on a specific `<input>`.
 
@@ -283,7 +283,7 @@ export class Child extends Component<IChildProps, IChildState> {
 }
 ```
 
-<Video src="/video/react/use-ref_component-instance.mov" />
+<Video src="/video/react/use-ref_component-instance.mp4" />
 
 In this example:
 
@@ -378,7 +378,7 @@ export const Example = () => {
 }
 ```
 
-<Video src="/video/react/use-ref_uncontrolled-component.mov" />
+<Video src="/video/react/use-ref_uncontrolled-component.mp4" />
 
 ### Keeping Value for Later Use
 

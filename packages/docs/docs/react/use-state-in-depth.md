@@ -78,7 +78,7 @@ const updateData = () => {
 
 In the above example, we might expect the component to re-render twice after `updateData()` is called because two separate `setState()` calls are made within `updateData()`; but in this example, the component will only re-render once.
 
-<Video src="/video/react/use-state-in-depth_batching-1.mov" />
+<Video src="/video/react/use-state-in-depth_batching-1.mp4" />
 
 Before explaining why is this happening, let's take a look at another example:
 
@@ -104,7 +104,7 @@ const updateData = () => {
 
 In the above example, even though so many `setState()` are called, the component is still going to re-render **once** after `updateData()` is called.
 
-<Video src="/video/react/use-state-in-depth_batching-2.mov" />
+<Video src="/video/react/use-state-in-depth_batching-2.mp4" />
 
 Why?
 
@@ -120,7 +120,7 @@ If you're interested in how state updates are processed in React, please refer t
 
 :::
 
-<Video src="/video/react/use-state-in-depth_batching-analysis.mov" />
+<Video src="/video/react/use-state-in-depth_batching-analysis.mp4" />
 
 - Before the first render:
   - All states in a component are stored in an imaginary object called `states`.
@@ -152,7 +152,7 @@ const updateCount = () => {
 
 In the above example, we first call `setCount(1)`, which will update the value of `count` to `1` in the next render. Then, we call `setCount((prevCount) => prevCount + 2)`, which means "give me the last value being passed to `setCount()`, and update the value of `count` to `(that value + 2)`". Thus, in this example, `count` will be updated to `3` after `updateCount()` is executed.
 
-<Video src="/video/react/use-state-in-depth_updater-function-1.mov" height="300px" />
+<Video src="/video/react/use-state-in-depth_updater-function-1.mp4" height="300px" />
 
 Great, now let's take a look at another example:
 
@@ -180,7 +180,7 @@ In the above example:
 
 Therefore, the value of `count` will be `4` after `updateCount()` is called.
 
-<Video src="/video/react/use-state-in-depth_updater-function-2.mov" />
+<Video src="/video/react/use-state-in-depth_updater-function-2.mp4" />
 
 ## Fixed Value or Updater Function?
 
