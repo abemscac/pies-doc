@@ -98,7 +98,7 @@ useEffect(() => {
 - 无论 `dependencies` 的值为何，React 都会在组件挂载时调用 `callback`。
 - 在组件重新渲染时，React 会检查 `dependencies` 中每个元素的值是否和前一次渲染相同；若有任何元素发生变化，React 就会运行这个副作用。既然我们使用了空阵列作为 `dependencies`，代表没有任何依赖值会改变，所以 React 永远不会再次运行这个副作用。
 
-<Video src="/video/react/use-effect_empty-array_no-clean-up.mov" />
+<Video src="/video/react/use-effect_empty-array_no-clean-up.mp4" />
 
 如果有个清理函数在 `callback` 中被返回呢？例如：
 
@@ -118,7 +118,7 @@ useEffect(() => {
 
 由于 `dependencies` 是一个空阵列，代表除了首次副作用外不会有任何后续的副作用发生。因此我们能在主控台中看见 `World` 的时间点就只有在组件即将卸载之前。
 
-<Video src="/video/react/use-effect_empty-array_with-clean-up.mov" />
+<Video src="/video/react/use-effect_empty-array_with-clean-up.mp4" />
 
 ### 使用不为空的阵列 `dependencies`
 
@@ -139,7 +139,7 @@ useEffect(() => {
 - 无论 `dependencies` 的值为何，React 都会在组件挂载时调用 `callback`。
 - `count` 是这个副作用的依赖值，所以他的改变会导致这个副用的运行。
 
-<Video src="/video/react/use-effect_non-empty-array_no-clean-up.mov" />
+<Video src="/video/react/use-effect_non-empty-array_no-clean-up.mp4" />
 
 如果有个清理函数在 `callback` 中被返回呢？例如：
 
@@ -181,7 +181,7 @@ useEffect(() => {
 - 无论 `dependencies` 的值为何，React 都会在组件挂载时调用 `callback`。
 - `dependencies` 是 `undefined`，代表这个副作用会在组件重新渲染时被运行。
 
-<Video src="/video/react/use-effect_non-empty-array_no-clean-up.mov" />
+<Video src="/video/react/use-effect_non-empty-array_no-clean-up.mp4" />
 
 如果有个清理函数在 `callback` 中被返回呢？例如：
 
@@ -204,7 +204,7 @@ useEffect(() => {
 - 当组件重新渲染时。另外，在后续的副作用中，React 会先运行清理函数，然后才运行副作用中的主要代码。
 - 当组件即将卸载之前。
 
-<Video src="/video/react/use-effect_non-empty-array_with-clean-up.mov" />
+<Video src="/video/react/use-effect_non-empty-array_with-clean-up.mp4" />
 
 ## 非同步回呼函数 (Async Callback)
 
@@ -377,7 +377,7 @@ export const Example = (props) => {
 - 画面上有个输入框，我们必须记录使用者输入的内容。
 - 若输入的内容中含有被禁止的字元 (像是 `a`)，我们就要在画面上显示 `Prohobited characters found`。
 
-<Video src="/video/react/use-effect_prohibited-characters.mov" />
+<Video src="/video/react/use-effect_prohibited-characters.mp4" />
 
 在这样情境中，我们经常能看见这样的代码：
 

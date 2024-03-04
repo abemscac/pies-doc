@@ -62,7 +62,7 @@ export const Example = () => {
 
 In this example, everytime the "Increment" button is clicked, the value of `count` will be incremented by `1`. Since `count` is a reactive value, the component will re-render after it changes, thus "refreshing" the screen with the latest values.
 
-<Video src="/video/react/reactive-values_reactive.mov" />
+<Video src="/video/react/reactive-values_reactive.mp4" />
 
 However, you may have noticed that the value displayed in the console is always different from the value displayed on the screen. Good news is, this is not a bug, but it does confuse everyone! We'll explain this when we get to [Component Rendering](./component-rendering), just don't worry about it now.
 
@@ -96,7 +96,7 @@ export const Example = () => {
 }
 ```
 
-<Video src="/video/react/reactive-values_non-reactive.mov" />
+<Video src="/video/react/reactive-values_non-reactive.mp4" />
 
 In this example, everytime the "Increment" button is clicked, the value of `count` will be incremented by 1. However, since `count` is a **not-reactive** value, updating it will **not** cause the component to re-render, no matter how many times `count` changes.
 
@@ -137,7 +137,7 @@ export const Example = () => {
 }
 ```
 
-<Video src="/video/react/reactive-values_both.mov" height="300px" />
+<Video src="/video/react/reactive-values_both.mp4" height="300px" />
 
 In this example, `count` is a reactive value, while `age` is a non-reactive value. Thus:
 

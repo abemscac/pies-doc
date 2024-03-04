@@ -92,7 +92,7 @@ export const Parent = () => {
 
 This way `Child` will never re-render when `Parent` re-renders, because the `arePropsEqual()` function of `Child` always returns `true`.
 
-<Video src="/video/react/component-rendering_children-prop.mov" />
+<Video src="/video/react/component-rendering_children-prop.mp4" />
 
 :::info
 
@@ -343,7 +343,7 @@ export const Example = () => {
 }
 ```
 
-<Video src="/video/react/optimization-functions_use-callback-show-count.mov" />
+<Video src="/video/react/optimization-functions_use-callback-show-count.mp4" />
 
 In this example, at the start, "Show Count" and "Show Count (Memoized)" both display `0` in the console after click. After "Increment" is clicked three times, "Show Count" now shows `3`, but "Show Count (Memoized)" still shows `0`.
 
@@ -402,7 +402,7 @@ export const Example = () => {
 
 In this example, even if `MemoizedChild` is already wrapped in `memo()`, it'll still re-render when `Example` re-renders.
 
-<Video src="/video/react/optimization-functions_use-callback-before.mov" />
+<Video src="/video/react/optimization-functions_use-callback-before.mp4" />
 
 This is because every time `Example` re-renders, `increment()` will be redeclared; since `increment()` is a non-primitive value, it'll actually refer to a different value after being redeclared, causing `memo()` to think that `increment()` has changed between renders.
 
@@ -440,7 +440,7 @@ export const Example = () => {
 
 Notice how we pass an [updater function](./use-state-in-depth#updater-functions) to `setCount()` so that we don't need to put `count` in the dependency array of `useCallback()`. This way the `increment()` being passed to `MemoizedChild` is guaranteed to be consistent in each render, allowing `memo()` to work properly.
 
-<Video src="/video/react/optimization-functions_use-callback-after.mov" />
+<Video src="/video/react/optimization-functions_use-callback-after.mp4" />
 
 :::info
 

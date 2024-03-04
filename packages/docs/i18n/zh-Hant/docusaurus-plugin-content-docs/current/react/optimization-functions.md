@@ -92,7 +92,7 @@ export const Parent = () => {
 
 這種寫法中的 `Child` 永遠不會隨著 `Parent` 一起重新渲染，因為這裡的 `arePropsEqual()` 永遠回傳 `true`。
 
-<Video src="/video/react/component-rendering_children-prop.mov" />
+<Video src="/video/react/component-rendering_children-prop.mp4" />
 
 :::info
 
@@ -343,7 +343,7 @@ export const Example = () => {
 }
 ```
 
-<Video src="/video/react/optimization-functions_use-callback-show-count.mov" />
+<Video src="/video/react/optimization-functions_use-callback-show-count.mp4" />
 
 在這個範例中，一開始點擊 "Show Count" 和 "Show Count (Memoized)" 都會在主控台中顯示 `0`。在點擊 "Increment" 三次後，點擊 "Show Count" 顯示了 `3`，而點擊 "Show Count (Memoized)" 卻依然顯示 `0`。
 
@@ -384,7 +384,7 @@ export const Example = () => {
 
 在這個範例中，儘管 `MemoizedChild` 已經用 `memo()` 記憶起來了，他還是會隨著 `Example` 一同重新渲染。
 
-<Video src="/video/react/optimization-functions_use-callback-before.mov" />
+<Video src="/video/react/optimization-functions_use-callback-before.mp4" />
 
 這是因為每次 `Example` 重新渲染時，`increment()` 都會被重新宣告；由於 `increment()` 屬於非原始型別，他每次都會指向不同的物件，導致 `memo()` 認為 `increment()` 在兩次渲染之間發生變化了。
 
@@ -422,7 +422,7 @@ export const Example = () => {
 
 請注意，我們在 `setCount()` 中使用了[更新函式](./use-state-in-depth#更新函式-updater-functions)，這樣我們就不需要將 `count` 放在 `useCallback()` 的依賴值陣列中。如此一來我們就能保證被傳遞給 `MemoizedChild` 的 `increment()` 在每次渲染中都會指向相同的物件，從而使 `memo()` 能如預期的運作。
 
-<Video src="/video/react/optimization-functions_use-callback-after.mov" />
+<Video src="/video/react/optimization-functions_use-callback-after.mp4" />
 
 :::info
 

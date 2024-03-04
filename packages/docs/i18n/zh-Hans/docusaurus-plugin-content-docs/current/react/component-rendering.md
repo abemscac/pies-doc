@@ -64,7 +64,7 @@ export const Example = () => {
 2. 调用 `setCount()` 之后。
 3. 调用 `setCount()` 的 5 秒钟后。
 
-<Video src="/video/react/component-rendering_state-with-timeout.mov" />
+<Video src="/video/react/component-rendering_state-with-timeout.mp4" />
 
 在[响应式数值](./reactive-values)的[其中一个范例](./reactive-values#响应式数值范例)中，我们已经知道 `setState()` 这种函数所造成的变化并不会立即生效，因此目前看到第二个 `console.log()` 显示 `0` 是可以接受的 (我们会在[下方](#响应式数值何时会被更新)解释导致这个现象的原因！)。但是为何在上面的影片中，即使我们清楚的看见画面上的数字已经从 `0` 变成了 `5`，`console.log()` 却还是显示 `0` 呢？
 
@@ -180,7 +180,7 @@ export const Example = () => {
 
 这个组件中唯一的状态是 `count`，我们可以透过点击 "Increment" 按钮来更新他。
 
-<Video src="/video/react/component-rendering_counter-app.mov" height="200px" />
+<Video src="/video/react/component-rendering_counter-app.mp4" height="200px" />
 
 ### 首次渲染 (初始化)
 
@@ -270,11 +270,11 @@ export const Example = () => {
 
   虽然 `<View />` 和 `{View()}` 都会渲染出 `<Child />`，但由于每次的渲染都有着它自己的 `View` 函数，React 会将每次渲染的 `<View />` 当成是一个「新」组件的新实体，导致他随着重新渲染而被卸载又重新挂载。如果 `View` 返回的是一个较消耗资源的组件，这可能会对效能产生影响。
 
-  <Video src="/video/react/component-rendering_render-method-1.mov" />
+  <Video src="/video/react/component-rendering_render-method-1.mp4" />
 
   相反地，`{View()}` 的写法就不会出现这种情况，因为他并不会被当成一个组件看待；他只是调用 `View` 函数所返回的结果。
 
-  <Video src="/video/react/component-rendering_render-method-2.mov" />
+  <Video src="/video/react/component-rendering_render-method-2.mp4" />
   
   因此，如果在组件中声明的函数返回的是 JSX 元素，我们建议使用 `{View()}` 的写法来渲染他而非 `<View />` 以避免不必要的卸载和挂载。
   
@@ -321,7 +321,7 @@ export const Parent = () => {
 }
 ```
 
-<Video src="/video/react/component-rendering_rendering-is-recursive.mov" />
+<Video src="/video/react/component-rendering_rendering-is-recursive.mp4" />
 
 在这个范例中，`Child` 并没有使用 `Parent` 的任何状态当做属性；然而，每当 `Parent` 重新渲染，`Child` 也会跟着重新渲染。在大部分情况下这是可以接受的，因为 `Child` 可能不是一个相当消耗资源的组件；但如果他是，`Parent` 的重新渲染会导致 `Child` 也重新渲染就不理想了。那么，是否有办法可以改变这种行为，让 `Child` 不会随着 `Parent` 一起重新渲染呢？
 
@@ -408,7 +408,7 @@ export const Parent = ({ children }: PropsWithChildren) => {
 
 如此一来 `Child` 将不再受到 `Parent` 的重新渲染影响。
 
-<Video src="/video/react/component-rendering_children-prop.mov" />
+<Video src="/video/react/component-rendering_children-prop.mp4" />
 
 ## 响应式数值何时会被更新？
 
@@ -507,7 +507,7 @@ useEffect(() => {
 // highlight-end
 ```
 
-<Video src="/video/react/component-rendering_await-triggers-states-update.mov" />
+<Video src="/video/react/component-rendering_await-triggers-states-update.mp4" />
 
 :::caution
 
@@ -560,7 +560,7 @@ const doSomethingAsync = () => {
   2. 在第二个 `await doSomethingAsync()` 被运行时，`doSomethingAsync()` 被 resolved 或 rejected 之前 (从 `1` 被更新到 `2`)。
   3. 当 `click()` 完成之后 (从 `2` 被更新到 `3`)。
 
-  <Video src="/video/react/component-rendering_update-request-exercise.mov" />
+  <Video src="/video/react/component-rendering_update-request-exercise.mp4" />
   
 </details>
 

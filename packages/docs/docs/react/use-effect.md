@@ -99,7 +99,7 @@ We'll only see `Hello` in the console **when the component is mounted**, because
 - React calls `callback` right after the component is mounted, no matter what value `dependencies` is.
 - During re-render, React checks if every element in `dependencies` is the same as the previous render; if anything in `dependencies` has changed between renders, React will execute the effect. Since we use an empty array as `dependencies`, React will never execute this effect during re-render, because nothing changes in an empty array.
 
-<Video src="/video/react/use-effect_empty-array_no-clean-up.mov" />
+<Video src="/video/react/use-effect_empty-array_no-clean-up.mp4" />
 
 What if a clean up function is returned in this effect? For example:
 
@@ -119,7 +119,7 @@ useEffect(() => {
 
 Due to the fact that `dependencies` is an empty array, which means no subsequent effect will be executed, we'll only see `World` in the console when the component is about to unmount.
 
-<Video src="/video/react/use-effect_empty-array_with-clean-up.mov" />
+<Video src="/video/react/use-effect_empty-array_with-clean-up.mp4" />
 
 ### Non-empty Array as `dependencies`
 
@@ -140,7 +140,7 @@ We'll see `Hello` in the console **when the component is mounted**, and **whenev
 - React calls `callback` right after the component is mounted, no matter what value `dependencies` is.
 - `count` is an element of `dependencies`, so the changes of `count` will trigger the effect.
 
-<Video src="/video/react/use-effect_non-empty-array_no-clean-up.mov" />
+<Video src="/video/react/use-effect_non-empty-array_no-clean-up.mp4" />
 
 What if a clean up function is returned in this effect? For example:
 
@@ -165,7 +165,7 @@ We'll see `World` in the console when:
 - Whenever `count` changes (so we will not see it in the first render). Also, for subsequent effects, React runs the clean up function first, then the main effect.
 - When the component is about to unmount.
 
-<Video src="/video/react/use-effect_non-empty-array_with-clean-up.mov" />
+<Video src="/video/react/use-effect_non-empty-array_with-clean-up.mp4" />
 
 ### `undefined` as `dependencies`
 
@@ -184,7 +184,7 @@ We'll see `Hello` in the console **when the component is mounted**, and **whenev
 - React calls `callback` right after the component is mounted, no matter what value `dependencies` is.
 - `dependencies` is `undefined`, which means the effect will be executed every time the component re-renders.
 
-<Video src="/video/react/use-effect_non-empty-array_no-clean-up.mov" />
+<Video src="/video/react/use-effect_non-empty-array_no-clean-up.mp4" />
 
 What if a clean up function is returned in this effect? For example:
 
@@ -207,7 +207,7 @@ We'll see `World` in the console when:
 - Whenever the component re-renders. Also, for subsequent effects, React runs the clean up function first, then the main effect.
 - When the component is about to unmount.
 
-<Video src="/video/react/use-effect_non-empty-array_with-clean-up.mov" />
+<Video src="/video/react/use-effect_non-empty-array_with-clean-up.mp4" />
 
 ## Async Callback
 
@@ -378,7 +378,7 @@ Consider the following scenario:
 - There's an input box on the screen, and we must record the value entered by the user.
 - If there's any prohibited characters (i.e. `a`) in the value, show `Prohobited characters found` on the screen.
 
-<Video src="/video/react/use-effect_prohibited-characters.mov" />
+<Video src="/video/react/use-effect_prohibited-characters.mp4" />
 
 In this scenario, we often see code like this:
 

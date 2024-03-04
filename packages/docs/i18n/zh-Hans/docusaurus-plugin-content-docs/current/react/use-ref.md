@@ -73,7 +73,7 @@ const logName = useCallback(() => {
 
 在这个范例中，即使 `logName()` 被一个没有任何依赖值的 `useCallback()` 记忆起来，`logName()` 中的 `name.current` 仍然会指向最新的数值。相同的规则也可以套用在 `useEffect()` 和 `useMemo()` 身上。
 
-<Video src="/video/react/use-ref_always-latest.mov" />
+<Video src="/video/react/use-ref_always-latest.mp4" />
 
 :::caution
 
@@ -212,7 +212,7 @@ export const Example = () => {
 
 藉由放置一个参考到 DOM 节点的 `ref` 属性中，您就能使用原生 JavaScript 的[元素](https://developer.mozilla.org/en-US/docs/Web/API/Element)物件来操作节点。请注意，如果参考的目标是一个 DOM 节点，我们就必须使用 `null` 来做为参考的初始值。
 
-<Video src="/video/react/use-ref_html-element.mov" />
+<Video src="/video/react/use-ref_html-element.mp4" />
 
 然而，这个作法只该在**标准的属性/状态无法达成您的需求，或是标准的属性/状态不便使用时**才被使用。两个使用 `useRef()` 的好例子是计算 DOM 节点的宽度/高度，或是聚焦 (focus) 在一个 `<input>` 上。
 
@@ -283,7 +283,7 @@ export class Child extends Component<IChildProps, IChildState> {
 }
 ```
 
-<Video src="/video/react/use-ref_component-instance.mov" />
+<Video src="/video/react/use-ref_component-instance.mp4" />
 
 在这个范例中：
 
@@ -378,7 +378,7 @@ export const Example = () => {
 }
 ```
 
-<Video src="/video/react/use-ref_uncontrolled-component.mov" />
+<Video src="/video/react/use-ref_uncontrolled-component.mp4" />
 
 ### 保留数值供之后使用
 

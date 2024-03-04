@@ -62,7 +62,7 @@ export const Example = () => {
 
 在這個範例中，每次 "Increment" 按鈕被點擊，`count` 的數值都會增加 `1`。由於 `count` 是一個響應式數值，元件將會在他改變之後進行重新渲染，使用最新的數值「刷新」畫面。
 
-<Video src="/video/react/reactive-values_reactive.mov" />
+<Video src="/video/react/reactive-values_reactive.mp4" />
 
 然而，您可能已經注意到主控台中顯示的數值總是和畫面上顯示的數值不同。好消息是，這不是一個 bug，但是這的確讓大家很困惑！我們會在[元件渲染](./component-rendering)章節中解釋這一點，現在先不用擔心他。
 
@@ -96,7 +96,7 @@ export const Example = () => {
 }
 ```
 
-<Video src="/video/react/reactive-values_non-reactive.mov" />
+<Video src="/video/react/reactive-values_non-reactive.mp4" />
 
 在這個範例中，每次 "Increment" 按鈕被點擊，`count` 的數值都會增加 `1`。由於 `count` 是一個**非響應式數值**，無論 `count` 改變了多少次，他的變化都**不會**導致元件重新渲染。
 
@@ -137,7 +137,7 @@ export const Example = () => {
 }
 ```
 
-<Video src="/video/react/reactive-values_both.mov" height="300px" />
+<Video src="/video/react/reactive-values_both.mp4" height="300px" />
 
 在這個範例中，`count` 是一個響應式數值，而 `age` 則是一個非響應式數值。因此：
 

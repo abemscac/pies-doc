@@ -74,7 +74,7 @@ export const Example = () => {
 }
 ```
 
-<Video src="/video/react/use-state_counter-app.mov" height="300px" />
+<Video src="/video/react/use-state_counter-app.mp4" height="300px" />
 
 在这个范例中，`0` 被用来当做 `count` 的初始值。每次 "Increment" 按钮被点击后，`increment()` 就会被调用，因此将 `count` 的数值更新为 `count + 1`。
 
@@ -172,7 +172,7 @@ export const Example = () => {
 
 在这个范例中，即使我们使用相同的值来更新 `user`，组件仍然会重新渲染。这是因为被传递给 `setUser()` 的物件与我们用来初始化 `user` 的物件并不是同一个。
 
-<Video src="/video/react/use-state_referential-equality.mov" />
+<Video src="/video/react/use-state_referential-equality.mp4" />
 
 这个问题会发生在所有非原始型别的变量上，像是物件、阵列、[map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map) 等等。
 

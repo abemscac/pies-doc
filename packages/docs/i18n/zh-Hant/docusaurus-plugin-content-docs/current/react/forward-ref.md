@@ -60,7 +60,7 @@ export const Parent = () => {
 
 結果就會像是這個樣子：
 
-<Video src="/video/react/forward-ref_0.mov" />
+<Video src="/video/react/forward-ref_0.mp4" />
 
 目前一切都運作良好，但是我們現在被要求增加一個新的功能－在某個父元件的按鈕被點擊時，我們要聚焦 (focus) 在 "Last Name" 的輸入框上。由於 `<input>` 標籤被放在子元件中，似乎沒有優雅的方式可以達成這個目的。
 
@@ -118,7 +118,7 @@ export const Parent = () => {
 }
 ```
 
-<Video src="/video/react/forward-ref_1.mov" />
+<Video src="/video/react/forward-ref_1.mp4" />
 
 <details>
   <summary><code>forwardRef()</code> 能用在類別元件身上嗎？</summary>
@@ -159,7 +159,7 @@ export const Parent = () => {
   
   此外，在這個範例中，由於 `MyComponent` (它是一個元件) 被定義在 `InputGroup` 中 (也是一個元件)，每次 `InputGroup` 重新渲染，`MyComponent` 就會被重新定義；代表「舊的」`<MyComponent {...props} />` 會被卸載，「新的」`<MyComponent {...props} />` 會被掛載，導致我們失去 `MyComponent` 中所有的狀態。
 
-  <Video src="/video/react/forward-ref_with-class-component.mov" />
+  <Video src="/video/react/forward-ref_with-class-component.mp4" />
 
   要解決這個問題，最簡單的解決方法就是在第一次渲染之前將 `MyComponent` 的定義記下來，並且從那時起只使用它來進行渲染。例如：
 

@@ -40,12 +40,6 @@ const config = {
           showLastUpdateTime: true,
           showLastUpdateAuthor: true,
         },
-        blog: {
-          showReadingTime: true,
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl: 'https://github.com/abemscac/pies-doc/blob/main',
-        },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
         },
@@ -81,7 +75,6 @@ const config = {
             position: 'left',
             label: 'Docs',
           },
-          // { to: '/blog', label: 'Blog', position: 'left' },
           {
             type: 'localeDropdown',
             position: 'right',
@@ -119,30 +112,9 @@ const config = {
               },
             ],
           },
-          // {
-          //   title: 'Community',
-          //   items: [
-          //     {
-          //       label: 'Stack Overflow',
-          //       href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-          //     },
-          //     {
-          //       label: 'Discord',
-          //       href: 'https://discordapp.com/invite/docusaurus',
-          //     },
-          //     {
-          //       label: 'Twitter',
-          //       href: 'https://twitter.com/docusaurus',
-          //     },
-          //   ],
-          // },
           {
             title: 'More',
             items: [
-              // {
-              //   label: 'Blog',
-              //   to: '/blog',
-              // },
               {
                 label: 'GitHub',
                 href: 'https://github.com/abemscac/pies-doc',
@@ -162,6 +134,7 @@ const config = {
         indexName: 'pies',
       },
     }),
+  plugins: ['./plugins/google-adsense-plugin'],
 }
 
 module.exports = config

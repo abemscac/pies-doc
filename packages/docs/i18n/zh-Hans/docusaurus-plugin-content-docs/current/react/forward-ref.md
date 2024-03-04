@@ -60,7 +60,7 @@ export const Parent = () => {
 
 结果就会像是这个样子：
 
-<Video src="/video/react/forward-ref_0.mov" />
+<Video src="/video/react/forward-ref_0.mp4" />
 
 目前一切都运作良好，但是我们现在被要求增加一个新的功能－在某个父组件的按钮被点击时，我们要聚焦 (focus) 在 "Last Name" 的输入框上。由于 `<input>` 标签被放在子组件中，似乎没有优雅的方式可以达成这个目的。
 
@@ -118,7 +118,7 @@ export const Parent = () => {
 }
 ```
 
-<Video src="/video/react/forward-ref_1.mov" />
+<Video src="/video/react/forward-ref_1.mp4" />
 
 <details>
   <summary><code>forwardRef()</code> 能用在类别组件身上吗？</summary>
@@ -159,7 +159,7 @@ export const Parent = () => {
   
   此外，在这个范例中，由于 `MyComponent` (它是一个组件) 被定义在 `InputGroup` 中 (也是一个组件)，每次 `InputGroup` 重新渲染，`MyComponent` 就会被重新定义；代表「旧的」`<MyComponent {...props} />` 会被卸载，「新的」`<MyComponent {...props} />` 会被挂载，导致我们失去 `MyComponent` 中所有的状态。
 
-  <Video src="/video/react/forward-ref_with-class-component.mov" />
+  <Video src="/video/react/forward-ref_with-class-component.mp4" />
 
   要解决这个问题，最简单的解决方法就是在第一次渲染之前将 `MyComponent` 的定义记下来，并且从那时起只使用它来进行渲染。例如：
 
