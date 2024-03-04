@@ -39,9 +39,3 @@ We want to change this. We hope that with the help of Pies Doc, a 100% free hand
 ### Contribution Guide
 
 Work in progress.
-
-### Supporting
-
-We hope you like Pies Doc! Your support will be very appreciated!
-
-[<img src="./static/readme/buy-me-a-coffee.svg" alt="Buy me a coffee">](https://buymeacoffee.com/abemscac).
