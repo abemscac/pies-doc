@@ -49,15 +49,16 @@ In React, "batching" refers to the process of **grouping multiple state updates 
 <details>
   <summary>What are React event handlers?</summary>
 
-  React event handlers are those things that come with `React.[Something]EventHandler` you see in VSCode when you hover on a handler prop:
+React event handlers are those things that come with `React.[Something]EventHandler` you see in VSCode when you hover on a handler prop:
 
   <img src="/img/react/use-state-in-depth_react-event-handler-hover.png" alt="How to check if a handler prop is React event handler in VSCode" />
 
-  You can also see all the types in the declaration file:
+You can also see all the types in the declaration file:
 
   <img src="/img/react/use-state-in-depth_react-event-handler-type.png" alt="React event handler declaration file" />
 
-  React already handles most of the native HTML events, such as `onClick()`, `onChange()`, `onBlur()`, `onDrag()`, `onSubmit()`, etc. Life-cycle hooks like `componentDidMount()` and `useEffect()` are also considered React event handlers.
+React already handles most of the native HTML events, such as `onClick()`, `onChange()`, `onBlur()`, `onDrag()`, `onSubmit()`, etc. Life-cycle hooks like `componentDidMount()` and `useEffect()` are also considered React event handlers.
+
 </details>
 
 To understand how batching works, please take a look at the following example:
@@ -110,13 +111,13 @@ Why?
 
 It actually makes sense if we think about it. In the above example, we don't want users to see flickers when `count` is being updated from `0` all the way to `3`. Since we know that the last value being passed to `setCount()` is `3`, we can simply skip over all previous values and directly set `count` to `3`. The same approach can be applied to `name` as well.
 
-Additionally, after all [update requests](./component-rendering#update-requests) have been processed, React knows that the states to be updated are `name` and `count`. To minimize the number of re-renders and avoid any flicker that users might notice, React updates them both at the same time instead of individually.
+Additionally, after all [update schedulers](./component-rendering#update-schedulers) have been processed, React knows that the states to be updated are `name` and `count`. To minimize the number of re-renders and avoid any flicker that users might notice, React updates them both at the same time instead of individually.
 
 The following video illustrates how states are updated in the above example. While the implementation may not be the same as React, it should give you a general understanding of how the render cycle works within a component.
 
 :::info
 
-If you're interested in how state updates are processed in React, please refer to [the official documentation](https://beta.reactjs.org/learn/queueing-a-series-of-state-updates).
+If you're interested in how state updates are processed in React, please refer to [the official documentation](https://react.dev/learn/queueing-a-series-of-state-updates).
 
 :::
 
@@ -124,12 +125,12 @@ If you're interested in how state updates are processed in React, please refer t
 
 - Before the first render:
   - All states in a component are stored in an imaginary object called `states`.
-  - An imaginary object called `updateRequests` is created to hold all of the unprocessed update requests.
+  - An imaginary object called `updateSchedulers` is created to hold all of the unprocessed update schedulers.
   - An imaginary object called `patches` is created to hold the values of `states` for the next render.
-- Every time `setState()` is called, the parameter (a value or a function) is pushed to the corresponding array in `updateRequests`.
-- For each state, React evaluates the output based on the update requests and put it in `patches`. Once all update requests have been processed, React copies all the properties from `patches` to `states` and clears `updateRequests` and `patches`.
+- Every time `setState()` is called, the parameter (a value or a function) is pushed to the corresponding array in `updateSchedulers`.
+- For each state, React evaluates the output based on the update schedulers and put it in `patches`. Once all update schedulers have been processed, React copies all the properties from `patches` to `states` and clears `updateSchedulers` and `patches`.
 
-After that, React updates the DOM nodes based on the values in `states`, and then waits for [the next opportunity](./component-rendering#when-will-reactive-values-be-updated) to process update requests.
+After that, React updates the DOM nodes based on the values in `states`, and then waits for [the next opportunity](./component-rendering#when-will-reactive-values-be-updated) to process update schedulers.
 
 ## Updater Functions
 
@@ -214,7 +215,7 @@ const [count, setCount] = useState(0)
 
 // highlight-start
 const increment = useCallback(() => {
-  setCount(prev => prev + 1)
+  setCount((prev) => prev + 1)
 }, [])
 // highlight-end
 ```

@@ -41,7 +41,7 @@ export const Example = () => {
     // highlight-next-line
     setCount(5)
     console.log('count right after setCount():', count)
-    
+
     setTimeout(() => {
       console.log('count 3 seconds after setCount():', count)
     }, 3000)
@@ -50,9 +50,7 @@ export const Example = () => {
   return (
     <div>
       <h1>Count: {count}</h1>
-      <button onClick={click}>
-        Click Me
-      </button>
+      <button onClick={click}>Click Me</button>
     </div>
   )
 }
@@ -84,7 +82,7 @@ const click = () => {
 
   setCount(5)
   console.log('count right after setCount():', count)
-  
+
   setTimeout(() => {
     console.log('count 3 seconds after setCount():', count)
   }, 3000)
@@ -101,7 +99,7 @@ const click = () => {
   setCount(5)
   // highlight-next-line
   console.log('count right after setCount():', 0)
-  
+
   setTimeout(() => {
     // highlight-next-line
     console.log('count 3 seconds after setCount():', 0)
@@ -156,9 +154,7 @@ export const Example = () => {
     <div>
       <h1>Count: {count}</h1>
       <h2>Count + 5: {countPlusFive}</h2>
-      <button onClick={increment}>
-        Increment
-      </button>
+      <button onClick={increment}>Increment</button>
     </div>
   )
 }
@@ -188,9 +184,9 @@ export const Example = () => {
 
 1. 執行 `const [count, setCount] = useState(0)` 來宣告 `count` 和 `setCount()`。
 2. 執行 `const countPlusFive = count + 5` 來宣告 `countPlusFive`。
-    - 由於 `count` 的初始值是 `0`，`countPlusFive` 在這次渲染中會被定義為 `0 + 5`。
+   - 由於 `count` 的初始值是 `0`，`countPlusFive` 在這次渲染中會被定義為 `0 + 5`。
 3. 執行 `const increment = () => { ... }` 來宣告 `increment()`。
-    - 由於 `count` 的初始值是 `0`，`setCount(count + 1)` 在這次渲染中會被解讀為 `setCount(0 + 1)`。
+   - 由於 `count` 的初始值是 `0`，`setCount(count + 1)` 在這次渲染中會被解讀為 `setCount(0 + 1)`。
 4. 綁定所有必要的數值到回傳區的 JSX 元素上，同時渲染所有子元件並回傳結果。
 
 ### 第二次渲染 (首次重新渲染)
@@ -199,9 +195,9 @@ export const Example = () => {
 
 1. 執行 `const [count, setCount] = useState(0)` 來宣告 `count` 和 `setCount()`。由於 `useState()` 內部運作機制的緣故，`count` 和 `setCount()` 仍然會指向和前一次渲染相同的變數；我們只是將它們賦予到和前一次渲染中相同名稱的新變數上。
 2. 執行 `const countPlusFive = count + 5` 來宣告 `countPlusFive`。
-    - 由於 `count` 已經從 `0` 被更新到 `1` 了，所以這次渲染中的 `count + 5` 會被解讀為 `1 + 5`，也就是 `6`。
+   - 由於 `count` 已經從 `0` 被更新到 `1` 了，所以這次渲染中的 `count + 5` 會被解讀為 `1 + 5`，也就是 `6`。
 3. 執行 `const increment = () => { ... }` 來宣告 `increment()`。
-    - 由於 `count` 已經從 `0` 被更新到 `1` 了，所以這次渲染中的 `setCount(count + 1)` 會被解讀為 `setCount(1 + 1)`。
+   - 由於 `count` 已經從 `0` 被更新到 `1` 了，所以這次渲染中的 `setCount(count + 1)` 會被解讀為 `setCount(1 + 1)`。
 4. 綁定所有必要的數值到回傳區的 JSX 元素上，同時重新渲染所有子元件並回傳結果。
 
 任何後續的渲染都會遵循與第一次重新渲染相同的步驟，無一例外。
@@ -275,9 +271,9 @@ export const Example = () => {
   相反地，`{View()}` 的寫法就不會出現這種情況，因為他並不會被當成一個元件看待；他只是呼叫 `View` 函式所回傳的結果。
 
   <Video src="/video/react/component-rendering_render-method-2.mp4" />
-  
+
   因此，如果在元件中宣告的函式回傳的是 JSX 元素，我們建議使用 `{View()}` 的寫法來渲染他而非 `<View />` 以避免不必要的卸載和掛載。
-  
+
 :::
 
 ### 渲染是遞迴的
@@ -311,9 +307,7 @@ export const Parent = () => {
   return (
     <div>
       <h1>Count: {count}</h1>
-      <button onClick={increment}>
-        Increment
-      </button>
+      <button onClick={increment}>Increment</button>
       {/* highlight-next-line */}
       <Child />
     </div>
@@ -396,9 +390,7 @@ export const Parent = ({ children }: PropsWithChildren) => {
   return (
     <div>
       <h1>Count: {count}</h1>
-      <button onClick={increment}>
-        Increment
-      </button>
+      <button onClick={increment}>Increment</button>
       {/* highlight-next-line */}
       {children}
     </div>
@@ -414,37 +406,18 @@ export const Parent = ({ children }: PropsWithChildren) => {
 
 如果狀態並不是在 `setState()` 呼叫後馬上更新，那麼他們到底會在什麼時候被更新呢？
 
-### 更新請求
+### 更新排程
 
-首先，我們必須明白像 [`setState()`](./use-state#setstate) 和 [`dispatch()`](https://beta.reactjs.org/apis/react/useReducer#dispatch) 這類函式的目的實際上是**提出更新請求**，而非進行實際、立即的更新。React 會根據我們提出的更新請求在某個時刻更新狀態。因此，在這份文件中，我們將會使用**更新請求**來稱呼這些函式。
+首先，我們必須明白像 [`setState()`](./use-state#setstate) 和 [`dispatch()`](https://react.dev/reference/react/useReducer#dispatch) 這類函式的目的實際上是**提出更新排程**，而非進行實際、立即的狀態更新。React 會對我們提出的更新排程進行[批量處理](./use-state-in-depth#批量處理狀態更新-batching)，並在某個時刻進行狀態更新。因此，在這份文件中，我們將會使用**更新排程**來稱呼這些函式。
 
-總的來說，React 會在以下任意條件符合時處理更新請求：
-
-1. 當呼叫堆疊 (call stack) 為空。
-2. 當 `await` 被執行。
-
-#### 當呼叫堆疊為空
-
-:::info
-
-若您不了解何謂呼叫堆疊，先不要驚慌！
-
-呼叫堆疊是 JavaScript [事件循環 (event loop)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/EventLoop) 中的一個環節。事實上，我們不見得需要知道他到底是什麼；由於大部分的更新請求都是由使用者發起的事件產生 (例如點擊按鈕或是提交表單)，也就是說這些事件通常會是呼叫堆疊中的第一個函式。這代表當這個事件執行完成時，呼叫堆疊通常會是空的。
-
-這些東西聽起來雖然很可怕，但是他其實沒有想像中困難。若您仍然想知道呼叫堆疊或事件循環是什麼，我們推薦您觀看 [Philip Roberts](https://github.com/latentflip) 的精采演講－[*What the heck is the event loop anyway?*](https://youtu.be/8aGhZQkoFbQ)。
-
-若您完全不了解我們到底在說什麼，那也沒關係。不要管他，繼續閱讀，一切都會沒事的！
-
-:::
-
-React 會在呼叫堆疊為空時處理更新請求。換句話說，假設提出更新請求的事件是呼叫堆疊中的第一個函式，當他執行完成後，狀態就會被更新。舉例來說：
+通常，當發送更新排程的事件處理程序（event handler）執行完成後，狀態就會更新，例如：
 
 ```tsx showLineNumbers
 import { useState } from 'react'
 
 export const Example = () => {
   const [count, setCount] = useState(0)
-  
+
   // highlight-next-line
   const click = () => {
     setCount(1)
@@ -455,72 +428,45 @@ export const Example = () => {
     <div>
       <h1>Count: {count}</h1>
       {/* highlight-next-line */}
-      <button onClick={click}>
-        Click Me
-      </button>
+      <button onClick={click}>Click Me</button>
     </div>
   )
 }
 ```
 
-在這個範例中，`click()` 是按鈕 `onClick` 事件的處理程序 (event handler)，代表當按鈕被點擊時，`click()` 會是呼叫堆疊中唯一的一個函式。由於 `console.log('Done')` 是 `click()` 中的最後一個動作，`click()` 的執行會在 `console.log('Done')` 執行完成後被視為完成。因此， React 會在 `click()` 執行完成後立即依照我們所提出的更新請求 (就是 `setCount(1)`) 對狀態進行更新。
+在這個範例中，`click()` 是按鈕的 `onClick` 事件處理程序 (event handler)，代表當按鈕被點擊時，`click()` 會是呼叫堆疊中唯一的一個函式。由於 `console.log('Done')` 是 `click()` 中的最後一個動作，`click()` 的執行會在 `console.log('Done')` 執行完成後被視為完成。因此， React 會在 `click()` 執行完成後立即依照我們所提出的更新排程 (就是 `setCount(1)`) 對狀態進行更新。
 
-#### 當 `await` 被執行
+React 通常會在同一個事件循環 (event loop) 中對更新排程進行批量處理，並在目前的事件處理程序執行結束後處理它們，但不一定是在呼叫堆疊完全為空的時候。
 
-React 也會在 `await` 被執行時處理更新請求，例如：
+:::info
 
-```ts showLineNumbers
-import { useState } from 'react'
+若您不了解何謂呼叫堆疊，先不要驚慌！
 
-const [count, setCount] = useState(0)
+呼叫堆疊是 JavaScript [事件循環](https://developer.mozilla.org/en-US/docs/Web/JavaScript/EventLoop) 中的一個環節。事實上，我們不見得需要知道他到底是什麼；由於大部分的更新排程都是由使用者發起的事件產生 (例如點擊按鈕或是提交表單)，也就是說這些事件通常會是呼叫堆疊中的第一個函式。這代表當這個事件執行完成時，呼叫堆疊通常會是空的。
 
-const click = async () => {
-  // highlight-next-line
-  setCount(1)
-  await doSomethingAsync()
+這些東西聽起來雖然很可怕，但是他其實沒有想像中困難。若您仍然想知道呼叫堆疊或事件循環是什麼，我們推薦您觀看 [Philip Roberts](https://github.com/latentflip) 的精采演講－[_What the heck is the event loop anyway?_](https://youtu.be/8aGhZQkoFbQ)。
 
-  // highlight-next-line
-  setCount(2)
-  await doSomethingAsync()
-}
+若您有足夠的時間，也非常建議看看 [Jake Archibald](https://github.com/jakearchibald/) 的出色演講 [_Jake Archibald on the web browser event loop, setTimeout, micro tasks, requestAnimationFrame, ..._](https://youtu.be/cCOL7MC4Pl0)。
 
-const doSomethingAsync = () => {
-  // 做一些異步的事情，例如呼叫 API。
-  return Promise.resolve(true)
-}
-```
+若您完全不了解我們到底在說什麼，那也沒關係。不要管他，繼續閱讀，一切都會沒事的！
 
-在上面的範例中，`count` 將會被更新兩次：
+:::
 
-1. 在第一個 `await doSomethingAsync()` 被執行時，`doSomethingAsync()` 被 resolved 或 rejected 之前 (從 `0` 被更新到 `1`)。
-2. 在第二個 `await doSomethingAsync()` 被執行時，`doSomethingAsync()` 被 resolved 或 rejected 之前 (從 `1` 被更新到 `2`)。
-
-我們可以使用 `useEffect()` 來驗證這一點：  
-
-```ts showLineNumbers
-import { useEffect } from 'react'
-
-// highlight-start
-useEffect(() => {
-  console.log('count has been updated to', count)
-}, [count])
-// highlight-end
-```
-
-<Video src="/video/react/component-rendering_await-triggers-states-update.mp4" />
+此外，由於 [JavaScript 中非同步函式的特性](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function#description)，在大多數情況下，您的函式在遇到 `await` 表達式後就會從呼叫堆疊中被移除 (popped)。
 
 :::caution
 
-雖然狀態會在 `await` 執行時馬上被更新，別忘了，由於[響應式數值在元件中的運作方式](#響應式數值在元件中的運作方式)的緣故，函式中的狀態仍然會保持函式被宣告時的數值。我們還是得等到下一次渲染才能拿到更新後的值！
+別忘了，由於[響應式數值在元件中的運作方式](#響應式數值在元件中的運作方式)的緣故，函式中的狀態仍然會保持函式被宣告時的數值。我們還是得等到下一次渲染才能拿到更新後的值！
 
 :::
 
 <details>
   <summary>這背後的理論是什麼？(不一定要知道，跳過也沒關係）</summary>
 
-  從上方的描述中，您可能已經猜到了－那些「更新請求」實際上就是[**微任務 (microtasks)**](https://developer.mozilla.org/en-US/docs/Web/API/HTML_DOM_API/Microtask_guide)。若您覺得他很難懂，跳過他也沒關係；即使不知道他是什麼您也能過的很好！
-  
-  此外，`await` 其實可以用在任何東西上，即使他不是一個 promise。若您有興趣了解更多細節，可以看看這份 [MDN 的文件](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await#control_flow_effects_of_await)！
+從上方的描述中，您可能已經猜到了－那些「更新排程」實際上就是[**微任務 (microtasks)**](https://developer.mozilla.org/en-US/docs/Web/API/HTML_DOM_API/Microtask_guide)。若您覺得他很難懂，跳過他也沒關係；即使不知道他是什麼您也能過的很好！
+
+此外，`await` 其實可以用在任何東西上，即使他不是一個 promise。若您有興趣了解更多細節，可以看看這份 [MDN 的文件](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await#control_flow_effects_of_await)！
+
 </details>
 
 :::info 小練習
@@ -554,11 +500,11 @@ const doSomethingAsync = () => {
 <details>
   <summary>公布解答</summary>
 
-  在這個範例中，`count` 會被更新三次：
+在這個範例中，`count` 會被更新三次：
 
-  1. 在第一個 `await doSomethingAsync()` 被執行時，`doSomethingAsync()` 被 resolved 或 rejected 之前 (從 `0` 被更新到 `1`)。
-  2. 在第二個 `await doSomethingAsync()` 被執行時，`doSomethingAsync()` 被 resolved 或 rejected 之前 (從 `1` 被更新到 `2`)。
-  3. 當 `click()` 完成之後 (從 `2` 被更新到 `3`)。
+1. 在第一個 `await doSomethingAsync()` 被執行時，`doSomethingAsync()` 被 resolved 或 rejected 之前 (從 `0` 被更新到 `1`)。
+2. 在第二個 `await doSomethingAsync()` 被執行時，`doSomethingAsync()` 被 resolved 或 rejected 之前 (從 `1` 被更新到 `2`)。
+3. 當 `click()` 完成之後 (從 `2` 被更新到 `3`)。
 
   <Video src="/video/react/component-rendering_update-request-exercise.mp4" />
   

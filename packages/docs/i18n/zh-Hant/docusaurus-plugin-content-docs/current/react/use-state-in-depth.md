@@ -50,17 +50,17 @@ const [state, setState] = useState({
 <details>
   <summary>什麼是 React 事件處理程序？</summary>
 
-  React 事件處理程序指的是您在 VSCode 中將鼠標停留在處理程序屬性 (handler prop) 上面會看到的 `React.[什麼]EventHandler`：
+React 事件處理程序指的是您在 VSCode 中將鼠標停留在處理程序屬性 (handler prop) 上面會看到的 `React.[什麼]EventHandler`：
 
   <img src="/img/react/use-state-in-depth_react-event-handler-hover.png" alt="How to check if a handler prop is React event handler in VSCode" />
 
-  您也可以在宣告檔案 (declaration file) 中看見所有的型別：
+您也可以在宣告檔案 (declaration file) 中看見所有的型別：
 
   <img src="/img/react/use-state-in-depth_react-event-handler-type.png" alt="React event handler declaration file" />
 
-  絕大部分的原生事件都屬於 React 事件處理程序，像是`onClick()`、`onChange()`、`onBlur()`、`onDrag()`、`onSubmit()`等等。生命週期鉤子 (life-cycle hooks) 如 `componentDidMount()` 和 `useEffect()` 也都屬於 React 事件處理程序。
-</details>
+絕大部分的原生事件都屬於 React 事件處理程序，像是`onClick()`、`onChange()`、`onBlur()`、`onDrag()`、`onSubmit()`等等。生命週期鉤子 (life-cycle hooks) 如 `componentDidMount()` 和 `useEffect()` 也都屬於 React 事件處理程序。
 
+</details>
 
 要了解批量狀態更新的運作方式，請看以下範例：
 
@@ -112,13 +112,13 @@ const updateData = () => {
 
 如果我們仔細想想，這其實挺合理的。在上面的範例中，當 `count` 的數值從 `0` 一路被更新到 `3` 時，我們不會想要使用者在畫面上看見快速的閃爍。既然我們知道最後被傳遞給 `setCount()` 的數值是 `3`，我們大可以跳過前面的數值，直接將 `count` 的值更新到 `3`。同樣的道理也可以套用在 `name` 身上。
 
-此外，在所有的[更新請求](./component-rendering#更新請求)都被處理完成後，React 就會知道該被更新的狀態是 `name` 和 `count`。為了將重新渲染的次數減到最少，同時避免使用者在畫面上看見任何閃爍，React 會同時更新這兩個狀態，而不是單獨更新他們。
+此外，在所有的[更新排程](./component-rendering#更新排程)都被處理完成後，React 就會知道該被更新的狀態是 `name` 和 `count`。為了將重新渲染的次數減到最少，同時避免使用者在畫面上看見任何閃爍，React 會同時更新這兩個狀態，而不是單獨更新他們。
 
 下面的動畫說明了在上面的範例中，狀態是如何被更新的。雖然動畫中的實作和 React 的實作不太一樣，但它應該能讓您大致了解元件中的渲染循環是如何進行的。
 
 :::info
 
-若您有興趣了解 React 如何處理狀態更新，請參考[官方文件](https://beta.reactjs.org/learn/queueing-a-series-of-state-updates)。
+若您有興趣了解 React 如何處理狀態更新，請參考[官方文件](https://react.dev/learn/queueing-a-series-of-state-updates)。
 
 :::
 
@@ -126,12 +126,12 @@ const updateData = () => {
 
 - 在首次渲染之前：
   - 元件中的所有狀態都會被存入一個虛擬的 `states` 物件當中。
-  - 一個名為 `updateRequests` 的虛擬物件會被建立，用來存放所有尚未處理的更新請求。
+  - 一個名為 `updateSchedulers` 的虛擬物件會被建立，用來存放所有尚未處理的更新排程。
   - 一個名為 `patches` 的虛擬物件會被建立，用來存放 `states` 在下一次渲染中的值。
-- 當 `setState()` 被呼叫時，該參數 (數值或是函式) 會被放入該狀態在 `updateRequests` 中所對應的陣列裡。
-- 針對每個狀態，React 會依據他們各自的更新請求計算出他們在下一次渲染中的值，將他們放入 `patches` 中，然後清除 `updateRequests` 和 `patches`。
+- 當 `setState()` 被呼叫時，該參數 (數值或是函式) 會被放入該狀態在 `updateSchedulers` 中所對應的陣列裡。
+- 針對每個狀態，React 會依據他們各自的更新排程計算出他們在下一次渲染中的值，將他們放入 `patches` 中，然後清除 `updateSchedulers` 和 `patches`。
 
-在那之後，React 會依據 `states` 中的值更新 DOM 節點，然後等待下一個[處理更新請求的時機](./component-rendering#響應式數值何時會被更新)。
+在那之後，React 會依據 `states` 中的值更新 DOM 節點，然後等待下一個[處理更新排程的時機](./component-rendering#響應式數值何時會被更新)。
 
 ## 更新函式 (Updater Functions)
 
@@ -216,7 +216,7 @@ const [count, setCount] = useState(0)
 
 // highlight-start
 const increment = useCallback(() => {
-  setCount(prev => prev + 1)
+  setCount((prev) => prev + 1)
 }, [])
 // highlight-end
 ```

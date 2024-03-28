@@ -1,7 +1,16 @@
 ---
 sidebar_position: 1
 description: 介紹 React 元件的基本語法，包含類別元件 (class component) 和函式元件 (function component)。
-keywords: [piesdoc, react, react元件, react class component, react類別元件, react function component, react函式元件]
+keywords:
+  [
+    piesdoc,
+    react,
+    react元件,
+    react class component,
+    react類別元件,
+    react function component,
+    react函式元件,
+  ]
 ---
 
 import Badge from '@site/src/widgets/Badge'
@@ -82,7 +91,6 @@ export class App extends Component<IAppProps, IAppState> {
   <Badge variant="success" text="推薦" />
 </p>
 
-
 函式元件在鉤子 API 推出之前就已經存在了，但是那個時候僅有類別元件可以宣告狀態。因此，函式元件在當時都是無狀態的元件，僅能依照給予的屬性來渲染使用者介面。
 
 隨著鉤子 API 的發展，函式元件已逐漸取代類別元件並成為主流。整體而言，與類別元件相比，函式元件更具可讀性、可維護性和可擴展性。
@@ -92,7 +100,7 @@ export class App extends Component<IAppProps, IAppState> {
 - 宣告元件的方式和宣告 JavaScript 函式相同。
 - 函式元件本身就是函式，所以我們不需要使用 `this` 也能存取屬性和狀態。
 - 屬性會是函式元件的第一個 (也是唯一一個) 參數。
-- 狀態必須使用 [`useState()`](./use-state)、[`useReducer()`](https://beta.reactjs.org/reference/react/useReducer#usereducer)，或是利用上述兩個鉤子的自定鉤子來進行宣告及更新。
+- 狀態必須使用 [`useState()`](./use-state)、[`useReducer()`](https://react.dev/reference/react/useReducer#usereducer)，或是利用上述兩個鉤子的自定鉤子來進行宣告及更新。
 - 生命週期鉤子被有著多種功能的 [`useEffect()`](./use-effect) 取代，他能同時做到類別元件中的 `componentDidMount()`、`componentDidUpdate()` 和 `componentWillUnmount()`。
 
 ### 範例
