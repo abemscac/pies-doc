@@ -13,14 +13,14 @@ import Video from '@site/src/widgets/Video'
 響應式數值指的是**任何在改變後會造成元件重新渲染的東西**，包含：
 
 - 由 [`useState()`](./use-state) 所建立出來的值。
-- 由 [`useReducer()`](https://beta.reactjs.org/apis/react/useReducer) 所建立出來的值。
+- 由 [`useReducer()`](https://react.dev/apis/react/useReducer) 所建立出來的值。
 - 元件的屬性 (props)。
 
 任何未被列在此處的數值都屬於非響應式，因此更新他們並不會造成元件重新渲染。
 
 :::caution
 
-那麼透過 [`createContext()`](https://beta.reactjs.org/reference/react/createContext#createcontext) 建立出來的值呢？我們使用 [`useContext()`](https://beta.reactjs.org/reference/react/useContext#usecontext) 將他們注入元件的時候，他們不也是響應式的嗎？
+那麼透過 [`createContext()`](https://react.dev/reference/react/createContext#createcontext) 建立出來的值呢？我們使用 [`useContext()`](https://react.dev/reference/react/useContext#usecontext) 將他們注入元件的時候，他們不也是響應式的嗎？
 
 沒錯，但是那只有在 **context 裡面的數值和更新數值的函式是由 `useState()` 或是 `useReducer()` 建立的時候**才會發生。若您放置一個非響應式數值到 context 中，更新他並不會造成元件重新渲染。
 
@@ -52,9 +52,7 @@ export const Example = () => {
   return (
     <div>
       <h1>Count: {count}</h1>
-      <button onClick={increment}>
-        Increment
-      </button>
+      <button onClick={increment}>Increment</button>
     </div>
   )
 }
@@ -87,9 +85,7 @@ export const Example = () => {
     <div>
       <div>
         <h1>Count: {count}</h1>
-        <button onClick={increment}>
-          Increment
-        </button>
+        <button onClick={increment}>Increment</button>
       </div>
     </div>
   )

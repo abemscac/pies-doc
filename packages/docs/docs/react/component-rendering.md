@@ -41,7 +41,7 @@ export const Example = () => {
     // highlight-next-line
     setCount(5)
     console.log('count right after setCount():', count)
-    
+
     setTimeout(() => {
       console.log('count 3 seconds after setCount():', count)
     }, 3000)
@@ -50,9 +50,7 @@ export const Example = () => {
   return (
     <div>
       <h1>Count: {count}</h1>
-      <button onClick={click}>
-        Click Me
-      </button>
+      <button onClick={click}>Click Me</button>
     </div>
   )
 }
@@ -84,7 +82,7 @@ const click = () => {
 
   setCount(5)
   console.log('count right after setCount():', count)
-  
+
   setTimeout(() => {
     console.log('count 3 seconds after setCount():', count)
   }, 3000)
@@ -101,7 +99,7 @@ const click = () => {
   setCount(5)
   // highlight-next-line
   console.log('count right after setCount():', 0)
-  
+
   setTimeout(() => {
     // highlight-next-line
     console.log('count 3 seconds after setCount():', 0)
@@ -156,9 +154,7 @@ export const Example = () => {
     <div>
       <h1>Count: {count}</h1>
       <h2>Count + 5: {countPlusFive}</h2>
-      <button onClick={increment}>
-        Increment
-      </button>
+      <button onClick={increment}>Increment</button>
     </div>
   )
 }
@@ -188,9 +184,9 @@ In the first render, React initializes the component according to the following 
 
 1. Declare `count` and `setCount` by running `const [count, setCount] = useState(0)`.
 2. Declare `countPlusFive` by running `const countPlusFive = count + 5`.
-    - Since the initial value of `count` is `0`, `countPlusFive` will evaluate to `0 + 5` in this render, which is `5`.
+   - Since the initial value of `count` is `0`, `countPlusFive` will evaluate to `0 + 5` in this render, which is `5`.
 3. Declare `increment()` by running `const increment = () => { ... }`.
-    - Since the initial value of `count` is `0`, `setCount(count + 1)` will evaluate to `setCount(0 + 1)` in this render.
+   - Since the initial value of `count` is `0`, `setCount(count + 1)` will evaluate to `setCount(0 + 1)` in this render.
 4. Binds all necessary values to the JSX elements in the return section while rendering all child components, and do the return.
 
 ### The Second Render (The First Re-Render)
@@ -199,9 +195,9 @@ After the "Increment" button is clicked once, the value of `count` will be updat
 
 1. Declare `count` and `setCount` by running `const [count, setCount] = useState(0)`. However, thanks to how `useState()` works internally, `count` and `setCount()` will still refer to the same variables as in the previous render; they're just being assigned to new variables with the same names as in the previous render.
 2. Declare `countPlusFive` by running `const countPlusFive = count + 5`.
-    - Since value of `count` has been updated from `0` to `1`, `count + 5` will evaluate to `1 + 5` in this render, which is `6`.
+   - Since value of `count` has been updated from `0` to `1`, `count + 5` will evaluate to `1 + 5` in this render, which is `6`.
 3. Declare `increment()` by running `const increment = () => { ... }`.
-    - Since the value of `count` has been updated from `0` to `1`, `setCount(count + 1)` will evaluate to `setCount(1 + 1)` in this render.
+   - Since the value of `count` has been updated from `0` to `1`, `setCount(count + 1)` will evaluate to `setCount(1 + 1)` in this render.
 4. Binds all necessary values to the JSX elements in the return section while re-rendering all children, and do the return.
 
 Any subsequent render will just follow the same rule as the the first re-render, with no exception.
@@ -209,7 +205,7 @@ Any subsequent render will just follow the same rule as the the first re-render,
 As you can see, render and re-render are actually not that different from each other; they both follow the same rule — runs the code in a component from top to bottom. Therefore, **in each render, everything gets redeclared; the only difference is how the values are evaluated**. Please keep in mind that:
 
 - Reactive values will never change within the same render. In other words, **reactive values can actually be seen as constants in each render**; they only change in the next render.
-- **Although everything gets redeclared in each render,  it doesn't necessarily mean that all variables will point to different memory addresses compared to the previous render**. You can use memoization functions like [`useMemo()`](./optimization-functions#usememo) and [`useCallback()`](./optimization-functions#usecallback) to make a variable point to the same memory address across different renders.
+- **Although everything gets redeclared in each render, it doesn't necessarily mean that all variables will point to different memory addresses compared to the previous render**. You can use memoization functions like [`useMemo()`](./optimization-functions#usememo) and [`useCallback()`](./optimization-functions#usecallback) to make a variable point to the same memory address across different renders.
 
 :::caution
 
@@ -277,7 +273,7 @@ Since everything gets redeclared during re-render, we must be careful when using
   <Video src="/video/react/component-rendering_render-method-2.mp4" />
 
   Therefore, if a function declared in a component returns a JSX element, it is generally recommended to use it like `{View()}` instead of `<View />` to avoid unnecessary unmounting and mounting of the element.
-  
+
 :::
 
 ### Rendering Is Recursive
@@ -311,9 +307,7 @@ export const Parent = () => {
   return (
     <div>
       <h1>Count: {count}</h1>
-      <button onClick={increment}>
-        Increment
-      </button>
+      <button onClick={increment}>Increment</button>
       {/* highlight-next-line */}
       <Child />
     </div>
@@ -396,9 +390,7 @@ export const Parent = ({ children }: PropsWithChildren) => {
   return (
     <div>
       <h1>Count: {count}</h1>
-      <button onClick={increment}>
-        Increment
-      </button>
+      <button onClick={increment}>Increment</button>
       {/* highlight-next-line */}
       {children}
     </div>
@@ -414,37 +406,18 @@ This way the re-render of `Parent` will no longer impact `Child`.
 
 If states are not updated right after `setState()` is called, when exactly will they be updated?
 
-### Update Requests
+### Update Schedulers
 
-First, we must understand that the purpose of functions like [`setState()`](./use-state#setstate) and [`dispatch()`](https://beta.reactjs.org/apis/react/useReducer#dispatch) is actually **making an update request** instead of doing an actual, instant update. React will update the states at some point based on the update requests we sent. For this reason, we'll refer to those functions as "**update requests**" in this documentation.
+First, we must understand that the purpose of functions like [`setState()`](./use-state#setstate) and [`dispatch()`](https://react.dev/reference/react/useReducer#dispatch) is to **schedule state updates** rather than directly modifying the state. React [batches](./use-state-in-depth#batching) these updates and applies them asynchronously at a specific point in the execution flow. For this reason, we'll refer to those functions as "**update schedulers**" in this documentation.
 
-In general, React will process update requests when any of the following conditions are met:
-
-1. When the call stack is empty.
-2. When `await` is executed.
-
-#### When the Call Stack Is Empty
-
-:::info
-
-If you don't know what call stack is, don't panic just yet!
-
-Call stack is a part of the [event loop](https://developer.mozilla.org/en-US/docs/Web/JavaScript/EventLoop) in JavaScript. To be honest, it's not really necessary to know it due to the fact that most of the update requests are triggered by user-initiated events (i.e. clicking a button or submitting a form), which will be the first function call in the call stack most of the time. That means the call stack will usually be empty when the execution of the event handler is done.
-
-It may sound scary, but it's actually not something very difficult to understand. If you still want to know what call stack or event loop is, we recommend you watch this awesome talk by [Philip Roberts](https://github.com/latentflip). [*What the heck is the event loop anyway?*](https://youtu.be/8aGhZQkoFbQ)
-
-If you have no idea what we're talking about at all, it's okay. Just ignore it and keep reading, you'll be fine!
-
-:::
-
-Update requests will be processed when the call stack is empty. In other words, states will be updated when the event handler that sends the update requests is done executed, assuming the event handler is the first function call in the call stack. For example:
+Usually, states will be updated when the event handler that sends the update schedulers is done executed. For example:
 
 ```tsx showLineNumbers
 import { useState } from 'react'
 
 export const Example = () => {
   const [count, setCount] = useState(0)
-  
+
   // highlight-next-line
   const click = () => {
     setCount(1)
@@ -455,72 +428,45 @@ export const Example = () => {
     <div>
       <h1>Count: {count}</h1>
       {/* highlight-next-line */}
-      <button onClick={click}>
-        Click Me
-      </button>
+      <button onClick={click}>Click Me</button>
     </div>
   )
 }
 ```
 
-In this example, `click()` is the `onClick` event handler of the button, which means `click()` will be the only function call in the call stack when the button is clicked. Since `console.log('Done')` is the last action to be done in `click()`, the execution of `click()` will be considered as done after `console.log('Done')` is completed. Thus, React will immediately update the states according to our update request (which is `setCount(1)`) once the execution of `click()` is done.
+In this example, `click()` is the `onClick` event handler of the button, which means `click()` will be the only function call in the call stack when the button is clicked. Since `console.log('Done')` is the last action to be done in `click()`, the execution of `click()` will be considered as done after `console.log('Done')` is completed. Thus, React will immediately update the states according to our update schedulers (which is `setCount(1)`) once the execution of `click()` is done.
 
-#### When `await` Is Executed
+React typically batches update schedulers made within the same event loop and processes them after the current JavaScript execution finishes, but not necessarily when the call stack is completely empty.
 
-Update requests will also be processed when `await` is executed. For example:
+:::info
 
-```ts showLineNumbers
-import { useState } from 'react'
+If you don't know what call stack is, don't panic just yet!
 
-const [count, setCount] = useState(0)
+Call stack is a part of the [event loop](https://developer.mozilla.org/en-US/docs/Web/JavaScript/EventLoop) in JavaScript. To be honest, it's not really necessary to know it due to the fact that most of the update schedulers are triggered by user-initiated events (i.e. clicking a button or submitting a form), which will be the first function call in the call stack most of the time. That means the call stack will usually be empty when the execution of the event handler is done.
 
-const click = async () => {
-  // highlight-next-line
-  setCount(1)
-  await doSomethingAsync()
+It may sound scary, but it's actually not something very difficult to understand. If you still want to know what call stack or event loop is, we recommend you watch this awesome talk by [Philip Roberts](https://github.com/latentflip). [_What the heck is the event loop anyway?_](https://youtu.be/8aGhZQkoFbQ)
 
-  // highlight-next-line
-  setCount(2)
-  await doSomethingAsync()
-}
+If you have more time, make sure to also check out this outstanding talk by [Jake Archibald](https://github.com/jakearchibald/)[_Jake Archibald on the web browser event loop, setTimeout, micro tasks, requestAnimationFrame, ..._](https://youtu.be/cCOL7MC4Pl0)
 
-const doSomethingAsync = () => {
-  // Do something asynchronous here. For example, calling an API.
-  return Promise.resolve(true)
-}
-```
+If you have no idea what we're talking about at all, it's okay. Just ignore it and keep reading, you'll be fine!
 
-In the above example, `count` is going to be updated twice:
+:::
 
-1. Right when the first `await doSomethingAsync()` is executed, before `doSomethingAsync()` is resolved or rejected (updated from `0` to `1`).
-2. Right when the second `await doSomethingAsync()` is executed, before `doSomethingAsync()` is resolved or rejected (updated from `1` to `2`).
-  
-We can verify this with the help of `useEffect()`:
-
-```ts showLineNumbers
-import { useEffect } from 'react'
-
-// highlight-start
-useEffect(() => {
-  console.log('count has been updated to', count)
-}, [count])
-// highlight-end
-```
-
-<Video src="/video/react/component-rendering_await-triggers-states-update.mp4" />
+In addition, due to [the nature of async function in JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function#description), under most circumstances your event handler will be popped from the call stack as soon as an `await` expression is encountered.
 
 :::caution
 
-While states will be updated immediately when an `await` statement is executed, don't forget that the states in a function will remain the same as they were in the render they were defined, due to [how reactive value works in a component](#how-reactive-value-works-in-a-component). Updated states will only be available in the next render!
+Don't forget that the states in a function will remain the same as they were in the render they were defined, due to [how reactive value works in a component](#how-reactive-value-works-in-a-component). Updated states will only be available in the next render!
 
 :::
 
 <details>
   <summary>What's the theory behind this? (feel free to skip this!)</summary>
 
-  From the description above, you may have guessed it already — those "update requests" are actually [**microtasks**](https://developer.mozilla.org/en-US/docs/Web/API/HTML_DOM_API/Microtask_guide). If you find it very confusing, feel free to skip it! You'll do just fine without knowing anything about it!
-  
-  Besides, `await` can actually be used on anything, whether it's a promise or not. Check out [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await#control_flow_effects_of_await) for more information if you're interested in it!
+From the description above, you may have guessed it already — those "update schedulers" are actually [**microtasks**](https://developer.mozilla.org/en-US/docs/Web/API/HTML_DOM_API/Microtask_guide). If you find it very confusing, feel free to skip it! You'll do just fine without knowing anything about it!
+
+Besides, `await` can actually be used on anything, whether it's a promise or not. Check out [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await#control_flow_effects_of_await) for more information if you're interested in it!
+
 </details>
 
 :::info Tiny Exercise
@@ -554,11 +500,11 @@ const doSomethingAsync = () => {
 <details>
   <summary>Show me the answer</summary>
 
-  In this example, `count` is going to be updated three times:
+In this example, `count` is going to be updated three times:
 
-  1. Right when the first `await doSomethingAsync()` is executed, before `doSomethingAsync()` is resolved or rejected (updated from `0` to `1`).
-  2. Right when the second `await doSomethingAsync()` is executed, before `doSomethingAsync()` is resolved or rejected (updated from `1` to `2`).
-  3. When the execution of `click()` is done (updated from `2` to `3`).
+1. Right when the first `await doSomethingAsync()` is executed, before `doSomethingAsync()` is resolved or rejected (updated from `0` to `1`).
+2. Right when the second `await doSomethingAsync()` is executed, before `doSomethingAsync()` is resolved or rejected (updated from `1` to `2`).
+3. When the execution of `click()` is done (updated from `2` to `3`).
 
   <Video src="/video/react/component-rendering_update-request-exercise.mp4" />
   

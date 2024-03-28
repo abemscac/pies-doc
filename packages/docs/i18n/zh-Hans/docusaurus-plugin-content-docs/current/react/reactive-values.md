@@ -13,14 +13,14 @@ import Video from '@site/src/widgets/Video'
 响应式数值指的是**任何在改变后会造成组件重新渲染的东西**，包含：
 
 - 由 [`useState()`](./use-state) 所建立出来的值。
-- 由 [`useReducer()`](https://beta.reactjs.org/apis/react/useReducer) 所建立出来的值。
+- 由 [`useReducer()`](https://react.dev/apis/react/useReducer) 所建立出来的值。
 - 组件的属性 (props)。
 
 任何未被列在此处的数值都属于非响应式，因此更新他们并不会造成组件重新渲染。
 
 :::caution
 
-那么透过 [`createContext()`](https://beta.reactjs.org/reference/react/createContext#createcontext) 建立出来的值呢？我们使用 [`useContext()`](https://beta.reactjs.org/reference/react/useContext#usecontext) 将他们注入组件的时候，他们不也是响应式的吗？
+那么透过 [`createContext()`](https://react.dev/reference/react/createContext#createcontext) 建立出来的值呢？我们使用 [`useContext()`](https://react.dev/reference/react/useContext#usecontext) 将他们注入组件的时候，他们不也是响应式的吗？
 
 没错，但是那只有在 **context 里面的数值和更新数值的函数是由 `useState()` 或是 `useReducer()` 建立的时候**才会发生。若您放置一个非响应式数值到 context 中，更新他并不会造成元件重新渲染。
 
@@ -52,9 +52,7 @@ export const Example = () => {
   return (
     <div>
       <h1>Count: {count}</h1>
-      <button onClick={increment}>
-        Increment
-      </button>
+      <button onClick={increment}>Increment</button>
     </div>
   )
 }
@@ -87,9 +85,7 @@ export const Example = () => {
     <div>
       <div>
         <h1>Count: {count}</h1>
-        <button onClick={increment}>
-          Increment
-        </button>
+        <button onClick={increment}>Increment</button>
       </div>
     </div>
   )

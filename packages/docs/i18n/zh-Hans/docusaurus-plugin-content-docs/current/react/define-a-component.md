@@ -1,7 +1,16 @@
 ---
 sidebar_position: 1
 description: 介绍 React 组件的基本语法，包含类别组件 (class component) 和函数组件 (function component)。
-keywords: [piesdoc, react, react组件, react class component, react类别组件, react function component, react函数组件]
+keywords:
+  [
+    piesdoc,
+    react,
+    react组件,
+    react class component,
+    react类别组件,
+    react function component,
+    react函数组件,
+  ]
 ---
 
 import Badge from '@site/src/widgets/Badge'
@@ -82,7 +91,6 @@ export class App extends Component<IAppProps, IAppState> {
   <Badge variant="success" text="推荐" />
 </p>
 
-
 函数组件在钩子 API 推出之前就已经存在了，但是那个时候仅有类别组件可以声明状态。因此，函数组件在当时都是无状态的组件，仅能依照给予的属性来渲染使用者介面。
 
 随着钩子 API 的发展，函数组件已逐渐取代类别组件并成为主流。整体而言，与类别组件相比，函数组件更具可读性、可维护性和可扩展性。
@@ -92,7 +100,7 @@ export class App extends Component<IAppProps, IAppState> {
 - 声明组件的方式和声明 JavaScript 函数相同。
 - 函数组件本身就是函数，所以我们不需要使用 `this` 也能存取属性和状态。
 - 属性会是函数组件的第一个 (也是唯一一个) 参数。
-- 状态必须使用 [`useState()`](./use-state)、[`useReducer()`](https://beta.reactjs.org/reference/react/useReducer#usereducer)，或是利用上述两个钩子的自定钩子来进行宣告及更新。
+- 状态必须使用 [`useState()`](./use-state)、[`useReducer()`](https://react.dev/reference/react/useReducer#usereducer)，或是利用上述两个钩子的自定钩子来进行宣告及更新。
 - 生命周期钩子被有着多种功能的 [`useEffect()`](./use-effect) 取代，他能同时做到类别组件中的 `componentDidMount()`、`componentDidUpdate()` 和 `componentWillUnmount()`。
 
 ### 范例
