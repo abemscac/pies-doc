@@ -134,7 +134,6 @@ const config = {
         indexName: 'pies',
       },
     }),
-  plugins: ['./plugins/google-adsense-plugin'],
 }
 
 module.exports = config
