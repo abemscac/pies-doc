@@ -110,7 +110,7 @@ export const Example = () => {
 }
 ```
 
-雖然範例中的寫法能正常運作，但是由於 JSX 運作機制的關係，`getSomething()` 實際上會隨著 `Example` 的重新渲染不斷的被呼叫。幸運的是，我們可以透過**傳遞函式**給 `useState()` 而不是傳遞數值來防止這種情況發生。例如：
+雖然範例中的寫法能正常運作，但由於 `Example` 只是一個每次重新渲染都會被重新呼叫的函式，`getSomething()` 實際上會隨著 `Example` 的重新渲染不斷的被呼叫。幸運的是，我們可以透過**傳遞函式**給 `useState()` 而不是傳遞數值來防止這種情況發生。例如：
 
 ```ts showLineNumbers
 const [state, setState] = useState(getSomething)

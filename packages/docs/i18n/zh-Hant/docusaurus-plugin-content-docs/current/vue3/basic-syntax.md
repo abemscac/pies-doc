@@ -58,7 +58,7 @@ Vue 3 有個 [在 CSS 裡面使用 `v-bind`](https://vuejs.org/api/sfc-css-featu
 
 和選項式 API (Options API) 中的 `export default { ... }` 相似，`<script>` 中的 `setup` 屬性是用來告訴 Vue 這個 `<script>` 區塊裡面的程式碼代表這個元件的定義。所有我們在選項式 API 裡面能做到的事情，在 `<script setup>` 裡面也都能做到。
 
-此外，一個 SFC 裡面**最多只能有一個** `<script setup>`，這個概念和我們無法在同個檔案裡面 `export default` 多次是一樣的。在一個 SFC 裡面，您可以有很多個 `<script>` 標籤，但是這些標籤裡面只能有一個有 `setup` 屬性。
+此外，一個 SFC 裡面**最多只能有一個** `<script setup>`，這個概念和我們無法在同個檔案裡面 `export default` 多次是一樣的。同樣的限制也適用於一般的 `<script>` 區塊：一個 SFC 最多只能有一個一般的 `<script>`，以及最多一個 `<script setup>`，這兩者可以同時存在。
 
 ## 定義元件
 

@@ -110,7 +110,7 @@ const logName = useCallback(() => {
 
 ## `MutableRefObject<T>`
 
-`useRef()` 的回傳值型別為 `MutableRefObject<T>`。簡化版的 `MutableRefObject<T>` 介面如下：
+`useRef()` 的回傳值型別通常為 `MutableRefObject<T>`，不過若以 `useRef(null)` 的方式呼叫（如下方 DOM/實體的參考中常見的用法），回傳值則會是唯讀版本的 `RefObject<T>`。簡化版的 `MutableRefObject<T>` 介面如下：
 
 ```ts showLineNumbers
 interface MutableRefObject<T> {
@@ -438,7 +438,7 @@ export const Example = ({ something }: IExampleProps) => {
 
   useEffect(() => {
     // highlight-next-line
-    thatFunction.crrent = SomeRandomLibrary.init(something)
+    thatFunction.current = SomeRandomLibrary.init(something)
   }, [])
   
   const doSomething = () => {
