@@ -14,7 +14,7 @@ In Vue, composables are **functions** that can be called within the root level o
 
 :::info
 
-You might be wondering what's the difference between a (util) function and a composable, because the statement "functions that can be called within the root level of any component in Vue" sounds just like an utility function. Generally speaking, if any Vue-specific feature is used within the function (i.e. `ref()` and `onMounted()`), we would call it a **composable** instead of a normal function.
+You might wonder how a composable differs from a plain (util) function, since the earlier description — "a function that can be called at the root level of any component" — could just as easily describe an ordinary utility function. Generally speaking, if any Vue-specific feature is used inside the function (i.e. `ref()` and `onMounted()`), we call it a **composable** instead of a normal function.
 
 :::
 

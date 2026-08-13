@@ -100,7 +100,7 @@ If a component is memoized by `memo()`, is it correct to say that as long as the
 
 **No, that's not true!** We know that a component re-renders when any [reactive value](./reactive-values) changes, but props is not the only reactive value in a component. `memo()` only functions when the re-render is triggered by parent component, that is, when parent component re-renders. If the re-render is triggered by a non-prop reactive value (i.e. a state), the component will still re-render.
 
-Think of it this way: `memo()` memoizes neither the output HTML nor the snapshot of a component; instead, it acts like a pointer to a specific instance of a component. When the result of `arePropsEqual()` is falsy, a new instance of the component will be created, and the pointer will change from the old instance to new the new one. Therefore, changes that happen in a component can still work without being affected by `memo()`.
+Think of it this way: `memo()` memoizes neither the output HTML nor the snapshot of a component; instead, it acts like a pointer to a specific instance of a component. When the result of `arePropsEqual()` is falsy, a new instance of the component will be created, and the pointer will change from the old instance to the new one. Therefore, changes that happen in a component can still work without being affected by `memo()`.
 
 :::
 

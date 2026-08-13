@@ -62,7 +62,7 @@ The result would look like this:
 
 <Video src="/video/react/forward-ref_0.mp4" />
 
-Everything works well at first, however, we're now required to add a new feature — focuses on "Last Name" input when a button in `Parent` is clicked. Since the `<input>` tag is placed inside a child component, there doesn't seem to be an elegant way to do this.
+Everything works well at first, however, we're now required to add a new feature: focus the "Last Name" input when a button in `Parent` is clicked. Since the `<input>` tag is placed inside a child component, there doesn't seem to be an elegant way to do this.
 
 This is where `forwardRef()` could be useful. We could use it to make `ref` attribute available on function components, and forward the reference to the `<input>` inside `InputGroup`. For example:
 
@@ -187,7 +187,7 @@ export const Parent = () => {
   )
   ```
 
-  All in all, to to make things easier, just use the built-in `ref` in a class component!
+  All in all, to make things easier, just use the built-in `ref` in a class component!
 </details>
 
 ## `useImperativeHandle()`
