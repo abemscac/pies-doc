@@ -60,7 +60,7 @@ export const Example = () => {
 
 1. 调用 `setCount()` 之前。
 2. 调用 `setCount()` 之后。
-3. 调用 `setCount()` 的 5 秒钟后。
+3. 调用 `setCount()` 的 3 秒钟后。
 
 <Video src="/video/react/component-rendering_state-with-timeout.mp4" />
 
@@ -193,7 +193,7 @@ export const Example = () => {
 
 在 "Increment" 按钮被点击一次之后，`count` 的数值会从 `0` 被更新到 `1`。由于 `count` 是一个响应式数值，这个变动会造成组件重新渲染。因此，React 会从上到下再次运行组件中所有的代码来达到重新渲染：
 
-1. 运行 `const [count, setCount] = useState(0)` 来声明 `count` 和 `setCount()`。由于 `useState()` 内部运作机制的缘故，`count` 和 `setCount()` 仍然会指向和前一次渲染相同的变量；我们只是将它们赋予到和前一次渲染中相同名称的新变量上。
+1. 运行 `const [count, setCount] = useState(0)` 来声明 `count` 和 `setCount()`。由于 `useState()` 内部运作机制的缘故，`setCount` 仍然会指向和前一次渲染相同的函数（它的身份在各次渲染之间保持稳定），而 `count` 则是一个全新的绑定，存放着当下最新的数值。
 2. 运行 `const countPlusFive = count + 5` 来声明 `countPlusFive`。
    - 由于 `count` 已经从 `0` 被更新到 `1` 了，所以这次渲染中的 `count + 5` 会被解读为 `1 + 5`，也就是 `6`。
 3. 运行 `const increment = () => { ... }` 来声明 `increment()`。
@@ -436,7 +436,7 @@ export const Example = () => {
 
 在这个范例中，`click()` 是按钮的 `onClick` 事件处理程序，代表当按钮被点击时，`click()` 会是调用堆叠中唯一的一个函数。由于 `console.log('Done')` 是 `click()` 中的最后一个动作，`click()` 的运行会在 `console.log('Done')` 运行完成后被视为完成。因此， React 会在 `click()` 运行完成后立即依照我们所提出的更新排程 (就是 `setCount(1)`) 对状态进行更新。
 
-React 通常会在同一个事件循环 (event loop) 中对更新排程进行批量处理，并在当前的事件处理程序执行结束后处理它们，但并不一定是在调用堆叠完全为空的时候。
+React 通常会在同一个任务 (task) 中对更新排程进行批量处理，并在调用堆叠变为空的时候处理它们（在内部，这个处理过程是被排程为一个微任务）。
 
 :::info
 

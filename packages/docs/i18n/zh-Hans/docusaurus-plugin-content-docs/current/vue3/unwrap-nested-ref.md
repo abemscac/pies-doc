@@ -127,7 +127,7 @@ const unwrapRef = <T>(arg: T): UnwrapRef<T> => {
 
 
 ```ts showLineNumbers
-import { reactive } from 'reactive'
+import { reactive } from 'vue'
 
 const user = {
   name: 'hello',

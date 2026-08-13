@@ -58,7 +58,7 @@ React 事件处理程序指的是您在 VSCode 中将鼠标停留在处理程序
 
   <img src="/img/react/use-state-in-depth_react-event-handler-type.png" alt="React event handler declaration file" />
 
-绝大部分的原生事件都属于 React 事件处理程序，像是`onClick()`、`onChange()`、`onBlur()`、`onDrag()`、`onSubmit()`等等。生命周期钩子 (life-cycle hooks) 如 `componentDidMount()` 和 `useEffect()` 也都属于 React 事件处理程序。
+绝大部分的原生事件都属于 React 事件处理程序，像是`onClick()`、`onChange()`、`onBlur()`、`onDrag()`、`onSubmit()`等等。在 `componentDidMount()` 这类生命周期方法 (life-cycle methods) 以及 `useEffect()` 中所做的更新，也会以同样的方式被批次处理，即便它们严格来说并不是事件处理程序。
 
 </details>
 

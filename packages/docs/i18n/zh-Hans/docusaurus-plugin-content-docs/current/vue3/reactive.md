@@ -301,7 +301,7 @@ _这是我们在 `reactive()` 身上使用解构赋值所导致的问题吗？_
 
 答案其实很间单。我们需只要复习一下变量在 JavaScript 中运作的方式，您马上就会了解其中的原因了！
 
-在 JavaScript 中，数值只能经由两种方式被传递—**传值**或是**传参考**。原始型别总是透过**传值**的方式被传递，而非原始型别总是透过**传参考**的方式被传递。因此，透过写下 `const { name: myName, age: myName } = user`，我们其实就是在写：
+在 JavaScript 中，数值只能经由两种方式被传递—**传值**或是**传参考**。原始型别总是透过**传值**的方式被传递，而非原始型别总是透过**传参考**的方式被传递。因此，透过写下 `const { name: myName, age: myAge } = user`，我们其实就是在写：
 
 ```js showLineNumbers
 const myName = user.name
@@ -345,7 +345,7 @@ const { name, age } = toRefs(user)
 在上面的例子中，如果我们把 `toRefs()` 换成 `ref()` 会得到相同的结果吗？例如：
 
 ```ts showLineNumbers
-import { reactive, ref } from 'vue'
+import { reactive, toRefs } from 'vue'
 
 const user = reactive({
   name: 'hello',
@@ -354,8 +354,18 @@ const user = reactive({
 
 // 原本是这个样子：
 const { name, age } = toRefs(user)
+```
 
-// 换成这种作法会得到一样的结果吗？
+换成这种作法会得到一样的结果吗？
+
+```ts showLineNumbers
+import { reactive, ref } from 'vue'
+
+const user = reactive({
+  name: 'hello',
+  age: 5,
+})
+
 // highlight-start
 const name = ref(user.name)
 const age = ref(user.age)
@@ -368,7 +378,7 @@ const age = ref(user.age)
 
 此外，虽然 `ref()` 和 `toRef()` 的返回值都是 `Ref<T>` 介面，他们返回的其实是有着不同逻辑的类别实体。
 
-另外要注意的是，如果目标数值属于非原始型别，`ref()` 和 `toRef()` 所产生的 `Ref<T>` 都会连接到来源，而且他们的更新都会导致组件重新渲染。例如：
+另外要注意的是，如果目标数值属于非原始型别，`ref()` 和 `toRef()` 一开始都会指向同一个来源，因此更改其嵌套属性会同时更新来源并让组件重新渲染。但是，如果直接重新赋值 `.value` 本身，两者就不再等价了 —— 只有 `toRef()` 会把这个赋值写回来源，`ref()` 不会。例如：
 
 
 ```ts showLineNumbers

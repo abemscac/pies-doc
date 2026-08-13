@@ -90,7 +90,7 @@ export const Parent = () => {
 }
 ```
 
-这种写法中的 `Child` 永远不会随着 `Parent` 一起重新渲染，因为这里的 `arePropsEqual()` 永远返回 `true`。
+这种写法中的 `Child` 永远不会随着 `Parent` 一起重新渲染，因为 `Child` 没有接收任何属性，所以 React 预设的属性比对逻辑永远会判定它们相等。
 
 <Video src="/video/react/component-rendering_children-prop.mp4" />
 
@@ -118,7 +118,7 @@ export const Parent = () => {
 type useMemo<T> = (
   callback: () => T,
   dependencies: any[],
-) => void
+) => T
 
 // 使用 `useMemo()`
 const something = useMemo(() => {
@@ -290,7 +290,7 @@ export const Example = ({ keyword }: IExampleProps) => {
 type useCallback<T extends Function> = (
   callback: T,
   dependencies: any[],
-) => void
+) => T
 
 // 使用 `useCallback()`
 const myFunction = useCallback(() => {
