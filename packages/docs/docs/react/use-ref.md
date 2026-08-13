@@ -110,7 +110,7 @@ Simply put, **putting a reference into a dependency array (of an effect) is mean
 
 ## `MutableRefObject<T>`
 
-The returned type of `useRef()` is `MutableRefObject<T>`. A simple interface for `MutableRefObject<T>` would look like this:
+The returned type of `useRef()` is usually `MutableRefObject<T>`, though calling `useRef(null)` (common for DOM/instance refs, as shown below) returns the read-only variant `RefObject<T>` instead. A simple interface for `MutableRefObject<T>` would look like this:
 
 ```ts showLineNumbers
 interface MutableRefObject<T> {
@@ -438,7 +438,7 @@ export const Example = ({ something }: IExampleProps) => {
 
   useEffect(() => {
     // highlight-next-line
-    thatFunction.crrent = SomeRandomLibrary.init(something)
+    thatFunction.current = SomeRandomLibrary.init(something)
   }, [])
   
   const doSomething = () => {

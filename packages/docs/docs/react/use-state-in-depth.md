@@ -57,7 +57,7 @@ You can also see all the types in the declaration file:
 
   <img src="/img/react/use-state-in-depth_react-event-handler-type.png" alt="React event handler declaration file" />
 
-React already handles most of the native HTML events, such as `onClick()`, `onChange()`, `onBlur()`, `onDrag()`, `onSubmit()`, etc. Life-cycle hooks like `componentDidMount()` and `useEffect()` are also considered React event handlers.
+React already handles most of the native HTML events, such as `onClick()`, `onChange()`, `onBlur()`, `onDrag()`, `onSubmit()`, etc. Updates made inside life-cycle methods like `componentDidMount()` and inside `useEffect()` are batched the same way, even though they are not technically event handlers.
 
 </details>
 

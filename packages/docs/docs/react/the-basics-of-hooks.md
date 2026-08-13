@@ -13,7 +13,7 @@ In React, hooks are **functions that can be called within the root level of any 
 :::info
 
 - You might be wondering what's the difference between a (util) function and a hook, because the statement "functions that can be called within (the root level of) any function component" sounds just like an utility function. Generally speaking, if any React-specific features is used within the function (i.e. `useState()` and `useEffect()`), we would call it a **hook** instead of a normal function.
-- From a syntax perspective, a component and a hook are not really that different. In fact, if you return a JSX element in a hook, it becomes a component rather than a hook!
+- From a syntax perspective, a component and a hook are not really that different — both are just functions. What actually distinguishes them is convention: components are named with a capital letter and invoked via JSX (`<Foo />`), while hooks are named with a `use` prefix and invoked like normal function calls. Returning a JSX element from a hook does not turn it into a component.
 
 :::
 

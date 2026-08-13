@@ -110,7 +110,7 @@ export const Example = () => {
 }
 ```
 
-While the above example works fine, `getSomething()` will actually be executed every time `Example` re-renders, thanks to how JSX works. Luckily, we can prevent this from happening by **passing in a function** to `useState()` instead of a value. For example:
+While the above example works fine, `getSomething()` will actually be executed every time `Example` re-renders, since `Example` is just a function that gets called again on every re-render. Luckily, we can prevent this from happening by **passing in a function** to `useState()` instead of a value. For example:
 
 ```ts showLineNumbers
 const [state, setState] = useState(getSomething)

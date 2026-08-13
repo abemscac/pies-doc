@@ -303,7 +303,7 @@ Not really. The same thing would happen even if we use `const myName = user.name
 
 The answer is actually very simple. All we have to do is to recap how variable works in JavaScript, and you'll know it right away!
 
-In JavaScript, variables are either being **passed by value** or being **passed by reference**. For primitive values, they are always being **passed by value**, and non-primitive values are always being **passed by reference**. So by writing `const { name: myName, age: myName } = user`, we're actually saying:
+In JavaScript, variables are either being **passed by value** or being **passed by reference**. For primitive values, they are always being **passed by value**, and non-primitive values are always being **passed by reference**. So by writing `const { name: myName, age: myAge } = user`, we're actually saying:
 
 ```js showLineNumbers
 const myName = user.name
@@ -347,7 +347,7 @@ Most of the time we'll just use `toRefs()` because it's slightly more convenient
 In the above example, will we get the same result if we replace `toRefs()` with `ref()`? For example:
 
 ```ts showLineNumbers
-import { reactive, ref } from 'vue'
+import { reactive, toRefs } from 'vue'
 
 const user = reactive({
   name: 'hello',
@@ -356,8 +356,18 @@ const user = reactive({
 
 // Originally we did this.
 const { name, age } = toRefs(user)
+```
 
-// Can we achieve the same goal by doing this?
+Can we achieve the same goal by doing this instead?
+
+```ts showLineNumbers
+import { reactive, ref } from 'vue'
+
+const user = reactive({
+  name: 'hello',
+  age: 5,
+})
+
 // highlight-start
 const name = ref(user.name)
 const age = ref(user.age)
@@ -370,7 +380,7 @@ This is because since `user.name` and `user.age` are both primitive values, they
 
 Furthermore, even though the return type of `ref()` and `toRef()` are both `Ref<T>`, they are actually returning different class instances that run different logic.
 
-But be careful, if the target object is a non-primitive value, both `ref()` and `toRef()` would connect to the same source, and updating them would both cause the component to re-render. For example:
+But be careful, if the target object is a non-primitive value, both `ref()` and `toRef()` would initially point to the same source, so mutating its nested properties updates the source and re-renders the component either way. However, they are not equivalent if you reassign `.value` itself — only `toRef()` writes that back to the source; `ref()` does not. For example:
 
 
 ```ts showLineNumbers

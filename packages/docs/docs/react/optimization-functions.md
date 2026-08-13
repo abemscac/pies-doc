@@ -90,7 +90,7 @@ export const Parent = () => {
 }
 ```
 
-This way `Child` will never re-render when `Parent` re-renders, because the `arePropsEqual()` function of `Child` always returns `true`.
+This way `Child` will never re-render when `Parent` re-renders, because `Child` receives no props, so React's default prop comparison always considers them equal.
 
 <Video src="/video/react/component-rendering_children-prop.mp4" />
 
@@ -118,7 +118,7 @@ If you've learned Vue, just think of `useMemo()` as `computed()` that doesn't kn
 type useMemo<T> = (
   callback: () => T,
   dependencies: any[],
-) => void
+) => T
 
 // Using `useMemo()`
 const something = useMemo(() => {
@@ -290,7 +290,7 @@ It's important to note that **the `callback` being passed to `useMemo()` should 
 type useCallback<T extends Function> = (
   callback: T,
   dependencies: any[],
-) => void
+) => T
 
 // Using `useCallback()`
 const myFunction = useCallback(() => {

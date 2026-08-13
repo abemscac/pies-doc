@@ -127,7 +127,7 @@ When using Vue 3, you should try to **avoid declaring partial reactive object** 
 
 
 ```ts showLineNumbers
-import { reactive } from 'reactive'
+import { reactive } from 'vue'
 
 const user = {
   name: 'hello',
