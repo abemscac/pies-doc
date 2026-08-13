@@ -10,7 +10,7 @@ import Video from '@site/src/widgets/Video'
 
 ## What Is `useEffect()`?
 
-`useEffect()` is a built-in hook with multiple purposes. The "effect" in `useEffect()` refers to **side effect**, which may have different meanings depending on the context. In React, if no third-party libraries or frameworks are invloved, "effects" usually means things (states) that are performed (changed) indirectly. We'll further explain this idea at the end of this chapter.
+`useEffect()` is a built-in hook with multiple purposes. The "effect" in `useEffect()` refers to **side effect**, which may have different meanings depending on the context. In React, if no third-party libraries or frameworks are invloved, "effects" usually refers to state changes that happen indirectly — as a side effect of something else, rather than directly in response to an event. We'll further explain this idea at the end of this chapter.
 
 ## What Can `useEffect()` Do?
 

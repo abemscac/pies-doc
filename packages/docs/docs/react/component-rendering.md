@@ -446,7 +446,7 @@ Call stack is a part of the [event loop](https://developer.mozilla.org/en-US/doc
 
 It may sound scary, but it's actually not something very difficult to understand. If you still want to know what call stack or event loop is, we recommend you watch this awesome talk by [Philip Roberts](https://github.com/latentflip). [_What the heck is the event loop anyway?_](https://youtu.be/8aGhZQkoFbQ)
 
-If you have more time, make sure to also check out this outstanding talk by [Jake Archibald](https://github.com/jakearchibald/)[_Jake Archibald on the web browser event loop, setTimeout, micro tasks, requestAnimationFrame, ..._](https://youtu.be/cCOL7MC4Pl0)
+If you have more time, make sure to also check out this outstanding talk by [Jake Archibald](https://github.com/jakearchibald/): [_Jake Archibald on the web browser event loop, setTimeout, micro tasks, requestAnimationFrame, ..._](https://youtu.be/cCOL7MC4Pl0)
 
 If you have no idea what we're talking about at all, it's okay. Just ignore it and keep reading, you'll be fine!
 

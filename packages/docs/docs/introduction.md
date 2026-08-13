@@ -25,6 +25,6 @@ By learning how to use the API correctly and the theory behind it, you will not 
 
 Bad code is everywhere. From apps with hundreds of thousands of active users to some random apps you've never heard of, the amount of bad code in this world is way more than you could ever imagine.
 
-Unfortunately, we, the developers, are the source of these bad code. The problem is, most of the developers didn't realize what they wrote is bad, one of the reason is because they didn't learn the fundamentals well enough.
+Unfortunately, we developers are the source of this bad code. The problem is that most developers don't realize what they wrote is bad — one reason being that they never learned the fundamentals well enough.
 
 We want to change this. We hope that with the help of Pies Doc, a 100% free handbook, more and more people in this industry will start to care about their code quality, and help eliminate as much bad code as they can.

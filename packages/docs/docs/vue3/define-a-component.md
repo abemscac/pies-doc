@@ -12,7 +12,7 @@ There are multiple ways to define a component in Vue 3, we want to bring up some
 
 ## 1. Legacy Options API
 
-The legacy Options API still works in Vue 3, in almost the same way! If you just copy & paste your Vue 2 components into a Vue 3 project, they'll probably work fine after some other minor issues are resolved.
+The legacy Options API still works in Vue 3, in almost the same way! If you just copy and paste your Vue 2 components into a Vue 3 project, most of them should work with only minor adjustments.
 
 That being said, it is strongly recommended to try out the new Composition API instead of sticking to the legacy Options API. Otherwise what is the point of upgrading from Vue 2 to Vue 3, right?
 
