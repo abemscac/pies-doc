@@ -10,7 +10,7 @@ import Video from '@site/src/widgets/Video'
 
 ## 什么是 `useEffect()`?
 
-`useEffect()` 是一个具有多种功能的内建钩子 (hook)。`useEffect()` 中的 "Effect" 指的是**副作用 (side effect)**，依据情况的不同会有不同的意思。在 React 中，假设没有涉及任何第三方套件或是框架，「副作用」指的通常是间接被运行 (修改) 的事物 (状态)。我们会在本章节的最后解释这一点。
+`useEffect()` 是一个具有多种功能的内建钩子 (hook)。`useEffect()` 中的 "Effect" 指的是**副作用 (side effect)**，依据情况的不同会有不同的意思。在 React 中，假设没有涉及任何第三方套件或是框架，「副作用」指的通常是间接发生的状态变化 —— 也就是作为其他事情的附带结果发生，而不是直接响应某个事件而发生。我们会在本章节的最后解释这一点。
 
 ## `useEffect()` 可以做什么？
 
@@ -137,7 +137,7 @@ useEffect(() => {
 在这个范例中，我们能在主控台中看见 `Hello` 的时间点为**组件挂载后**，及**在 `count` 的值发生变化时**，因为：
 
 - 无论 `dependencies` 的值为何，React 都会在组件挂载时调用 `callback`。
-- `count` 是这个副作用的依赖值，所以他的改变会导致这个副用的运行。
+- `count` 是这个副作用的依赖值，所以他的改变会导致这个副作用的运行。
 
 <Video src="/video/react/use-effect_non-empty-array_no-clean-up.mp4" />
 
@@ -308,7 +308,7 @@ useEffect(() => {
 
 :::
 
-当副作用的逻辑有些复杂时，常常会看见组件中有很大一部分的代码都只是了该副作用而存在。例如：
+当副作用的逻辑有些复杂时，常常会看见组件中有很大一部分的代码都只是为了该副作用而存在。例如：
 
 ```tsx showLineNumbers
 import { useEffect } from 'react'

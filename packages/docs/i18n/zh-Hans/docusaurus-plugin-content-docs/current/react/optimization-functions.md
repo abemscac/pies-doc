@@ -18,7 +18,7 @@ import Video from '@site/src/widgets/Video'
 
 ## `memo()`
 
-`memo()` 是一个内建的 [HOC](https://reactjs.org/docs/higher-order-components.html)，用于**建立一个基于属性的可记忆版本的组件**。简化版的 `memo()` 介面如下：
+`memo()` 是一个内建的 [HOC](https://reactjs.org/docs/higher-order-components.html)，用于**根据属性建立组件的记忆化版本**。简化版的 `memo()` 介面如下：
 
 ```tsx showLineNumbers
 const memo = (
@@ -444,7 +444,7 @@ const increment = useMemo(() => {
 }, [])
 ```
 
-虽然您可以藉由显性返回来让代码变得好看一些 (看起来其实挺不错的！)，但是那样做的结果就和 `useCallback()` 一模一样。总而言之，只要将 `useCallback()` 视为**返回 `callback` 本身，而不是返回 `callback` 调用的结果的 `useMemo()`** 即可。
+虽然您可以藉由显性返回来让代码变得好看一些 (看起来其实挺不错的！)，但是那样做的结果就和 `useCallback()` 一模一样。总而言之，您可以把 `useCallback()` 想成是**一种特殊的 `useMemo()`：它返回的是 `callback` 本身，而不是调用 `callback` 后得到的结果**。
 
 ```ts showLineNumbers
 import { useMemo } from 'react'
