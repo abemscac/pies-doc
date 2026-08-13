@@ -48,7 +48,7 @@ h1 {
 
 :::info
 
-Vue 3 有个 [在 CSS 里面使用 `v-bind`](https://vuejs.org/api/sfc-css-features.html#v-bind-in-css) 的新功能，他让我们能够在 `<style>` 里面使用动态值，这某些情况下满实用的。
+Vue 3 有个 [在 CSS 里面使用 `v-bind`](https://vuejs.org/api/sfc-css-features.html#v-bind-in-css) 的新功能，它让我们能够在 `<style>` 里面使用动态值，这在某些情况下满实用的。
 
 :::
 
@@ -58,7 +58,7 @@ Vue 3 有个 [在 CSS 里面使用 `v-bind`](https://vuejs.org/api/sfc-css-featu
 
 和选项式 API (Options API) 中的 `export default { ... }` 相似，`<script>` 中的 `setup` 属性是用来告诉 Vue 这个 `<script>` 区块里面的代码代表这个组件的定义。所有我们在选项式 API 里面能做到的事情，在 `<script setup>` 里面也都能做到。
 
-此外，一个 SFC 里面**最多只能有一个** `<script setup>`，这个概念和我们无法在同个档案里面 `export default` 多次是一样的。同样的限制也适用于一般的 `<script>` 区块：一个 SFC 最多只能有一个一般的 `<script>`，以及最多一个 `<script setup>`，这两者可以同时存在。
+此外，一个 SFC 里面**最多只能有一个** `<script setup>`，这个概念和我们无法在同个档案里面 `export default` 多次是一样的。同样的限制也适用于一般的 `<script>` 区块：一个 SFC 最多只能有一个一般的 `<script>` 和一个 `<script setup>`，且两者可以同时存在。
 
 ## 定义组件
 

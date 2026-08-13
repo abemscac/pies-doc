@@ -55,7 +55,7 @@ export const Example = () => {
 
 在上面的范例中，`count` 的数值**不会**随着 `Example` 的重新渲染而被重置为 `0`。
 
-然而，由于参考是非响应式的，改变它**并不会**造成组件重新渲染。此外，和状态 (state) 不同的是，参考的改变是立即的－我们不需要等到下一次渲染才能拿到更新后的数值。这使得 `useRef()` 非常适合用在当我们想要在不同的渲染中保留变量值，但是又不希望组件因为变量值的改变而重新渲染的情况。
+然而，由于参考是非响应式的，改变它**并不会**造成组件重新渲染。此外，和状态 (state) 不同的是，参考的改变是立即的－我们不需要等到下一次渲染才能拿到更新后的数值。这使得 `useRef()` 非常适合以下情况：我们想要在不同的渲染中保留变量值，但又不希望组件因为该数值的改变而重新渲染。
 
 更重要的是，**参考给我们的数值永远会是最新的，即使是在被记忆起来的函数中也一样**。以 [`useCallback()`](./optimization-functions#usecallback) 为例：
 
@@ -77,7 +77,7 @@ const logName = useCallback(() => {
 
 :::caution
 
-请注意，由于参考是非响应式的，任何依赖于他的副作用 (`useEffect()`、`useMemo()` 或 `useCallback()`) 在参考改变时都**不会**被运行，除非在同一时间依赖值阵列中有任何响应式数值发生变化。举例来说：
+请注意，由于参考是非响应式的，任何依赖于他的副作用 (`useEffect()`、`useMemo()` 或 `useCallback()`) 在参考改变时都**不会**被运行，除非依赖值阵列中还有其他响应式数值在同一时间发生变化。举例来说：
 
 - 在下面的范例中，无论 `name.current` 改变多少次，副作用都不会再次运行：
   ```ts showLineNumbers
@@ -90,7 +90,7 @@ const logName = useCallback(() => {
   // highlight-next-line
   }, [name.current])
   ```
-- 在下面的范例中，`name.curent` 的改变不会导致副作用被运行，但是 `age` 会！
+- 在下面的范例中，`name.current` 的改变不会导致副作用被运行，但是 `age` 会！
   ```ts showLineNumbers
   import { useState, useRef, useEffect } from 'react'
 

@@ -14,7 +14,7 @@ import Badge from '@site/src/widgets/Badge'
 
 ## 1. 传统选项式 API (Options API)
 
-选项式 API 在 Vue 3 依然有用，而且几乎一样！若您直接将 Vue 2 的组件复制到 Vue 3 专案中，也许在解决一些小问题之后他们就能运作良好。
+选项式 API 在 Vue 3 依然有用，而且几乎一样！若您直接将 Vue 2 的组件复制到 Vue 3 专案中，大部分应该都能在稍作调整后正常运作。
 
 话虽如此，我们还是强烈建议您尝试新的组合式 API，而不要黏着选项式 API 不放。否则升级到 Vue 3 又有什么意义呢，对吧？
 
@@ -86,7 +86,7 @@ import Badge from '@site/src/widgets/Badge'
 
 这是目前最受欢迎的模式。若您曾经学过 React 的 Hooks API，您可能会发现这个模式的风格和他很像。如果您没有学过，也不用担心！这个模式其实很好懂。
 
-预设情况下，无论您使用的是一般函数还是箭头函数，`<script setup>` 里面不都会有 `this` 的出现。所以如果您不喜欢 `this`，这会是个好消息！
+预设情况下，无论您使用的是一般函数还是箭头函数，`<script setup>` 里面都不会有 `this` 的出现。所以如果您不喜欢 `this`，这会是个好消息！
 
 ```html title="组合式 API 搭配 <script setup>" showLineNumbers
 <template>
