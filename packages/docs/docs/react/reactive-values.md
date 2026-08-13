@@ -30,7 +30,7 @@ At the moment, reactive values in React are still coming from `useState()`, `use
 
 ## What Does Render Mean?
 
-In React, "render" means to **run the code in your component from top to bottom, and transform JSX elements into DOM nodes**. Any subsequent render after the very first render is called **re-render**.
+In React, "render" means to **run the code in your component from top to bottom and produce the resulting JSX**. React then uses this output to update the actual DOM in a later step called the commit phase. Any subsequent render after the very first render is called **re-render**.
 
 ## Examples
 

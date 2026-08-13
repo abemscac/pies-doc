@@ -75,7 +75,7 @@ console.log(fruits.value) // ['cherry', 'banana']
 
 // object
 const user = ref({
-  name: 'hello'
+  name: 'hello',
   age: 5,
 })
 console.log(user.value) // { name: 'hello', age: 5 }

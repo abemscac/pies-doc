@@ -58,7 +58,7 @@ So what is this `<script setup>`? What can the `setup` attribute do in an SFC?
 
 Similar to the `export default { ... }` in Options API, the `setup` attribute on `<script>` is used to tell Vue that the code in this `<script>` block should be treated as the definition of a component. Anything we can do in Options API, we can also do it in `<script setup>`.
 
-Also, there **cannot be more than one `<script setup>`** in an SFC, just like how we cannot `export default` multiple times in a single file. You can have as many `<script>` as you want, just remember only one of them can be decorated with `setup` attribute.
+Also, there **cannot be more than one `<script setup>`** in an SFC, just like how we cannot `export default` multiple times in a single file. The same limit applies to the plain `<script>` block — an SFC can have at most one plain `<script>` and at most one `<script setup>`, and the two can coexist.
 
 ## Define a component
 

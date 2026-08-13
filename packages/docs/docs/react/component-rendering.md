@@ -60,7 +60,7 @@ In this example, we use three `console.log()` successively to print out the valu
 
 1. Before `setCount()` is called.
 2. Right after `setCount()` is called.
-3. 5 seconds after `setCount()` is called.
+3. 3 seconds after `setCount()` is called.
 
 <Video src="/video/react/component-rendering_state-with-timeout.mp4" />
 
@@ -193,7 +193,7 @@ In the first render, React initializes the component according to the following 
 
 After the "Increment" button is clicked once, the value of `count` will be updated from `0` to `1`. Since `count` is a reactive value, this change will cause the component to re-render. Thus, React re-renders the component by re-running every single piece of code in the component from top to bottom:
 
-1. Declare `count` and `setCount` by running `const [count, setCount] = useState(0)`. However, thanks to how `useState()` works internally, `count` and `setCount()` will still refer to the same variables as in the previous render; they're just being assigned to new variables with the same names as in the previous render.
+1. Declare `count` and `setCount` by running `const [count, setCount] = useState(0)`. Thanks to how `useState()` works internally, `setCount` will still refer to the same function as in the previous render — its identity is stable across renders — while `count` is a fresh binding holding whatever the latest value is.
 2. Declare `countPlusFive` by running `const countPlusFive = count + 5`.
    - Since value of `count` has been updated from `0` to `1`, `count + 5` will evaluate to `1 + 5` in this render, which is `6`.
 3. Declare `increment()` by running `const increment = () => { ... }`.
@@ -436,7 +436,7 @@ export const Example = () => {
 
 In this example, `click()` is the `onClick` event handler of the button, which means `click()` will be the only function call in the call stack when the button is clicked. Since `console.log('Done')` is the last action to be done in `click()`, the execution of `click()` will be considered as done after `console.log('Done')` is completed. Thus, React will immediately update the states according to our update schedulers (which is `setCount(1)`) once the execution of `click()` is done.
 
-React typically batches update schedulers made within the same event loop and processes them after the current JavaScript execution finishes, but not necessarily when the call stack is completely empty.
+React typically batches update schedulers made within the same task and processes them once the call stack becomes empty (internally, this flush is scheduled as a microtask).
 
 :::info
 
